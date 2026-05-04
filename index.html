@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SOB Combos Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { font-family: Arial; text-align: center; }
+
+.container { margin-top: 20px; }
+
+input, select {
+  padding: 12px;
+  margin: 8px;
+  width: 90%;
+  max-width: 340px;
+  font-size: 16px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  max-width: 340px;
+  margin: auto;
+}
+
+.box {
+  margin: auto;
+  max-width: 340px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+}
+
+.total { font-weight: bold; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.total-row { font-weight: bold; }
+
+button {
+  padding: 10px;
+  margin: 8px;
+}
+
+/* PRINT CONTROL */
+@media print {
+  body * { visibility: hidden; }
+
+  #printArea.active, #printArea.active * {
+    visibility: visible;
+  }
+
+  #thermalPrint.active, #thermalPrint.active * {
+    visibility: visible;
+  }
+
+  #printArea.active,
+  #thermalPrint.active {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  #thermalPrint.active {
+    width: 80mm;
+    font-family: monospace;
+    font-size: 10px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h2>SOB Combos Calculator</h2>
+
+<div class="container">
+
+<select id="combo" onchange="resetAndCalc()">
+<option value="">Select Combo</option>
+
+<option value="170,80,70,150">390/300 TU Explorer Combo</option>
+<option value="170,80,0,227">397/307 Adventure Combo</option>
+<option value="170,80,28,200">398/308 ECO FUN Combo</option>
+<option value="170,80,255,0">425/335 Snow Adventure Combo</option>
+<option value="400,300,0,99">499/399 Astha Combo</option>
+<option value="370,180,0,175">545/355 Shiv Ganesha Combo</option>
+<option value="550,375,0,50">600/425 Namah Combo</option>
+<option value="170,170,0,529,NA">699/NA Ultimate Play Combo</option>
+<option value="370,180,325,50">745/555 Viewing Fun Combo</option>
+<option value="550,375,249,170">969/794 Symbolic Combo</option>
+<option value="170,80,355,574">1099/1009 Delight Combo</option>
+<option value="370,180,355,574">1299/1109 Mini Blast Combo</option>
+<option value="550,375,250,599">1399/1224 All in Fun Combo</option>
+<option value="1350,775,0,150">1500/925 Divine Rush Combo</option>
+<option value="1400,1400,449,2350,NA">4199/NA Ultimate Mega Combo</option>
+</select>
+
+<p id="comboName" style="font-weight:bold;"></p>
+
+<label>No. of Adults:</label>
+<input type="number" id="adults" placeholder="Enter number of adults" oninput="calc()">
+
+<label>No. of Children:</label>
+<input type="number" id="children" placeholder="Enter number of children" oninput="calc()">
+
+<p id="warning" style="color:red;"></p>
+
+<div class="box">
+<div class="row"><span>TPU</span><span>Rs. <span id="tpu">0</span></span></div>
+<div class="row"><span>OEPL</span><span>Rs. <span id="oepl">0</span></span></div>
+<div class="row"><span>PAEPL</span><span>Rs. <span id="paepl">0</span></span></div>
+<hr>
+<div class="row total"><span>Total</span><span>Rs. <span id="total">0</span></span></div>
+</div>
+
+<input type="tel" inputmode="numeric" id="sobInput" placeholder="Enter SOB ID (6 or 7 digits)">
+
+<br>
+
+<button onclick="saveEntry()">Save SOB ID</button>
+
+<div style="display:flex; justify-content:center; gap:10px;">
+<button onclick="resetForm()">Reset Calculator</button>
+<button onclick="resetAllData()">Reset SOB IDs</button>
+</div>
+
+</div>
+
+<!-- A4 PRINT -->
+<div id="printArea">
+<div class="header">
+<div>POS # ______</div>
+<div>USERNA<b>M</b>E.<b>S</b> : ____________________</div>
+<div>Date: <span id="date"></span></div>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>SR</th>
+<th>SOB ID</th>
+<th>TPU</th>
+<th>OEPL</th>
+<th>PAEPL</th>
+<th>TOTAL</th>
+<th>TIME</th>
+</tr>
+</thead>
+
+<tbody id="dataBody"></tbody>
+
+<tfoot>
+<tr class="total-row">
+<td colspan="2">TOTAL</td>
+<td id="tpuT">0</td>
+<td id="oeplT">0</td>
+<td id="paeplT">0</td>
+<td id="grandT">0</td>
+<td></td>
+</tr>
+</tfoot>
+</table>
+</div>
+
+<!-- THERMAL PRINT -->
+<div id="thermalPrint" style="display:none; text-align:left;">
+
+<center>
+<b>SOB SPLIT PAYMENT REPORT</b><br>
+Date: <span id="tDate"></span>
+</center>
+
+POS # ______<br>
+USERNA<b>M</b>E.<b>S</b> : ____________________
+
+--------------------------------
+TPU  OEPL  PAEPL  TOTAL
+--------------------------------
+
+<div id="thermalData"></div>
+
+--------------------------------
+TOTAL<br>
+TPU:   <span id="t_tpu"></span><br>
+OEPL:  <span id="t_oepl"></span><br>
+PAEPL: <span id="t_paepl"></span><br>
+GRAND: <span id="t_total"></span><br>
+--------------------------------
+
+</div>
+
+<button onclick="printA4()">Print A4</button>
+<button onclick="printThermal()">Print Thermal</button>
+
+<script>
+
+let data = JSON.parse(localStorage.getItem("sobData")) || [];
+
+function resetAndCalc(){
+adults.value="";
+children.value="";
+calc();
+}
+
+function calc(){
+let v = combo.value;
+if(!v) return;
+
+let p=v.split(",");
+
+let ta=parseInt(p[0]);
+let tc=parseInt(p[1]);
+let o=parseInt(p[2]);
+let pi=parseInt(p[3]);
+let na=p[4]==="NA";
+
+let a=parseInt(adults.value)||0;
+let ch=parseInt(children.value)||0;
+
+warning.innerText=(na && ch>0)?"⚠ Not allowed for children":"";
+
+let tpu=a*ta+ch*tc;
+let oepl=(a+ch)*o;
+let paepl=(a+ch)*pi;
+let total=tpu+oepl+paepl;
+
+document.getElementById("tpu").innerText=tpu;
+document.getElementById("oepl").innerText=oepl;
+document.getElementById("paepl").innerText=paepl;
+document.getElementById("total").innerText=total;
+
+comboName.innerText="Selected Combo: "+combo.options[combo.selectedIndex].text;
+
+return {tpu,oepl,paepl,total};
+}
+
+function formatSOB(n){
+if(n.length===6) return "SOB000"+n;
+if(n.length===7) return "SOB00"+n;
+}
+
+function saveEntry(){
+
+let raw=sobInput.value.replace(/\D/g,'');
+
+if(raw.length<6 || raw.length>7){
+alert("Enter 6 or 7 digit SOB ID");
+return;
+}
+
+let r=calc();
+if(!r) return;
+
+let sob=formatSOB(raw);
+let time=new Date().toLocaleTimeString();
+
+data.push({sob,...r,time});
+localStorage.setItem("sobData",JSON.stringify(data));
+
+render();
+sobInput.value="";
+}
+
+function resetForm(){
+adults.value="";
+children.value="";
+sobInput.value="";
+tpu.innerText=0;
+oepl.innerText=0;
+paepl.innerText=0;
+total.innerText=0;
+warning.innerText="";
+comboName.innerText="";
+}
+
+function resetAllData(){
+if(!confirm("Delete all SOB entries?")) return;
+data=[];
+localStorage.removeItem("sobData");
+render();
+}
+
+function pad(n){
+return String(n).padEnd(6," ");
+}
+
+function render(){
+let body=dataBody;
+body.innerHTML="";
+
+let tpuT=0,oeplT=0,paeplT=0,grandT=0;
+let thermalHTML="";
+
+data.forEach((d,i)=>{
+body.innerHTML+=`
+<tr>
+<td>${i+1}</td>
+<td>${d.sob}</td>
+<td>${d.tpu}</td>
+<td>${d.oepl}</td>
+<td>${d.paepl}</td>
+<td>${d.total}</td>
+<td style="font-size:10px">${d.time}</td>
+</tr>`;
+
+thermalHTML+=`
+${i+1}. ${d.sob}
+${pad(d.tpu)} ${pad(d.oepl)} ${pad(d.paepl)} ${pad(d.total)}
+`;
+
+tpuT+=d.tpu;
+oeplT+=d.oepl;
+paeplT+=d.paepl;
+grandT+=d.total;
+});
+
+document.getElementById("tpuT").innerText=tpuT;
+document.getElementById("oeplT").innerText=oeplT;
+document.getElementById("paeplT").innerText=paeplT;
+document.getElementById("grandT").innerText=grandT;
+
+document.getElementById("thermalData").innerText=thermalHTML;
+document.getElementById("t_tpu").innerText=tpuT;
+document.getElementById("t_oepl").innerText=oeplT;
+document.getElementById("t_paepl").innerText=paeplT;
+document.getElementById("t_total").innerText=grandT;
+
+date.innerText=new Date().toLocaleDateString();
+tDate.innerText=new Date().toLocaleDateString();
+}
+
+function printA4(){
+printArea.classList.add("active");
+thermalPrint.classList.remove("active");
+window.print();
+}
+
+function printThermal(){
+thermalPrint.classList.add("active");
+printArea.classList.remove("active");
+window.print();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
