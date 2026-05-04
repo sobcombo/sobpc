@@ -1,92 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>SOB Combos Calculator</title>
+<title>SOB POS System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body { font-family: Arial; text-align: center; }
+body { font-family: Arial; text-align:center; }
 
-.container { margin-top: 20px; }
+.container { margin-top:20px; }
 
 input, select {
-  padding: 12px;
-  margin: 8px;
-  width: 90%;
-  max-width: 340px;
-  font-size: 16px;
+  padding:12px;
+  margin:8px;
+  width:90%;
+  max-width:340px;
+  font-size:16px;
 }
 
-label {
-  display: block;
-  text-align: left;
-  max-width: 340px;
-  margin: auto;
-}
-
-.box {
-  margin: auto;
-  max-width: 340px;
-}
+.box { max-width:340px; margin:auto; }
 
 .row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 18px;
+  display:flex;
+  justify-content:space-between;
+  font-size:18px;
 }
 
-.total { font-weight: bold; }
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  margin: 10px;
+button {
+  padding:10px;
+  margin:8px;
 }
 
+/* TABLE */
 table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
 }
 
 th, td {
-  border: 1px solid black;
-  padding: 5px;
+  border:1px solid black;
+  padding:5px;
 }
 
-.total-row { font-weight: bold; }
-
-button {
-  padding: 10px;
-  margin: 8px;
-}
-
-/* PRINT CONTROL */
+/* PRINT */
 @media print {
-  body * { visibility: hidden; }
+  @page { margin:3mm; }
 
-  #printArea.active, #printArea.active * {
-    visibility: visible;
+  body * { visibility:hidden; }
+
+  #printArea, #printArea * {
+    visibility:visible;
   }
 
-  #thermalPrint.active, #thermalPrint.active * {
-    visibility: visible;
-  }
-
-  #printArea.active,
-  #thermalPrint.active {
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
-
-  #thermalPrint.active {
-    width: 80mm;
-    font-family: monospace;
-    font-size: 10px;
+  #printArea {
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
   }
 }
+
+/* 80MM */
+#thermal {
+  display:none;
+  text-align:left;
+  font-size:12px;
+  padding:5px;
+}
+
+.line { margin:2px 0; }
+
+hr {
+  border:0;
+  border-top:1px solid #000;
+  margin:5px 0;
+}
+
+/* HEADER FIX */
+.header {
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  margin:5px 0;
+}
+.header div {
+  width:33%;
+}
+.header .center { text-align:center; }
+.header .right { text-align:right; }
+.header .left { text-align:left; }
 </style>
 </head>
 
@@ -106,53 +108,57 @@ button {
 <option value="400,300,0,99">499/399 Astha Combo</option>
 <option value="370,180,0,175">545/355 Shiv Ganesha Combo</option>
 <option value="550,375,0,50">600/425 Namah Combo</option>
-<option value="170,170,0,529,NA">699/NA Ultimate Play Combo</option>
-<option value="370,180,325,50">745/555 Viewing Fun Combo</option>
-<option value="550,375,249,170">969/794 Symbolic Combo</option>
-<option value="170,80,355,574">1099/1009 Delight Combo</option>
-<option value="370,180,355,574">1299/1109 Mini Blast Combo</option>
-<option value="550,375,250,599">1399/1224 All in Fun Combo</option>
-<option value="1350,775,0,150">1500/925 Divine Rush Combo</option>
-<option value="1400,1400,449,2350,NA">4199/NA Ultimate Mega Combo</option>
+<option value="170,170,0,529,NA">699/NA</option>
+<option value="370,180,325,50">745/555 Viewing</option>
+<option value="550,375,249,170">969/794 Symbolic</option>
+<option value="170,80,355,574">1099/1009 Delight</option>
+<option value="370,180,355,574">1299/1109 Mini Blast</option>
+<option value="550,375,250,599">1399/1224 All in Fun</option>
+<option value="1350,775,0,150">1500/925 Divine Rush</option>
+<option value="1400,1400,449,2350,NA">4199/NA Mega</option>
+
 </select>
 
-<p id="comboName" style="font-weight:bold;"></p>
+<br>
 
-<label>No. of Adults:</label>
-<input type="number" id="adults" placeholder="Enter number of adults" oninput="calc()">
-
-<label>No. of Children:</label>
-<input type="number" id="children" placeholder="Enter number of children" oninput="calc()">
+<input type="number" id="adults" placeholder="Adults" oninput="calc()">
+<input type="number" id="children" placeholder="Children" oninput="calc()">
 
 <p id="warning" style="color:red;"></p>
 
 <div class="box">
-<div class="row"><span>TPU</span><span>Rs. <span id="tpu">0</span></span></div>
-<div class="row"><span>OEPL</span><span>Rs. <span id="oepl">0</span></span></div>
-<div class="row"><span>PAEPL</span><span>Rs. <span id="paepl">0</span></span></div>
+<div class="row"><span>TPU</span><span id="tpu">0</span></div>
+<div class="row"><span>OEPL</span><span id="oepl">0</span></div>
+<div class="row"><span>PAEPL</span><span id="paepl">0</span></div>
 <hr>
-<div class="row total"><span>Total</span><span>Rs. <span id="total">0</span></span></div>
+<div class="row"><b>Total</b><span id="total">0</span></div>
 </div>
-
-<input type="tel" inputmode="numeric" id="sobInput" placeholder="Enter SOB ID (6 or 7 digits)">
 
 <br>
 
-<button onclick="saveEntry()">Save SOB ID</button>
+<input type="tel" id="sobInput" placeholder="Enter SOB ID">
 
-<div style="display:flex; justify-content:center; gap:10px;">
+<br>
+
+<button onclick="saveEntry()">Save SOB</button>
 <button onclick="resetForm()">Reset Calculator</button>
 <button onclick="resetAllData()">Reset SOB IDs</button>
-</div>
+
+<button onclick="printA4()">Print A4</button>
+<button onclick="print80()">Print 80mm</button>
 
 </div>
 
-<!-- A4 PRINT -->
+<!-- PRINT AREA -->
 <div id="printArea">
+
+<!-- A4 -->
+<div id="a4">
+
 <div class="header">
-<div>POS # ______</div>
-<div>USERNA<b>M</b>E.<b>S</b> : ____________________</div>
-<div>Date: <span id="date"></span></div>
+  <div class="left">POS # ______</div>
+  <div class="center">USERNA<b>M</b>E.<b>S</b></div>
+  <div class="right">DATE: <span id="date"></span></div>
 </div>
 
 <table>
@@ -171,47 +177,51 @@ button {
 <tbody id="dataBody"></tbody>
 
 <tfoot>
-<tr class="total-row">
-<td colspan="2">TOTAL</td>
-<td id="tpuT">0</td>
-<td id="oeplT">0</td>
-<td id="paeplT">0</td>
-<td id="grandT">0</td>
+<tr>
+<td colspan="2"><b>TOTAL</b></td>
+<td id="tpuT"></td>
+<td id="oeplT"></td>
+<td id="paeplT"></td>
+<td id="grandT"></td>
 <td></td>
 </tr>
 </tfoot>
 </table>
+
 </div>
 
-<!-- THERMAL PRINT -->
-<div id="thermalPrint" style="display:none; text-align:left;">
+<!-- 80MM -->
+<div id="thermal">
 
-<center>
-<b>SOB SPLIT PAYMENT REPORT</b><br>
-Date: <span id="tDate"></span>
-</center>
+<div class="line"><b>SOB SPLIT PAYMENTS</b></div>
+<hr>
 
-POS # ______<br>
-USERNA<b>M</b>E.<b>S</b> : ____________________
+<div class="line">POS# : ______</div>
+<div class="line">USERNA<b>M</b>E.<b>S</b> : ________</div>
+<div class="line">DATE : <span id="date2"></span></div>
 
---------------------------------
-TPU  OEPL  PAEPL  TOTAL
---------------------------------
+<hr>
+
+<div class="line"><b>SR  SOB ID (TOTAL)</b></div>
+<div class="line"><b>TPU | OEPL | PAEPL</b></div>
+
+<hr>
 
 <div id="thermalData"></div>
 
---------------------------------
-TOTAL<br>
-TPU:   <span id="t_tpu"></span><br>
-OEPL:  <span id="t_oepl"></span><br>
-PAEPL: <span id="t_paepl"></span><br>
-GRAND: <span id="t_total"></span><br>
---------------------------------
+<hr>
+
+<div class="line">TOTAL TPU : <span id="tpuT2"></span></div>
+<div class="line">TOTAL OEPL : <span id="oeplT2"></span></div>
+<div class="line">TOTAL PAEPL : <span id="paeplT2"></span></div>
+
+<hr>
+
+<div class="line"><b>GRAND TOTAL : <span id="grandT2"></span></b></div>
 
 </div>
 
-<button onclick="printA4()">Print A4</button>
-<button onclick="printThermal()">Print Thermal</button>
+</div>
 
 <script>
 
@@ -224,56 +234,53 @@ calc();
 }
 
 function calc(){
+
 let v = combo.value;
 if(!v) return;
 
-let p=v.split(",");
+let p = v.split(",");
 
-let ta=parseInt(p[0]);
-let tc=parseInt(p[1]);
-let o=parseInt(p[2]);
-let pi=parseInt(p[3]);
-let na=p[4]==="NA";
+let ta = +p[0];
+let tc = +p[1];
+let o  = +p[2];
+let pi = +p[3];
+let na = p[4]==="NA";
 
-let a=parseInt(adults.value)||0;
-let ch=parseInt(children.value)||0;
+let a = +adults.value || 0;
+let c = +children.value || 0;
 
-warning.innerText=(na && ch>0)?"⚠ Not allowed for children":"";
+if(na && c>0){
+warning.innerText = "⚠ Children not allowed";
+} else {
+warning.innerText = "";
+}
 
-let tpu=a*ta+ch*tc;
-let oepl=(a+ch)*o;
-let paepl=(a+ch)*pi;
-let total=tpu+oepl+paepl;
+let tpu = a*ta + c*tc;
+let oepl = (a+c)*o;
+let paepl = (a+c)*pi;
+let total = tpu + oepl + paepl;
 
-document.getElementById("tpu").innerText=tpu;
-document.getElementById("oepl").innerText=oepl;
-document.getElementById("paepl").innerText=paepl;
-document.getElementById("total").innerText=total;
-
-comboName.innerText="Selected Combo: "+combo.options[combo.selectedIndex].text;
+document.getElementById("tpu").innerText = tpu;
+document.getElementById("oepl").innerText = oepl;
+document.getElementById("paepl").innerText = paepl;
+document.getElementById("total").innerText = total;
 
 return {tpu,oepl,paepl,total};
 }
 
-function formatSOB(n){
-if(n.length===6) return "SOB000"+n;
-if(n.length===7) return "SOB00"+n;
-}
-
 function saveEntry(){
 
-let raw=sobInput.value.replace(/\D/g,'');
-
+let raw = sobInput.value.replace(/\D/g,'');
 if(raw.length<6 || raw.length>7){
-alert("Enter 6 or 7 digit SOB ID");
+alert("Invalid SOB ID");
 return;
 }
 
-let r=calc();
+let r = calc();
 if(!r) return;
 
-let sob=formatSOB(raw);
-let time=new Date().toLocaleTimeString();
+let sob = "SOB000" + raw;
+let time = new Date().toLocaleTimeString();
 
 data.push({sob,...r,time});
 localStorage.setItem("sobData",JSON.stringify(data));
@@ -291,29 +298,27 @@ oepl.innerText=0;
 paepl.innerText=0;
 total.innerText=0;
 warning.innerText="";
-comboName.innerText="";
 }
 
 function resetAllData(){
-if(!confirm("Delete all SOB entries?")) return;
+if(!confirm("Delete all?")) return;
 data=[];
 localStorage.removeItem("sobData");
 render();
 }
 
-function pad(n){
-return String(n).padEnd(6," ");
-}
-
 function render(){
-let body=dataBody;
+
+let body = dataBody;
 body.innerHTML="";
 
-let tpuT=0,oeplT=0,paeplT=0,grandT=0;
-let thermalHTML="";
+let t1=0,t2=0,t3=0,t4=0;
+
+let th="";
 
 data.forEach((d,i)=>{
-body.innerHTML+=`
+
+body.innerHTML += `
 <tr>
 <td>${i+1}</td>
 <td>${d.sob}</td>
@@ -321,46 +326,48 @@ body.innerHTML+=`
 <td>${d.oepl}</td>
 <td>${d.paepl}</td>
 <td>${d.total}</td>
-<td style="font-size:10px">${d.time}</td>
+<td>${d.time}</td>
 </tr>`;
 
-thermalHTML+=`
-${i+1}. ${d.sob}
-${pad(d.tpu)} ${pad(d.oepl)} ${pad(d.paepl)} ${pad(d.total)}
+th += `
+<div class="line">${i+1}. ${d.sob} (${d.total})</div>
+<div class="line">${d.tpu} | ${d.oepl} | ${d.paepl}</div><br>
 `;
 
-tpuT+=d.tpu;
-oeplT+=d.oepl;
-paeplT+=d.paepl;
-grandT+=d.total;
+t1+=d.tpu;
+t2+=d.oepl;
+t3+=d.paepl;
+t4+=d.total;
+
 });
 
-document.getElementById("tpuT").innerText=tpuT;
-document.getElementById("oeplT").innerText=oeplT;
-document.getElementById("paeplT").innerText=paeplT;
-document.getElementById("grandT").innerText=grandT;
+tpuT.innerText=t1;
+oeplT.innerText=t2;
+paeplT.innerText=t3;
+grandT.innerText=t4;
 
-document.getElementById("thermalData").innerText=thermalHTML;
-document.getElementById("t_tpu").innerText=tpuT;
-document.getElementById("t_oepl").innerText=oeplT;
-document.getElementById("t_paepl").innerText=paeplT;
-document.getElementById("t_total").innerText=grandT;
+thermalData.innerHTML = th;
 
-date.innerText=new Date().toLocaleDateString();
-tDate.innerText=new Date().toLocaleDateString();
+tpuT2.innerText=t1;
+oeplT2.innerText=t2;
+paeplT2.innerText=t3;
+grandT2.innerText=t4;
 }
 
 function printA4(){
-printArea.classList.add("active");
-thermalPrint.classList.remove("active");
+a4.style.display="block";
+thermal.style.display="none";
 window.print();
 }
 
-function printThermal(){
-thermalPrint.classList.add("active");
-printArea.classList.remove("active");
+function print80(){
+a4.style.display="none";
+thermal.style.display="block";
 window.print();
 }
+
+date.innerText = new Date().toLocaleDateString();
+date2.innerText = new Date().toLocaleDateString();
 
 render();
 
