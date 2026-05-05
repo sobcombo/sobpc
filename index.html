@@ -337,7 +337,13 @@ paeplT2.innerText = paeplSum;
 function printA4(){ a4.style.display="block"; thermal.style.display="none"; window.print(); }
 function print80(){ a4.style.display="none"; thermal.style.display="block"; window.print(); }
 
-date.innerText=date2.innerText=updateDate.innerText=new Date().toLocaleDateString();
+function setDate() {
+  const today = new Date().toLocaleDateString();
+  document.getElementById("date").innerText = today;
+  document.getElementById("date2").innerText = today;
+}
+
+setDate();
 
 render();
 
