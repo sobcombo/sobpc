@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>SOB Combos Calculator V3.0</title>
+<title>SOB coMboS calculator V3.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -44,14 +44,26 @@ th, td {
   display:flex;
   justify-content:space-between;
   font-size:13px;
+  margin-bottom: 10px;
 }
 
 /* PRINT */
 @media print {
-  @page { margin:3mm; }
+  @page { margin:0; }
+
   body * { visibility:hidden; }
-  #printArea, #printArea * { visibility:visible; }
-  #printArea { position:absolute; top:0; width:100%; }
+
+  #printArea, #printArea * {
+    visibility:visible;
+  }
+
+  #printArea {
+    position:absolute;
+    top:0;
+    width:100%;
+  }
+
+  h2 { display:none !important; }
 }
 
 /* 80MM */
@@ -61,6 +73,10 @@ th, td {
   font-size:11px;
   font-family:"Courier New", monospace;
   font-weight:bold;
+
+  width: 72mm;
+  padding: 2mm;
+  box-sizing: border-box;
 }
 
 .line { margin:3px 0; }
@@ -81,12 +97,24 @@ hr { border-top:1px solid black; }
   text-align:right;
   font-size:12px;
 }
+/* A4 PRINT AREA FIX */
+#a4 {
+  padding: 10mm;
+  box-sizing: border-box;
+}
+
+/* 80MM PRINT FIX */
+#thermal {
+  width: 72mm;
+  padding: 2mm;
+  box-sizing: border-box;
+}
 </style>
 </head>
 
 <body>
 
-<h2>SOB Combos Calculator V3.0</h2>
+<h2>SOB coMboS calculator V3.0</h2>
 
 <div class="container">
 
@@ -149,7 +177,7 @@ hr { border-top:1px solid black; }
 
 <div class="header">
 <div>POS# : __________</div>
-<div>USERNAME.S : ____________</div>
+<div>USERNA<b>M</b>E.<b>S</b> : ____________</div>
 <div>DATE : <span id="date"></span></div>
 </div>
 
@@ -188,14 +216,18 @@ hr { border-top:1px solid black; }
 <div class="line">POS# : ____________</div>
 <div class="line">USERNAME.S : ____________</div>
 <div class="line">DATE : <span id="date2"></span></div>
-
 <hr>
-
+<div class="line"><b>SR  SOB ID (TOTAL)</b></div>
+<div class="line"><b>TPU | OEPL | PAEPL</b></div>
+<hr>
 <div id="thermalData"></div>
+<div class="line">TOTAL TPU : <span id="tpuT2"></span></div>
+<div class="line">TOTAL OEPL : <span id="oeplT2"></span></div>
+<div class="line">TOTAL PAEPL : <span id="paeplT2"></span></div>
 
 <hr>
 
-<div class="line">GRAND TOTAL : <span id="grandT2"></span></div>
+<div class="line"><b>GRAND TOTAL : <span id="grandT2"></span></b></div>
 
 </div>
 
@@ -283,7 +315,7 @@ data=[]; localStorage.removeItem("sobData"); render();
 function render(){
 
 dataBody.innerHTML="";
-let totalAll=0, th="";
+let totalAll=0, tpuSum=0, oeplSum=0, paeplSum=0, th="";
 
 data.forEach((d,i)=>{
 
@@ -303,12 +335,24 @@ th+=`
 <div class="line">${d.tpu} | ${d.oepl} | ${d.paepl}</div>
 <hr>`;
 
-totalAll+=d.total;
+tpuSum += d.tpu;
+oeplSum += d.oepl;
+paeplSum += d.paepl;
+
+totalAll += d.total;
 });
 
 thermalData.innerHTML=th;
-grandT.innerText=totalAll;
-grandT2.innerText=totalAll;
+grandT.innerText = totalAll;
+grandT2.innerText = totalAll;
+
+tpuT.innerText = tpuSum;
+oeplT.innerText = oeplSum;
+paeplT.innerText = paeplSum;
+
+tpuT2.innerText = tpuSum;
+oeplT2.innerText = oeplSum;
+paeplT2.innerText = paeplSum;
 }
 
 function printA4(){ a4.style.display="block"; thermal.style.display="none"; window.print(); }
