@@ -154,7 +154,12 @@ hr { border-top:1px solid black; }
 <div class="row"><b>Total</b><span>Rs. <span id="total">0</span></span></div>
 </div>
 
-<input type="tel" id="sobInput" placeholder="Enter SOB ID">
+<input 
+  type="tel" 
+  id="sobInput" 
+  maxlength="6"
+  pattern="[1-9][0-9]{5}"
+  placeholder="Enter 6-digit SOB ID (no 0 start)">
 
 <br>
 
@@ -281,15 +286,15 @@ return {tpu,oepl,paepl,total};
 
 function saveEntry(){
 
-let raw = sobInput.value.replace(/\D/g,'');
-
-if(raw.length<6 || raw.length>7){
-alert("Invalid SOB ID"); return;
+let raw = sobInput.value.trim();
+if(!/^[1-9][0-9]{5}$/.test(raw)){
+  alert("Enter valid 6-digit SOB ID (no leading 0)");
+  return;
 }
 
 let r = calc(); if(!r) return;
 
-let sob = raw.length===6 ? "SOB000"+raw : "SOB00"+raw;
+let sob = raw.length===6 ? "SOB000";
 
 data.push({sob,...r,time:new Date().toLocaleTimeString()});
 localStorage.setItem("sobData",JSON.stringify(data));
