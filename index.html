@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>SOB POS System</title>
+<title>SOB coMboS calculator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -66,6 +66,7 @@ th, td {
   text-align:left;
   font-size:12px;
   padding:5px;
+  font-family: monospace; /* 🔥 IMPORTANT */
 }
 
 .line { margin:2px 0; }
@@ -330,8 +331,9 @@ body.innerHTML += `
 </tr>`;
 
 th += `
+<div class="line">--------------------------------</div>
 <div class="line">${i+1}. ${d.sob} (${d.total})</div>
-<div class="line">${d.tpu} | ${d.oepl} | ${d.paepl}</div><br>
+<div class="line">TPU:${d.tpu} | OEPL:${d.oepl} | PAEPL:${d.paepl}</div>
 `;
 
 t1+=d.tpu;
