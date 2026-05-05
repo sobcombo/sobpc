@@ -27,7 +27,6 @@ input, select {
 
 button { padding:10px; margin:6px; }
 
-/* TABLE FIX */
 table {
   width:100%;
   border-collapse:collapse;
@@ -39,23 +38,18 @@ th, td {
   padding:5px;
 }
 
-/* HEADER */
 .header {
   display:flex;
   justify-content:space-between;
   font-size:13px;
-  margin-bottom: 10px;
+  margin-bottom:10px;
 }
 
-/* PRINT */
 @media print {
   @page { margin:0; }
 
   body * { visibility:hidden; }
-
-  #printArea, #printArea * {
-    visibility:visible;
-  }
+  #printArea, #printArea * { visibility:visible; }
 
   #printArea {
     position:absolute;
@@ -66,23 +60,20 @@ th, td {
   h2 { display:none !important; }
 }
 
-/* 80MM */
 #thermal {
   display:none;
   text-align:left;
   font-size:11px;
   font-family:"Courier New", monospace;
   font-weight:bold;
-
-  width: 72mm;
-  padding: 2mm;
-  box-sizing: border-box;
+  width:72mm;
+  padding:2mm;
+  box-sizing:border-box;
 }
 
 .line { margin:3px 0; }
 hr { border-top:1px solid black; }
 
-/* FOOTER */
 .footer-left {
   position:fixed;
   bottom:5px;
@@ -97,17 +88,10 @@ hr { border-top:1px solid black; }
   text-align:right;
   font-size:12px;
 }
-/* A4 PRINT AREA FIX */
-#a4 {
-  padding: 10mm;
-  box-sizing: border-box;
-}
 
-/* 80MM PRINT FIX */
-#thermal {
-  width: 72mm;
-  padding: 2mm;
-  box-sizing: border-box;
+#a4 {
+  padding:10mm;
+  box-sizing:border-box;
 }
 </style>
 </head>
@@ -120,7 +104,6 @@ hr { border-top:1px solid black; }
 
 <select id="combo" onchange="calc()">
 <option value="">Select Combo</option>
-
 <option value="170,80,70,150">390/300 TU Explorer Combo</option>
 <option value="170,80,0,227">397/307 Adventure Combo</option>
 <option value="170,80,28,200">398/308 ECO FUN Combo</option>
@@ -154,12 +137,7 @@ hr { border-top:1px solid black; }
 <div class="row"><b>Total</b><span>Rs. <span id="total">0</span></span></div>
 </div>
 
-<input 
-  type="tel" 
-  id="sobInput" 
-  maxlength="6"
-  pattern="[1-9][0-9]{5}"
-  placeholder="Enter 6-digit SOB ID (no 0 start)">
+<input type="tel" id="sobInput" maxlength="6" placeholder="Enter 6-digit SOB ID">
 
 <br>
 
@@ -174,12 +152,9 @@ hr { border-top:1px solid black; }
 
 </div>
 
-<!-- PRINT AREA -->
 <div id="printArea">
 
-<!-- A4 -->
 <div id="a4">
-
 <div class="header">
 <div>POS# : __________</div>
 <div>USERNA<b>M</b>E.<b>S</b> : ____________</div>
@@ -212,12 +187,9 @@ hr { border-top:1px solid black; }
 </tr>
 </tfoot>
 </table>
-
 </div>
 
-<!-- 80MM -->
 <div id="thermal">
-
 <div class="line">POS# : ____________</div>
 <div class="line">USERNAME.S : ____________</div>
 <div class="line">DATE : <span id="date2"></span></div>
@@ -229,16 +201,12 @@ hr { border-top:1px solid black; }
 <div class="line">TOTAL TPU : <span id="tpuT2"></span></div>
 <div class="line">TOTAL OEPL : <span id="oeplT2"></span></div>
 <div class="line">TOTAL PAEPL : <span id="paeplT2"></span></div>
-
 <hr>
-
 <div class="line"><b>GRAND TOTAL : <span id="grandT2"></span></b></div>
-
 </div>
 
 </div>
 
-<!-- FOOTER -->
 <div class="footer-left">
 Last Updated: <span id="updateDate"></span> | V3.0
 </div>
@@ -257,12 +225,10 @@ const paeplEl = document.getElementById("paepl");
 const totalEl = document.getElementById("total");
 
 function calc(){
-
 let v = combo.value;
 if(!v) return;
 
 let p = v.split(",");
-
 let ta = +p[0], tc = +p[1], o = +p[2], pi = +p[3];
 let na = p[4]==="NA";
 
@@ -287,14 +253,22 @@ return {tpu,oepl,paepl,total};
 function saveEntry(){
 
 let raw = sobInput.value.trim();
+
+// strict validation
 if(!/^[1-9][0-9]{5}$/.test(raw)){
   alert("Enter valid 6-digit SOB ID (no leading 0)");
   return;
 }
 
-let r = calc(); if(!r) return;
+let sob = "SOB000" + raw;
 
-let sob = raw.length===6 ? "SOB000";
+// 🔥 DUPLICATE CHECK
+if(data.some(d => d.sob === sob)){
+  alert("This SOB ID already exists");
+  return;
+}
+
+let r = calc(); if(!r) return;
 
 data.push({sob,...r,time:new Date().toLocaleTimeString()});
 localStorage.setItem("sobData",JSON.stringify(data));
@@ -343,11 +317,11 @@ th+=`
 tpuSum += d.tpu;
 oeplSum += d.oepl;
 paeplSum += d.paepl;
-
 totalAll += d.total;
 });
 
 thermalData.innerHTML=th;
+
 grandT.innerText = totalAll;
 grandT2.innerText = totalAll;
 
