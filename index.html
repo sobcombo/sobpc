@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>SOB coMboS calculator V2.0</title>
+<title>SOB POS System V2.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -25,51 +25,34 @@ input, select {
   font-size:18px;
 }
 
-button {
-  padding:10px;
-  margin:8px;
-}
+button { padding:10px; margin:6px; }
 
-/* TABLE (A4) */
+/* HEADER */
+.header {
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  margin:5px 0;
+}
+.header div { width:33%; }
+
+/* TABLE */
 table {
   width:100%;
   border-collapse:collapse;
   font-size:12px;
 }
-
 th, td {
   border:1px solid black;
   padding:5px;
 }
 
-/* HEADER FIX */
-.header {
-  display:flex;
-  justify-content:space-between;
-  font-size:12px;
-  margin:5px 0;
-}
-.header div { width:33%; }
-.left { text-align:left; }
-.center { text-align:center; }
-.right { text-align:right; }
-
 /* PRINT */
 @media print {
   @page { margin:3mm; }
-
   body * { visibility:hidden; }
-
-  #printArea, #printArea * {
-    visibility:visible;
-  }
-
-  #printArea {
-    position:absolute;
-    left:0;
-    top:0;
-    width:100%;
-  }
+  #printArea, #printArea * { visibility:visible; }
+  #printArea { position:absolute; top:0; width:100%; }
 }
 
 /* 80MM */
@@ -79,9 +62,10 @@ th, td {
   font-size:11px;
   padding:5px;
   font-family:"Courier New", monospace;
+  font-weight:bold;
 }
 
-.line { margin:2px 0; }
+.line { margin:3px 0; }
 
 hr {
   border:0;
@@ -96,10 +80,12 @@ hr {
   left:10px;
   font-size:12px;
 }
+
 .footer-right {
   position:fixed;
   bottom:5px;
   right:10px;
+  text-align:right;
   font-size:12px;
 }
 </style>
@@ -114,26 +100,29 @@ hr {
 <select id="combo" onchange="calc()">
 <option value="">Select Combo</option>
 
-<option value="170,80,70,150">390/300 | TU Explorer</option>
-<option value="170,80,0,227">397/307 | Adventure</option>
-<option value="170,80,28,200">398/308 | Eco Fun</option>
-<option value="170,80,255,0">425/335 | Snow Adventure</option>
-<option value="400,300,0,99">499/399 | Astha</option>
-<option value="370,180,0,175">545/355 | Shiv Ganesha</option>
-<option value="550,375,0,50">600/425 | Namah</option>
-<option value="170,170,0,529,NA">699 | Ultimate Play (NA)</option>
-<option value="370,180,325,50">745/555 | Viewing Fun</option>
-<option value="550,375,249,170">969/794 | Symbolic</option>
-<option value="170,80,355,574">1099/1009 | Delight</option>
-<option value="370,180,355,574">1299/1109 | Mini Blast</option>
-<option value="550,375,250,599">1399/1224 | All in Fun</option>
-<option value="1350,775,0,150">1500/925 | Divine Rush</option>
-<option value="1400,1400,449,2350,NA">4199 | Ultimate Mega</option>
+<option value="170,80,70,150">390/300 TU Explorer Combo</option>
+<option value="170,80,0,227">397/307 Adventure Combo</option>
+<option value="170,80,28,200">398/308 ECO FUN Combo</option>
+<option value="170,80,255,0">425/335 Snow Adventure Combo</option>
+<option value="400,300,0,99">499/399 Astha Combo</option>
+<option value="370,180,0,175">545/355 Shiv Ganesha Combo</option>
+<option value="550,375,0,50">600/425 Namah Combo</option>
+<option value="170,170,0,529,NA">699/NA Ultimate Play Combo</option>
+<option value="370,180,325,50">745/555 Viewing Fun Combo</option>
+<option value="550,375,249,170">969/794 Symbolic Combo</option>
+<option value="170,80,355,574">1099/1009 Delight Combo</option>
+<option value="370,180,355,574">1299/1109 Mini Blast Combo</option>
+<option value="550,375,250,599">1399/1224 All in Fun Combo</option>
+<option value="1350,775,0,150">1500/925 Divine Rush Combo</option>
+<option value="1400,1400,449,2350,NA">4199/NA Ultimate Mega Combo</option>
 
 </select>
 
-<input type="number" id="adults" placeholder="No. of Adults" oninput="calc()">
-<input type="number" id="children" placeholder="No. of Children" oninput="calc()">
+<br>
+
+<input type="number" id="adults" min="0" placeholder="No. of Adults" oninput="calc()">
+<br>
+<input type="number" id="children" min="0" placeholder="No. of Children" oninput="calc()">
 
 <p id="warning" style="color:red;"></p>
 
@@ -153,6 +142,8 @@ hr {
 <button onclick="resetForm()">Reset Calculator</button>
 <button onclick="resetAllData()">Reset SOB IDs</button>
 
+<br>
+
 <button onclick="printA4()">Print A4</button>
 <button onclick="print80()">Print 80mm</button>
 
@@ -165,9 +156,9 @@ hr {
 <div id="a4">
 
 <div class="header">
-  <div class="left">POS# : ______</div>
-  <div class="center">USERNA<b>M</b>E.<b>S</b></div>
-  <div class="right">DATE : <span id="date"></span></div>
+<div>POS# : __________</div>
+<div>USERNA<b>M</b>E.<b>S</b> : ____________</div>
+<div>DATE : <span id="date"></span></div>
 </div>
 
 <table>
@@ -202,17 +193,17 @@ hr {
 <!-- 80MM -->
 <div id="thermal">
 
-<div class="line"><b>SOB SPLIT PAYMENTS</b></div>
+<div class="line">SOB SPLIT PAYMENTS</div>
 <hr>
 
-<div class="line">POS# : ______</div>
-<div class="line">USERNA<b>M</b>E.<b>S</b> : ______</div>
+<div class="line">POS# : ____________</div>
+<div class="line">USERNAME.S : ____________</div>
 <div class="line">DATE : <span id="date2"></span></div>
 
 <hr>
 
-<div class="line"><b>SR  SOB ID (TOTAL)</b></div>
-<div class="line"><b>TPU | OEPL | PAEPL</b></div>
+<div class="line">SR  SOB ID (TOTAL)</div>
+<div class="line">TPU | OEPL | PAEPL</div>
 
 <hr>
 
@@ -226,7 +217,7 @@ hr {
 
 <hr>
 
-<div class="line"><b>GRAND TOTAL : <span id="grandT2"></span></b></div>
+<div class="line">GRAND TOTAL : <span id="grandT2"></span></div>
 
 </div>
 
@@ -238,66 +229,60 @@ Last Updated: <span id="updateDate"></span> | V2.0
 </div>
 
 <div class="footer-right">
-Created for my Team :) by MS
+Created for my Team :)<br>by MS
 </div>
 
 <script>
 
 let data = JSON.parse(localStorage.getItem("sobData")) || [];
 
+combo.addEventListener("wheel", function(e){
+e.preventDefault();
+let i=this.selectedIndex;
+if(e.deltaY>0 && i<this.options.length-1) this.selectedIndex++;
+if(e.deltaY<0 && i>0) this.selectedIndex--;
+calc();
+});
+
 function calc(){
 
-let v = combo.value;
+let v=combo.value;
 if(!v) return;
 
-let p = v.split(",");
+let p=v.split(",");
 
-let ta = +p[0];
-let tc = +p[1];
-let o  = +p[2];
-let pi = +p[3];
-let na = p[4]==="NA";
+let ta=+p[0], tc=+p[1], o=+p[2], pi=+p[3];
+let na=p[4]==="NA";
 
-let a = +adults.value || 0;
-let c = +children.value || 0;
+let a=Math.max(0,+adults.value||0);
+let c=Math.max(0,+children.value||0);
 
-warning.innerText = (na && c>0) ? "⚠ Children not allowed" : "";
+warning.innerText=(na && c>0)?"⚠ Children not allowed":"";
 
-let tpu = a*ta + c*tc;
-let oepl = (a+c)*o;
-let paepl = (a+c)*pi;
-let total = tpu + oepl + paepl;
+let tpu=a*ta+c*tc;
+let oepl=(a+c)*o;
+let paepl=(a+c)*pi;
+let total=tpu+oepl+paepl;
 
-tpuEl.innerText = tpu;
-oeplEl.innerText = oepl;
-paeplEl.innerText = paepl;
-totalEl.innerText = total;
+tpu.innerText=tpu;
+oepl.innerText=oepl;
+paepl.innerText=paepl;
+total.innerText=total;
 
 return {tpu,oepl,paepl,total};
 }
 
-// FIX IDs
-const tpuEl = document.getElementById("tpu");
-const oeplEl = document.getElementById("oepl");
-const paeplEl = document.getElementById("paepl");
-const totalEl = document.getElementById("total");
-
 function saveEntry(){
 
-let raw = sobInput.value.replace(/\D/g,'');
+let raw=sobInput.value.replace(/\D/g,'');
 
-if(raw.length<6 || raw.length>7){
-alert("Invalid SOB ID");
-return;
-}
+if(raw.length<6||raw.length>7){ alert("Invalid SOB ID"); return; }
 
-let r = calc();
-if(!r) return;
+let r=calc(); if(!r) return;
 
-let sob = raw.length===6 ? "SOB000"+raw : "SOB00"+raw;
-let time = new Date().toLocaleTimeString();
+let sob=(raw.length===6)?"SOB000"+raw:"SOB00"+raw;
 
-data.push({sob,...r,time});
+data.push({sob,...r,time:new Date().toLocaleTimeString()});
 localStorage.setItem("sobData",JSON.stringify(data));
 
 render();
@@ -308,84 +293,47 @@ function resetForm(){
 adults.value="";
 children.value="";
 sobInput.value="";
-tpuEl.innerText=0;
-oeplEl.innerText=0;
-paeplEl.innerText=0;
-totalEl.innerText=0;
+tpu.innerText=oepl.innerText=paepl.innerText=total.innerText=0;
 warning.innerText="";
 }
 
 function resetAllData(){
 if(!confirm("Delete all?")) return;
-data=[];
-localStorage.removeItem("sobData");
-render();
+data=[]; localStorage.removeItem("sobData"); render();
 }
 
 function render(){
 
-let body=dataBody;
-body.innerHTML="";
-
-let t1=0,t2=0,t3=0,t4=0;
-let th="";
+dataBody.innerHTML="";
+let t1=0,t2=0,t3=0,t4=0, th="";
 
 data.forEach((d,i)=>{
 
-body.innerHTML+=`
+dataBody.innerHTML+=`
 <tr>
-<td>${i+1}</td>
-<td>${d.sob}</td>
-<td>${d.tpu}</td>
-<td>${d.oepl}</td>
-<td>${d.paepl}</td>
-<td>${d.total}</td>
-<td>${d.time}</td>
-</tr>`;
+<td>${i+1}</td><td>${d.sob}</td>
+<td>${d.tpu}</td><td>${d.oepl}</td>
+<td>${d.paepl}</td><td>${d.total}</td>
+<td>${d.time}</td></tr>`;
 
 th+=`
 <div class="line">--------------------------------</div>
 <div class="line">${i+1}. ${d.sob} (${d.total})</div>
-<div class="line">${d.tpu} | ${d.oepl} | ${d.paepl}</div>
-`;
+<div class="line">${d.tpu} | ${d.oepl} | ${d.paepl}</div>`;
 
-t1+=d.tpu;
-t2+=d.oepl;
-t3+=d.paepl;
-t4+=d.total;
-
+t1+=d.tpu; t2+=d.oepl; t3+=d.paepl; t4+=d.total;
 });
-
-th+=`<div class="line">--------------------------------</div>`;
 
 thermalData.innerHTML=th;
 
-tpuT.innerText=t1;
-oeplT.innerText=t2;
-paeplT.innerText=t3;
-grandT.innerText=t4;
-
-tpuT2.innerText=t1;
-oeplT2.innerText=t2;
-paeplT2.innerText=t3;
-grandT2.innerText=t4;
+tpuT.innerText=t1; oeplT.innerText=t2; paeplT.innerText=t3; grandT.innerText=t4;
+tpuT2.innerText=t1; oeplT2.innerText=t2; paeplT2.innerText=t3; grandT2.innerText=t4;
 }
 
-function printA4(){
-a4.style.display="block";
-thermal.style.display="none";
-window.print();
-}
+function printA4(){ a4.style.display="block"; thermal.style.display="none"; window.print(); }
+function print80(){ a4.style.display="none"; thermal.style.display="block"; window.print(); }
 
-function print80(){
-a4.style.display="none";
-thermal.style.display="block";
-window.print();
-}
-
-date.innerText=new Date().toLocaleDateString();
-date2.innerText=new Date().toLocaleDateString();
-updateDate.innerText=new Date().toLocaleDateString();
+date.innerText=date2.innerText=updateDate.innerText=new Date().toLocaleDateString();
 
 render();
 
