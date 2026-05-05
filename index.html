@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>SOB POS System V2.0</title>
+<title>SOB Combos Calculator V3.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -27,24 +27,23 @@ input, select {
 
 button { padding:10px; margin:6px; }
 
+/* TABLE FIX */
+table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+  border:1px solid black;
+}
+th, td {
+  border:1px solid black;
+  padding:5px;
+}
+
 /* HEADER */
 .header {
   display:flex;
   justify-content:space-between;
   font-size:13px;
-  margin:5px 0;
-}
-.header div { width:33%; }
-
-/* TABLE */
-table {
-  width:100%;
-  border-collapse:collapse;
-  font-size:12px;
-}
-th, td {
-  border:1px solid black;
-  padding:5px;
 }
 
 /* PRINT */
@@ -60,18 +59,12 @@ th, td {
   display:none;
   text-align:left;
   font-size:11px;
-  padding:5px;
   font-family:"Courier New", monospace;
   font-weight:bold;
 }
 
 .line { margin:3px 0; }
-
-hr {
-  border:0;
-  border-top:1px solid #000;
-  margin:5px 0;
-}
+hr { border-top:1px solid black; }
 
 /* FOOTER */
 .footer-left {
@@ -93,7 +86,7 @@ hr {
 
 <body>
 
-<h2>SOB Combos Calculator</h2>
+<h2>SOB Combos Calculator V3.0</h2>
 
 <div class="container">
 
@@ -115,7 +108,6 @@ hr {
 <option value="550,375,250,599">1399/1224 All in Fun Combo</option>
 <option value="1350,775,0,150">1500/925 Divine Rush Combo</option>
 <option value="1400,1400,449,2350,NA">4199/NA Ultimate Mega Combo</option>
-
 </select>
 
 <br>
@@ -134,7 +126,7 @@ hr {
 <div class="row"><b>Total</b><span>Rs. <span id="total">0</span></span></div>
 </div>
 
-<input type="tel" id="sobInput" placeholder="Enter SOB ID (6 or 7 digits)">
+<input type="tel" id="sobInput" placeholder="Enter SOB ID">
 
 <br>
 
@@ -157,7 +149,7 @@ hr {
 
 <div class="header">
 <div>POS# : __________</div>
-<div>USERNA<b>M</b>E.<b>S</b> : ____________</div>
+<div>USERNAME.S : ____________</div>
 <div>DATE : <span id="date"></span></div>
 </div>
 
@@ -193,27 +185,13 @@ hr {
 <!-- 80MM -->
 <div id="thermal">
 
-<div class="line">SOB SPLIT PAYMENTS</div>
-<hr>
-
 <div class="line">POS# : ____________</div>
 <div class="line">USERNAME.S : ____________</div>
 <div class="line">DATE : <span id="date2"></span></div>
 
 <hr>
 
-<div class="line">SR  SOB ID (TOTAL)</div>
-<div class="line">TPU | OEPL | PAEPL</div>
-
-<hr>
-
 <div id="thermalData"></div>
-
-<hr>
-
-<div class="line">TOTAL TPU : <span id="tpuT2"></span></div>
-<div class="line">TOTAL OEPL : <span id="oeplT2"></span></div>
-<div class="line">TOTAL PAEPL : <span id="paeplT2"></span></div>
 
 <hr>
 
@@ -225,7 +203,7 @@ hr {
 
 <!-- FOOTER -->
 <div class="footer-left">
-Last Updated: <span id="updateDate"></span> | V2.0
+Last Updated: <span id="updateDate"></span> | V3.0
 </div>
 
 <div class="footer-right">
@@ -236,51 +214,50 @@ Created for my Team :)<br>by MS
 
 let data = JSON.parse(localStorage.getItem("sobData")) || [];
 
-combo.addEventListener("wheel", function(e){
-e.preventDefault();
-let i=this.selectedIndex;
-if(e.deltaY>0 && i<this.options.length-1) this.selectedIndex++;
-if(e.deltaY<0 && i>0) this.selectedIndex--;
-calc();
-});
+const tpuEl = document.getElementById("tpu");
+const oeplEl = document.getElementById("oepl");
+const paeplEl = document.getElementById("paepl");
+const totalEl = document.getElementById("total");
 
 function calc(){
 
-let v=combo.value;
+let v = combo.value;
 if(!v) return;
 
-let p=v.split(",");
+let p = v.split(",");
 
-let ta=+p[0], tc=+p[1], o=+p[2], pi=+p[3];
-let na=p[4]==="NA";
+let ta = +p[0], tc = +p[1], o = +p[2], pi = +p[3];
+let na = p[4]==="NA";
 
-let a=Math.max(0,+adults.value||0);
-let c=Math.max(0,+children.value||0);
+let a = Math.max(0,+adults.value||0);
+let c = Math.max(0,+children.value||0);
 
-warning.innerText=(na && c>0)?"⚠ Children not allowed":"";
+warning.innerText = (na && c>0) ? "⚠ Children not allowed" : "";
 
-let tpu=a*ta+c*tc;
-let oepl=(a+c)*o;
-let paepl=(a+c)*pi;
-let total=tpu+oepl+paepl;
+let tpu = a*ta + c*tc;
+let oepl = (a+c)*o;
+let paepl = (a+c)*pi;
+let total = tpu + oepl + paepl;
 
-tpu.innerText=tpu;
-oepl.innerText=oepl;
-paepl.innerText=paepl;
-total.innerText=total;
+tpuEl.innerText = tpu;
+oeplEl.innerText = oepl;
+paeplEl.innerText = paepl;
+totalEl.innerText = total;
 
 return {tpu,oepl,paepl,total};
 }
 
 function saveEntry(){
 
-let raw=sobInput.value.replace(/\D/g,'');
+let raw = sobInput.value.replace(/\D/g,'');
 
-if(raw.length<6||raw.length>7){ alert("Invalid SOB ID"); return; }
+if(raw.length<6 || raw.length>7){
+alert("Invalid SOB ID"); return;
+}
 
-let r=calc(); if(!r) return;
+let r = calc(); if(!r) return;
 
-let sob=(raw.length===6)?"SOB000"+raw:"SOB00"+raw;
+let sob = raw.length===6 ? "SOB000"+raw : "SOB00"+raw;
 
 data.push({sob,...r,time:new Date().toLocaleTimeString()});
 localStorage.setItem("sobData",JSON.stringify(data));
@@ -290,10 +267,11 @@ sobInput.value="";
 }
 
 function resetForm(){
+combo.selectedIndex=0;
 adults.value="";
 children.value="";
 sobInput.value="";
-tpu.innerText=oepl.innerText=paepl.innerText=total.innerText=0;
+tpuEl.innerText=oeplEl.innerText=paeplEl.innerText=totalEl.innerText=0;
 warning.innerText="";
 }
 
@@ -305,29 +283,32 @@ data=[]; localStorage.removeItem("sobData"); render();
 function render(){
 
 dataBody.innerHTML="";
-let t1=0,t2=0,t3=0,t4=0, th="";
+let totalAll=0, th="";
 
 data.forEach((d,i)=>{
 
 dataBody.innerHTML+=`
 <tr>
-<td>${i+1}</td><td>${d.sob}</td>
-<td>${d.tpu}</td><td>${d.oepl}</td>
-<td>${d.paepl}</td><td>${d.total}</td>
-<td>${d.time}</td></tr>`;
+<td>${i+1}</td>
+<td>${d.sob}</td>
+<td>${d.tpu}</td>
+<td>${d.oepl}</td>
+<td>${d.paepl}</td>
+<td>${d.total}</td>
+<td>${d.time}</td>
+</tr>`;
 
 th+=`
-<div class="line">--------------------------------</div>
 <div class="line">${i+1}. ${d.sob} (${d.total})</div>
-<div class="line">${d.tpu} | ${d.oepl} | ${d.paepl}</div>`;
+<div class="line">${d.tpu} | ${d.oepl} | ${d.paepl}</div>
+<hr>`;
 
-t1+=d.tpu; t2+=d.oepl; t3+=d.paepl; t4+=d.total;
+totalAll+=d.total;
 });
 
 thermalData.innerHTML=th;
-
-tpuT.innerText=t1; oeplT.innerText=t2; paeplT.innerText=t3; grandT.innerText=t4;
-tpuT2.innerText=t1; oeplT2.innerText=t2; paeplT2.innerText=t3; grandT2.innerText=t4;
+grandT.innerText=totalAll;
+grandT2.innerText=totalAll;
 }
 
 function printA4(){ a4.style.display="block"; thermal.style.display="none"; window.print(); }
