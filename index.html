@@ -108,7 +108,7 @@ hr { border-top:1px solid black; }
 <option value="170,80,0,227">397/307 Adventure Combo</option>
 <option value="170,80,28,200">398/308 ECO FUN Combo</option>
 <option value="170,80,255,0">425/335 Snow Adventure Combo</option>
-<option value="400,300,0,99">499/399 Astha Combo</option>
+<option value="400,300,0,99">499/399 Aastha Combo</option>
 <option value="370,180,0,175">545/355 Shiv Ganesha Combo</option>
 <option value="550,375,0,50">600/425 Namah Combo</option>
 <option value="170,170,0,529,NA">699/NA Ultimate Play Combo</option>
@@ -136,7 +136,12 @@ hr { border-top:1px solid black; }
 <hr>
 <div class="row"><b>Total</b><span>Rs. <span id="total">0</span></span></div>
 </div>
-
+<p id="inclusions" style="
+margin-top:12px;
+font-size:14px;
+padding:0 10px;
+text-align:center;
+"></p>
 <input type="tel" id="sobInput" maxlength="6" placeholder="Enter 6-digit SOB ID">
 
 <br>
@@ -242,6 +247,56 @@ let oepl = (a+c)*o;
 let paepl = (a+c)*pi;
 let total = tpu + oepl + paepl;
 
+let t = combo.options[combo.selectedIndex].text;
+let inclusions = "";
+
+if (t.includes("Aastha"))
+  inclusions = "Park Entry + Nij Aatma Manthan + 2 Times Drop";
+
+else if (t.includes("Shiv Ganesha"))
+  inclusions = "Park Entry + Viewing Gallery + 1 Time Drop Only + Eyelusion + World of Ganesha";
+
+else if (t.includes("Viewing Fun"))
+  inclusions = "Park Entry + Viewing Gallery + Snow Park + Food (Rs.110) + 1 Time Drop Only";
+
+else if (t.includes("Symbolic"))
+  inclusions = "Park Entry + Viewing Gallery + Nij Aatma Manthan + World of Ganesha + Snow Park + 2 Times Drop + Wax Museum";
+
+else if (t.includes("Delight"))
+  inclusions = "Park Entry + Snow Park + Wax Museum + Eyelusion + 5 Rides + 12D Cinema + Mirror Maze + Horror House + Food (Rs.50) + 1 Time Drop Only + World of Ganesha + Souvenir (Rs.75)";
+
+else if (t.includes("Mini Blast"))
+  inclusions = "Park Entry + Viewing Gallery + Snow Park + Wax Museum + Eyelusion + 5 Rides + 12D Cinema + Mirror Maze + Horror House + Food (Rs.50) + 1 Time Drop Only + World of Ganesha + Souvenir (Rs.75)";
+
+else if (t.includes("All in Fun"))
+  inclusions = "Park Entry + Viewing Gallery + Nij Aatma Manthan + Snow Park + Wax Museum + Eyelusion + 5 Rides + 2 Times Drop + World of Ganesha";
+
+else if (t.includes("TU Explorer"))
+  inclusions = "Park Entry + Wax Museum + Eyelusion + World of Ganesha";
+
+else if (t.includes("Snow Adventure"))
+  inclusions = "Park Entry + Snow Park";
+
+else if (t.includes("Ultimate Play"))
+  inclusions = "Park Entry + 10 Rides + Go Kart + 3 Times Drop";
+
+else if (t.includes("Adventure Combo"))
+  inclusions = "Park Entry + 5 Rides/Games + 1 Time Drop Only";
+
+else if (t.includes("ECO FUN"))
+  inclusions = "Park Entry + 12D Cinema + Mirror Maze + Horror House + Wax Museum";
+
+else if (t.includes("Namah"))
+  inclusions = "Park Entry + Viewing Gallery + Nij Aatma Manthan + 1 Time Drop Only";
+
+else if (t.includes("Divine Rush"))
+  inclusions = "Park Entry + Viewing Gallery + Nij Aatma Manthan + Nij Aatma Abhishek + 3 Times Drop + World of Ganesha";
+
+else if (t.includes("Ultimate Mega"))
+  inclusions = "Park Entry + Viewing Gallery + Nij Aatma Manthan + Nij Aatma Abhishek + Snow Park + Wax Museum + Eyelusion + 10 Rides + Go Kart + Box Cricket + VR Zone + Souvenir (Rs.110) + Food (Rs.110) + Bungee Jumping + 3 Times Drop + World of Ganesha + 12D Cinema + Mirror Maze + Horror House";
+
+document.getElementById("inclusions").innerText = inclusions;
+
 tpuEl.innerText = tpu;
 oeplEl.innerText = oepl;
 paeplEl.innerText = paepl;
@@ -284,6 +339,7 @@ children.value="";
 sobInput.value="";
 tpuEl.innerText=oeplEl.innerText=paeplEl.innerText=totalEl.innerText=0;
 warning.innerText="";
+document.getElementById("inclusions").innerText = "";
 }
 
 function resetAllData(){
