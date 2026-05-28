@@ -1351,40 +1351,64 @@ html += `
 </tr>
 
 <tr>
+
 <td>${i+1}</td>
-<td>${d.sob}</td>
+
+<td>
+
+${d.sob}
+
+<br>
+
+<span style="
+font-size:8px;
+line-height:11px;
+display:block;
+margin-top:2px;
+">
+
+(${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+
+<br>
+
+(${d.adults}.A + ${d.children}.C)
+
+</span>
+
+</td>
+
 <td>${formatTime(d.time)}</td>
+
 </tr>
-
-</table>
-
-<table>
 
 <tr>
 <th>TPU</th>
 <th>OEPL</th>
 <th>PAEPL</th>
-<th>TOTAL</th>
 </tr>
 
 <tr>
 <td>${d.tpu}</td>
 <td>${d.oepl}</td>
 <td>${d.paepl}</td>
-<td><b>${d.total}</b></td>
-</tr>
-
-</table>
-
-<table>
-
-<tr>
-<th colspan="2">ACTIVITY BREAKUP</th>
 </tr>
 
 <tr>
-<td colspan="2" class="left">
-${d.breakup.replace(/<br>/g,'<br><br>')}
+<th colspan="2">TOTAL</th>
+<th>${d.total}</th>
+</tr>
+
+<tr>
+<th colspan="3">
+ACTIVITIES' AMOUNTS
+</th>
+</tr>
+
+<tr>
+<td colspan="3" class="left">
+
+${d.breakup}
+
 </td>
 </tr>
 
