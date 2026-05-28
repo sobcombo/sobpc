@@ -1263,10 +1263,10 @@ margin:2mm;
 
 body{
 font-family:Arial,sans-serif;
-width:76mm;
-margin:0 auto;
-padding:0;
-font-size:12px;
+width:79mm;
+margin:0;
+padding:0.5mm;
+font-size:13px;
 color:#000;
 font-weight:bold;
 }
@@ -1380,20 +1380,11 @@ font-size:10px;
 line-height:16px;
 }
 
-.heading{
-font-size:15px;
-margin-bottom:6px;
-}
-
 </style>
 
 </head>
 
 <body>
-
-<div class="center heading">
-SOB SPLIT AMOUNTS
-</div>
 
 <div class="header">
 <div>POS# __________</div>
@@ -1418,21 +1409,55 @@ addActivityTotals(d.breakup);
 
 html += `
 
-<div class="entry">
+<div style="
+width:100%;
+border:1px solid #000;
+margin-bottom:6px;
+">
 
-<div class="topRow">
+<table style="
+width:100%;
+border-collapse:collapse;
+table-layout:fixed;
+font-size:12px;
+font-weight:bold;
+">
+
+<tr>
+
+<td colspan="4"
+style="
+padding:4px;
+border-bottom:1px solid #000;
+font-size:14px;
+font-weight:bold;
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+">
 
 <div>
 ${i+1}) ${d.sob}
 </div>
 
-<div>
+<div style="
+font-size:11px;
+font-weight:bold;
+">
 ${formatTime(d.time)}
 </div>
 
 </div>
 
-<div class="smallRow">
+<div style="
+display:flex;
+justify-content:space-between;
+margin-top:2px;
+font-size:11px;
+">
 
 <div>
 (${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
@@ -1444,45 +1469,65 @@ ${formatTime(d.time)}
 
 </div>
 
-<div class="amountRow">
+</td>
 
-<div class="amountBox"
-style="border:1px solid #000;padding:3px;">
-TPU<br>${d.tpu}
-</div>
+</tr>
 
-<div class="amountBox"
-style="border:1px solid #000;padding:3px;">
-OEPL<br>${d.oepl}
-</div>
+<tr>
 
-<div class="amountBox"
-style="border:1px solid #000;padding:3px;">
-PAEPL<br>${d.paepl}
-</div>
-
-<div class="amountBox"
-style="border:1px solid #000;padding:3px;">
-TOTAL<br>${d.total}
-</div>
-
-</div>
-
-<div class="activity"
-style="
+<td style="
 border:1px solid #000;
-padding:5px;
-margin-top:5px;
+padding:3px;
+text-align:center;
+">
+TPU<br>${d.tpu}
+</td>
+
+<td style="
+border:1px solid #000;
+padding:3px;
+text-align:center;
+">
+OEPL<br>${d.oepl}
+</td>
+
+<td style="
+border:1px solid #000;
+padding:3px;
+text-align:center;
+">
+PAEPL<br>${d.paepl}
+</td>
+
+<td style="
+border:1px solid #000;
+padding:3px;
+text-align:center;
+">
+TOTAL<br>${d.total}
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan="4"
+style="
+padding:4px;
+font-size:10px;
+line-height:13px;
+text-align:left;
 ">
 
 ${formatActivityText(d.breakup)}
 
-</div>
+</td>
+
+</tr>
+
+</table>
 
 </div>
-
-<div class="line"></div>
-
 `;
 
 });
