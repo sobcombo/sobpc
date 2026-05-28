@@ -1174,129 +1174,22 @@ let paeplSum = 0;
 let oeplActivities = {};
 let paeplActivities = {};
 
-function formatActivitiesRows(obj){
-
-return Object.entries(obj)
-.map(([k,v]) => `
-<tr>
-<td>${k}</td>
-<td>${v}</td>
-</tr>
-`)
-.join("");
-
-}
-
-let html = `
-
-<!DOCTYPE html>
-
-<html>
-
-<head>
-
-<title>80MM PRINT</title>
-
-<style>
-
-@page{
-size:80mm auto;
-margin:2mm;
-}
-
-body{
-font-family:Arial,sans-serif;
-width:76mm;
-margin:0 auto;
-padding:0;
-font-size:10px;
-color:#000;
-}
-
-.center{
-text-align:center;
-}
-
-.bold{
-font-weight:bold;
-}
-
-.small{
-font-size:9px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:3px;
-font-size:9px;
-}
-
-th,td{
-border:0.5px solid #666;
-padding:3px;
-text-align:center;
-vertical-align:middle;
-word-break:break-word;
-}
-
-th{
-background:#f2f2f2;
-}
-
-.section{
-margin-top:6px;
-}
-
-.doubleLine{
-border-top:1px dashed #666;
-margin:5px 0;
-}
-
-.left{
-text-align:left;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="center bold">
-SOB SPLIT AMOUNTS
-</div>
-
-<div class="center small">
-${new Date().toLocaleDateString('en-GB')}
-</div>
-
-<div class="doubleLine"></div>
-
-`;
-
-data.forEach((d,i)=>{
-
-
-
-tpuSum += d.tpu;
-oeplSum += d.oepl;
-paeplSum += d.paepl;
-totalAll += d.total;
+function addActivityTotals(text){
 
 let tempDiv = document.createElement("div");
 
-tempDiv.innerHTML = d.breakup;
+tempDiv.innerHTML = text;
 
-let text = tempDiv.innerText.split("\n");
+let lines = tempDiv.innerText.split("\n");
 
-text.forEach(line => {
+lines.forEach(line=>{
 
 line = line.trim();
 
 if(line.startsWith("OEPL")){
 
-let activities = line.replace("OEPL →","").split("|");
+let activities =
+line.replace("OEPL →","").split("|");
 
 activities.forEach(a=>{
 
@@ -1317,7 +1210,8 @@ oeplActivities[name] =
 
 if(line.startsWith("PAEPL")){
 
-let activities = line.replace("PAEPL →","").split("|");
+let activities =
+line.replace("PAEPL →","").split("|");
 
 activities.forEach(a=>{
 
@@ -1338,85 +1232,256 @@ paeplActivities[name] =
 
 });
 
+}
+
+function formatActivityText(html){
+
+return html
+.replace(/<br\s*\/?>/gi,"\n")
+.replace(/<\/?[^>]+(>|$)/g,"");
+
+}
+
+let html = `
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>80MM PRINT</title>
+
+<style>
+
+<style>
+
+@page{
+size:80mm auto;
+margin:2mm;
+}
+
+body{
+font-family:Arial,sans-serif;
+width:76mm;
+margin:0 auto;
+padding:0;
+font-size:12px;
+color:#000;
+font-weight:bold;
+}
+
+*{
+font-weight:bold;
+box-sizing:border-box;
+}
+
+.header{
+text-align:right;
+font-size:11px;
+line-height:17px;
+margin-bottom:10px;
+font-weight:normal !important;
+}
+
+.header div{
+font-weight:normal !important;
+}
+
+.center{
+text-align:center;
+}
+
+.bold{
+font-weight:bold;
+}
+
+.line{
+border-top:2px dashed #555;
+margin:7px 0;
+}
+
+.entry{
+padding:6px;
+margin-bottom:8px;
+border:2px solid #000;
+border-radius:2px;
+}
+
+.line{
+display:none;
+}
+
+.topRow{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+font-size:13px;
+font-weight:bold;
+}
+
+.smallRow{
+display:flex;
+justify-content:space-between;
+font-size:11px;
+margin-top:3px;
+}
+
+.amountRow{
+display:flex;
+justify-content:space-between;
+margin-top:6px;
+font-size:11px;
+text-align:center;
+}
+
+.amountBox{
+width:25%;
+line-height:16px;
+}
+
+.activity{
+margin-top:5px;
+font-size:10px;
+line-height:15px;
+white-space:pre-line;
+}
+
+.grand{
+margin-top:10px;
+}
+
+.grandRow{
+display:flex;
+justify-content:space-between;
+text-align:center;
+font-size:11px;
+margin-top:5px;
+}
+
+.grandBox{
+width:25%;
+line-height:16px;
+}
+
+.label{
+font-size:10px;
+line-height:13px;
+}
+
+.value{
+margin-top:3px;
+font-size:12px;
+}
+
+.activityTotals{
+margin-top:10px;
+font-size:10px;
+line-height:16px;
+}
+
+.heading{
+font-size:15px;
+margin-bottom:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="center heading">
+SOB SPLIT AMOUNTS
+</div>
+
+<div class="header">
+<div>POS# __________</div>
+<div>
+USERNA<b>M</b>E.<b>S</b> __________
+</div>
+<div>DATE : ${new Date().toLocaleDateString('en-GB')}</div>
+</div>
+
+<div class="line"></div>
+
+`;
+
+data.forEach((d,i)=>{
+
+tpuSum += d.tpu;
+oeplSum += d.oepl;
+paeplSum += d.paepl;
+totalAll += d.total;
+
+addActivityTotals(d.breakup);
+
 html += `
 
-<div class="section">
+<div class="entry">
 
-<table>
+<div class="topRow">
 
-<tr>
-<th>SR</th>
-<th>SOB ID</th>
-<th>TIME</th>
-</tr>
+<div>
+${i+1}) ${d.sob}
+</div>
 
-<tr>
-
-<td>${i+1}</td>
-
-<td>
-
-${d.sob}
-
-<br>
-
-<span style="
-font-size:8px;
-line-height:11px;
-display:block;
-margin-top:2px;
-">
-
-(${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
-
-<br>
-
-(${d.adults}.A + ${d.children}.C)
-
-</span>
-
-</td>
-
-<td>${formatTime(d.time)}</td>
-
-</tr>
-
-<tr>
-<th>TPU</th>
-<th>OEPL</th>
-<th>PAEPL</th>
-</tr>
-
-<tr>
-<td>${d.tpu}</td>
-<td>${d.oepl}</td>
-<td>${d.paepl}</td>
-</tr>
-
-<tr>
-<th colspan="2">TOTAL</th>
-<th>${d.total}</th>
-</tr>
-
-<tr>
-<th colspan="3">
-ACTIVITIES' AMOUNTS
-</th>
-</tr>
-
-<tr>
-<td colspan="3" class="left">
-
-${d.breakup}
-
-</td>
-</tr>
-
-</table>
+<div>
+${formatTime(d.time)}
+</div>
 
 </div>
 
-<div class="doubleLine"></div>
+<div class="smallRow">
+
+<div>
+(${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+</div>
+
+<div>
+(${d.adults}.A + ${d.children}.C)
+</div>
+
+</div>
+
+<div class="amountRow">
+
+<div class="amountBox"
+style="border:1px solid #000;padding:3px;">
+TPU<br>${d.tpu}
+</div>
+
+<div class="amountBox"
+style="border:1px solid #000;padding:3px;">
+OEPL<br>${d.oepl}
+</div>
+
+<div class="amountBox"
+style="border:1px solid #000;padding:3px;">
+PAEPL<br>${d.paepl}
+</div>
+
+<div class="amountBox"
+style="border:1px solid #000;padding:3px;">
+TOTAL<br>${d.total}
+</div>
+
+</div>
+
+<div class="activity"
+style="
+border:1px solid #000;
+padding:5px;
+margin-top:5px;
+">
+
+${formatActivityText(d.breakup)}
+
+</div>
+
+</div>
+
+<div class="line"></div>
 
 `;
 
@@ -1424,67 +1489,98 @@ ${d.breakup}
 
 html += `
 
-<div class="section">
+<div class="grand">
 
-<table>
+<div class="center bold">
+GRAND TOTAL
+</div>
 
-<tr>
-<th colspan="4">GRAND TOTAL</th>
-</tr>
+<div class="grandRow"
+style="
+border:2px solid #000;
+padding:5px;
+margin-top:6px;
+">
 
-<tr>
-<th>T.TPU</th>
-<th>T.OEPL</th>
-<th>T.PAEPL</th>
-<th>GRAND</th>
-</tr>
+<div class="grandBox">
+<div class="label">
+TOTAL<br>TPU
+</div>
+<div class="value">
+${tpuSum}
+</div>
+</div>
 
-<tr>
-<td>${tpuSum}</td>
-<td>${oeplSum}</td>
-<td>${paeplSum}</td>
-<td><b>${totalAll}</b></td>
-</tr>
+<div class="grandBox">
+<div class="label">
+TOTAL<br>OEPL
+</div>
+<div class="value">
+${oeplSum}
+</div>
+</div>
 
-</table>
+<div class="grandBox">
+<div class="label">
+TOTAL<br>PAEPL
+</div>
+<div class="value">
+${paeplSum}
+</div>
+</div>
+
+<div class="grandBox">
+<div class="label">
+GRAND<br>TOTAL
+</div>
+<div class="value">
+${totalAll}
+</div>
+</div>
 
 </div>
 
-<div class="section">
-
-<table>
-
-<tr>
-<th colspan="2">OEPL ACTIVITIES TOTAL</th>
-</tr>
-
-<tr>
-<th>ACTIVITY</th>
-<th>AMOUNT</th>
-</tr>
-
-${formatActivitiesRows(oeplActivities)}
-
-</table>
-
 </div>
 
-<div class="section">
+<div class="line"></div>
 
-<table>
+<div class="activityTotals">
 
-<tr>
-<th colspan="2">PAEPL ACTIVITIES TOTAL</th>
-</tr>
+<div class="bold center">
+OEPL ACTIVITIES TOTAL
+</div>
 
-<tr>
-<th>ACTIVITY</th>
-<th>AMOUNT</th>
-</tr>
+${Object.entries(oeplActivities).map(([k,v])=>{
 
-${formatActivitiesRows(paeplActivities)}
+let vendor = "";
 
-</table>
+if(k==="Wax") vendor="Victory";
+if(k==="Snow") vendor="Shrinathji ent";
+if(k==="Food") vendor="Foods";
+if(k==="Souvenir") vendor="Mayan";
+
+return `${k} (${vendor}) : ${v}`;
+
+}).join("<br>")}
+
+<br><br>
+
+<div class="bold center">
+PAEPL ACTIVITIES TOTAL
+</div>
+
+${Object.entries(paeplActivities).map(([k,v])=>{
+
+let vendor = "";
+
+if(k==="Mayalok") vendor="Divine";
+if(k==="Eyelusion") vendor="Rinz";
+if(k==="Gamezone") vendor="Saachi";
+if(k==="WOG") vendor="Mahadev";
+
+return `${k} (${vendor}) : ${v}`;
+
+}).join("<br>")}
 
 </div>
 
