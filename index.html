@@ -1275,7 +1275,93 @@ font-weight:bold;
 font-weight:bold;
 box-sizing:border-box;
 }
+.header{
+text-align:center;
+font-size:15px;
+line-height:24px;
+margin-bottom:12px;
+font-weight:bold;
+}
 
+.header .writeLine{
+display:inline-block;
+min-width:140px;
+border-bottom:2px solid #000;
+height:18px;
+vertical-align:middle;
+}
+
+.doubleLine{
+border-top:3px double #000;
+margin:10px 0;
+}
+
+.entry{
+padding:4px 0;
+border:none;
+}
+
+.topRow{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+font-size:15px;
+font-weight:bold;
+margin-bottom:2px;
+}
+
+.smallRow{
+display:flex;
+justify-content:space-between;
+font-size:13px;
+font-weight:bold;
+margin-bottom:4px;
+}
+
+.amountTable{
+width:100%;
+border-collapse:collapse;
+margin-top:2px;
+margin-bottom:2px;
+}
+
+.amountTable td{
+border:2px solid #333;
+text-align:center;
+padding:4px 2px;
+font-size:13px;
+font-weight:bold;
+}
+
+.activity{
+margin-top:2px;
+font-size:11px;
+line-height:15px;
+padding:2px 2px;
+font-weight:bold;
+}
+
+.summaryTable{
+width:100%;
+border-collapse:collapse;
+margin-top:8px;
+margin-bottom:8px;
+}
+
+.summaryTable td{
+border:2px solid #333;
+text-align:center;
+padding:5px 3px;
+font-size:12px;
+font-weight:bold;
+}
+
+.summaryHead{
+font-size:14px !important;
+font-weight:bold;
+padding:6px !important;
+background:#f2f2f2;
+}
 .header{
 text-align:right;
 font-size:11px;
@@ -1387,11 +1473,21 @@ line-height:16px;
 <body>
 
 <div class="header">
-<div>POS# __________</div>
+
 <div>
-USERNA<b>M</b>E.<b>S</b> __________
+<b>POS#</b>
+<span class="writeLine"></span>
 </div>
-<div>DATE : ${new Date().toLocaleDateString('en-GB')}</div>
+
+<div>
+USERNA<b>M</b>E.<b>S</b>
+<span class="writeLine"></span>
+</div>
+
+<div>
+<b>DATE :</b> ${new Date().toLocaleDateString('en-GB')}
+</div>
+
 </div>
 
 <div class="line"></div>
@@ -1409,55 +1505,21 @@ addActivityTotals(d.breakup);
 
 html += `
 
-<div style="
-width:100%;
-border:1px solid #000;
-margin-bottom:6px;
-">
+<div class="entry">
 
-<table style="
-width:100%;
-border-collapse:collapse;
-table-layout:fixed;
-font-size:12px;
-font-weight:bold;
-">
-
-<tr>
-
-<td colspan="4"
-style="
-padding:4px;
-border-bottom:1px solid #000;
-font-size:14px;
-font-weight:bold;
-">
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-">
+<div class="topRow">
 
 <div>
 ${i+1}) ${d.sob}
 </div>
 
-<div style="
-font-size:11px;
-font-weight:bold;
-">
+<div>
 ${formatTime(d.time)}
 </div>
 
 </div>
 
-<div style="
-display:flex;
-justify-content:space-between;
-margin-top:2px;
-font-size:11px;
-">
+<div class="smallRow">
 
 <div>
 (${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
@@ -1469,268 +1531,124 @@ font-size:11px;
 
 </div>
 
-</td>
+<table class="amountTable">
 
+<tr>
+<td>TPU</td>
+<td>OEPL</td>
+<td>PAEPL</td>
+<td>TOTAL</td>
 </tr>
 
 <tr>
-
-<td style="
-border:1px solid #000;
-padding:3px;
-text-align:center;
-">
-TPU<br>${d.tpu}
-</td>
-
-<td style="
-border:1px solid #000;
-padding:3px;
-text-align:center;
-">
-OEPL<br>${d.oepl}
-</td>
-
-<td style="
-border:1px solid #000;
-padding:3px;
-text-align:center;
-">
-PAEPL<br>${d.paepl}
-</td>
-
-<td style="
-border:1px solid #000;
-padding:3px;
-text-align:center;
-">
-TOTAL<br>${d.total}
-</td>
-
-</tr>
-
-<tr>
-
-<td colspan="4"
-style="
-padding:4px;
-font-size:10px;
-line-height:13px;
-text-align:left;
-">
-
-${formatActivityText(d.breakup)}
-
-</td>
-
+<td>${d.tpu}</td>
+<td>${d.oepl}</td>
+<td>${d.paepl}</td>
+<td>${d.total}</td>
 </tr>
 
 </table>
 
+<div class="activity">
+${formatActivityText(d.breakup)}
 </div>
+
+</div>
+
 `;
 
 });
 
 html += `
 
-<div class="grand">
+<div class="doubleLine"></div>
+<div class="doubleLine"></div>
 
-<div class="center bold">
-GRAND TOTAL
-</div>
-
-<div class="grandRow"
-style="
-border:2px solid #000;
-padding:5px;
-margin-top:6px;
-">
-
-<div class="grandBox">
-<div class="label">
-TOTAL<br>TPU
-</div>
-<div class="value">
-${tpuSum}
-</div>
-</div>
-
-<div class="grandBox">
-<div class="label">
-TOTAL<br>OEPL
-</div>
-<div class="value">
-${oeplSum}
-</div>
-</div>
-
-<div class="grandBox">
-<div class="label">
-TOTAL<br>PAEPL
-</div>
-<div class="value">
-${paeplSum}
-</div>
-</div>
-
-<div class="grandBox">
-<div class="label">
-GRAND<br>TOTAL
-</div>
-<div class="value">
-${totalAll}
-</div>
-</div>
-
-</div>
-
-</div>
-
-<div style="
-border:1px solid #000;
-margin-top:8px;
-">
-
-<table style="
-width:100%;
-border-collapse:collapse;
-table-layout:fixed;
-font-size:10px;
-font-weight:bold;
-text-align:center;
-">
+<table class="summaryTable">
 
 <tr>
+<td class="summaryHead" colspan="4">
+GRAND TOTAL
+</td>
+</tr>
 
-<td colspan="4"
-style="
-border:1px solid #000;
-padding:4px;
-font-size:12px;
-">
+<tr>
+<td>TOTAL TPU</td>
+<td>TOTAL OEPL</td>
+<td>TOTAL PAEPL</td>
+<td>GRAND TOTAL</td>
+</tr>
+
+<tr>
+<td>${tpuSum}</td>
+<td>${oeplSum}</td>
+<td>${paeplSum}</td>
+<td>${totalAll}</td>
+</tr>
+
+</table>
+
+<table class="summaryTable">
+
+<tr>
+<td class="summaryHead" colspan="4">
 OEPL ACTIVITIES TOTAL
 </td>
-
 </tr>
 
 <tr>
+${Object.entries(oeplActivities).map(([k,v])=>{
 
-<td style="border:1px solid #000;padding:3px;">
-Wax (Victory)
-</td>
+let vendor = "";
 
-<td style="border:1px solid #000;padding:3px;">
-Snow (Shrinathji Ent)
-</td>
+if(k==="Wax") vendor="Victory";
+if(k==="Snow") vendor="Shrinathji Ent";
+if(k==="Food") vendor="Foods";
+if(k==="Souvenir") vendor="Mayan";
 
-<td style="border:1px solid #000;padding:3px;">
-Food (Foods)
-</td>
+return `<td>${k}<br>(${vendor})</td>`;
 
-<td style="border:1px solid #000;padding:3px;">
-Souvenir (Mayan)
-</td>
-
+}).join("")}
 </tr>
 
 <tr>
-
-<td style="border:1px solid #000;padding:3px;">
-${oeplActivities["Wax"] || 0}
-</td>
-
-<td style="border:1px solid #000;padding:3px;">
-${oeplActivities["Snow"] || 0}
-</td>
-
-<td style="border:1px solid #000;padding:3px;">
-${oeplActivities["Food"] || 0}
-</td>
-
-<td style="border:1px solid #000;padding:3px;">
-${oeplActivities["Souvenir"] || 0}
-</td>
-
+${Object.entries(oeplActivities).map(([k,v])=>`
+<td>${v}</td>
+`).join("")}
 </tr>
 
 </table>
 
-</div>
-
-<div style="
-border:1px solid #000;
-margin-top:8px;
-">
-
-<table style="
-width:100%;
-border-collapse:collapse;
-table-layout:fixed;
-font-size:10px;
-font-weight:bold;
-text-align:center;
-">
+<table class="summaryTable">
 
 <tr>
-
-<td colspan="4"
-style="
-border:1px solid #000;
-padding:4px;
-font-size:12px;
-">
+<td class="summaryHead" colspan="4">
 PAEPL ACTIVITIES TOTAL
 </td>
-
 </tr>
 
 <tr>
+${Object.entries(paeplActivities).map(([k,v])=>{
 
-<td style="border:1px solid #000;padding:3px;">
-Mayalok (Divine)
-</td>
+let vendor = "";
 
-<td style="border:1px solid #000;padding:3px;">
-Eyelusion (Rinz)
-</td>
+if(k==="Mayalok") vendor="Divine";
+if(k==="Eyelusion") vendor="Rinz";
+if(k==="Gamezone") vendor="Saachi";
+if(k==="WOG") vendor="Mahadev";
 
-<td style="border:1px solid #000;padding:3px;">
-Gamezone (Saachi)
-</td>
+return `<td>${k}<br>(${vendor})</td>`;
 
-<td style="border:1px solid #000;padding:3px;">
-WOG (Mahadev)
-</td>
-
+}).join("")}
 </tr>
 
 <tr>
-
-<td style="border:1px solid #000;padding:3px;">
-${paeplActivities["Mayalok"] || 0}
-</td>
-
-<td style="border:1px solid #000;padding:3px;">
-${paeplActivities["Eyelusion"] || 0}
-</td>
-
-<td style="border:1px solid #000;padding:3px;">
-${paeplActivities["Gamezone"] || 0}
-</td>
-
-<td style="border:1px solid #000;padding:3px;">
-${paeplActivities["WOG"] || 0}
-</td>
-
+${Object.entries(paeplActivities).map(([k,v])=>`
+<td>${v}</td>
+`).join("")}
 </tr>
 
 </table>
-
-</div>
-</body>
-
-</html>
 
 `;
 
