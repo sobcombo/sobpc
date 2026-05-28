@@ -1587,48 +1587,147 @@ ${totalAll}
 
 </div>
 
-<div class="line"></div>
+<div style="
+border:1px solid #000;
+margin-top:8px;
+">
 
-<div class="activityTotals">
+<table style="
+width:100%;
+border-collapse:collapse;
+table-layout:fixed;
+font-size:10px;
+font-weight:bold;
+text-align:center;
+">
 
-<div class="bold center">
+<tr>
+
+<td colspan="4"
+style="
+border:1px solid #000;
+padding:4px;
+font-size:12px;
+">
 OEPL ACTIVITIES TOTAL
+</td>
+
+</tr>
+
+<tr>
+
+<td style="border:1px solid #000;padding:3px;">
+Wax (Victory)
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+Snow (Shrinathji Ent)
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+Food (Foods)
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+Souvenir (Mayan)
+</td>
+
+</tr>
+
+<tr>
+
+<td style="border:1px solid #000;padding:3px;">
+${oeplActivities["Wax"] || 0}
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+${oeplActivities["Snow"] || 0}
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+${oeplActivities["Food"] || 0}
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+${oeplActivities["Souvenir"] || 0}
+</td>
+
+</tr>
+
+</table>
+
 </div>
 
-${Object.entries(oeplActivities).map(([k,v])=>{
+<div style="
+border:1px solid #000;
+margin-top:8px;
+">
 
-let vendor = "";
+<table style="
+width:100%;
+border-collapse:collapse;
+table-layout:fixed;
+font-size:10px;
+font-weight:bold;
+text-align:center;
+">
 
-if(k==="Wax") vendor="Victory";
-if(k==="Snow") vendor="Shrinathji ent";
-if(k==="Food") vendor="Foods";
-if(k==="Souvenir") vendor="Mayan";
+<tr>
 
-return `${k} (${vendor}) : ${v}`;
-
-}).join("<br>")}
-
-<br><br>
-
-<div class="bold center">
+<td colspan="4"
+style="
+border:1px solid #000;
+padding:4px;
+font-size:12px;
+">
 PAEPL ACTIVITIES TOTAL
+</td>
+
+</tr>
+
+<tr>
+
+<td style="border:1px solid #000;padding:3px;">
+Mayalok (Divine)
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+Eyelusion (Rinz)
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+Gamezone (Saachi)
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+WOG (Mahadev)
+</td>
+
+</tr>
+
+<tr>
+
+<td style="border:1px solid #000;padding:3px;">
+${paeplActivities["Mayalok"] || 0}
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+${paeplActivities["Eyelusion"] || 0}
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+${paeplActivities["Gamezone"] || 0}
+</td>
+
+<td style="border:1px solid #000;padding:3px;">
+${paeplActivities["WOG"] || 0}
+</td>
+
+</tr>
+
+</table>
+
 </div>
-
-${Object.entries(paeplActivities).map(([k,v])=>{
-
-let vendor = "";
-
-if(k==="Mayalok") vendor="Divine";
-if(k==="Eyelusion") vendor="Rinz";
-if(k==="Gamezone") vendor="Saachi";
-if(k==="WOG") vendor="Mahadev";
-
-return `${k} (${vendor}) : ${v}`;
-
-}).join("<br>")}
-
-</div>
-
 </body>
 
 </html>
