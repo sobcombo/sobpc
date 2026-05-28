@@ -1,404 +1,1451 @@
-<!DOCTYPE html>
+
+</body>
+
+</html<!DOCTYPE html>
 <html>
+
 <head>
+
 <title>SOB coMboS calculator V3.0</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link
+href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap"
+rel="stylesheet">
+
 <style>
-body { font-family: Arial; text-align:center; }
 
-.container { margin-top:20px; }
-
-input, select {
-  padding:12px;
-  margin:8px;
-  width:90%;
-  max-width:340px;
-  font-size:16px;
+*{
+font-family:'Arimo',sans-serif;
+box-sizing:border-box;
 }
 
-.box { max-width:340px; margin:auto; }
-
-.row {
-  display:flex;
-  justify-content:space-between;
-  font-size:18px;
+body{
+text-align:center;
+margin:0;
+padding:0;
 }
 
-button { padding:10px; margin:6px; }
-
-table {
-  width:100%;
-  border-collapse:collapse;
-  font-size:12px;
-  border:1px solid black;
+.container{
+margin-top:20px;
 }
-th, td {
-  border:1px solid black;
-  padding:5px;
+.top-buttons{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 12px 0 12px;
+}
+.center-switch{
+display:flex;
+justify-content:center;
+margin-top:8px;
 }
 
-.header {
-  display:flex;
-  justify-content:space-between;
-  font-size:13px;
-  margin-bottom:10px;
+.switch-btn{
+background:#1565c0;
+color:white;
+padding:6px 10px;
+border-radius:6px;
+text-decoration:none;
+font-size:12px;
+font-weight:bold;
+display:inline-block;
+}
+
+.switch-btn:hover{
+background:#0d47a1;
+}
+
+.deleteBtn{
+padding:2px 6px;
+font-size:11px;
+line-height:1;
+margin:0;
+min-width:auto;
+}
+
+#a4{
+padding:8mm;
+box-sizing:border-box;
+overflow:hidden;
+}
+
+input,select{
+padding:12px;
+margin:8px;
+width:90%;
+max-width:340px;
+font-size:16px;
+}
+
+.box{
+max-width:340px;
+margin:auto;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+font-size:18px;
+}
+
+button{
+padding:10px;
+margin:6px;
+cursor:pointer;
+}
+
+table{
+width:100%;
+margin:auto;
+border-collapse:collapse;
+font-size:12px;
+border:1px solid black;
+}
+
+th,td{
+border:1px solid black;
+padding:2px 4px;
+text-align:center;
+vertical-align:middle;
+line-height:14px;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+font-size:13px;
+margin-bottom:10px;
+}
+
+.activityRow{
+background:#f5f5f5;
+font-size:11px;
+font-weight:bold;
+}
+
+.activityCell {
+  text-align: left;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 14px;
+  padding: 5px 5px 5px 12px;
+  background: transparent;
+}
+.activityTotalsCell {
+  background: #eaeaea;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: left!important;
+  padding: 6px 6px 6px 12px;
+  vertical-align: top;
+}
+.footer-left{
+position:fixed;
+bottom:5px;
+left:10px;
+font-size:12px;
+}
+
+.footer-right{
+position:fixed;
+bottom:5px;
+right:10px;
+text-align:right;
+font-size:12px;
+}
+
+#a4{
+padding:10mm;
+box-sizing:border-box;
 }
 
 @media print {
-  @page { margin:0; }
 
-  body * { visibility:hidden; }
-  #printArea, #printArea * { visibility:visible; }
+@page{
+size:A4 portrait;
+margin:8mm;
+}
 
-  #printArea {
-    position:absolute;
-    top:0;
+html,body{
+margin:0;
+padding:0;
+width:100%;
+height:auto;
+background:white;
+font-family:'Arimo',sans-serif;
+-webkit-print-color-adjust:exact;
+print-color-adjust:exact;
+overflow:visible;
+}
+
+.container,
+.footer-left,
+.footer-right,
+h2,
+.top-buttons,
+.center-switch,
+.deleteBtn{
+display:none !important;
+}
+
+#printArea{
+display:block !important;
+width:100%;
+margin:0;
+padding:0;
+overflow:visible;
+}
+
+#a4{
+width:100%;
+padding:0;
+margin:0;
+box-sizing:border-box;
+overflow:visible;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:10px;
+table-layout:auto;
+}
+
+th,td{
+border:1px solid black;
+padding:3px;
+word-break:break-word;
+vertical-align:middle;
+}
+
+tr{
+page-break-inside:avoid;
+break-inside:avoid;
+}
+
+.activityCell{
+font-size:9px;
+line-height:11px;
+word-break:break-word;
+}
+
+.header{
+margin-bottom:8px;
+font-size:11px;
+}
+.deleteColumn{
+display:none !important;
+}
+
+}
+.table-wrapper{
     width:100%;
-  }
-
-  h2 { display:none !important; }
 }
 
-#thermal {
-  display:none;
-  text-align:left;
-  font-size:11px;
-  font-family:"Courier New", monospace;
-  font-weight:bold;
-  width:72mm;
-  padding:2mm;
-  box-sizing:border-box;
+@media screen and (max-width: 768px){
+
+.table-wrapper{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
 }
 
-.line { margin:3px 0; }
-hr { border-top:1px solid black; }
-
-.footer-left {
-  position:fixed;
-  bottom:5px;
-  left:10px;
-  font-size:12px;
+table{
+    min-width:700px;
 }
 
-.footer-right {
-  position:fixed;
-  bottom:5px;
-  right:10px;
-  text-align:right;
-  font-size:12px;
+.deleteBtn{
+    font-size:10px;
+    padding:2px 4px;
 }
 
-#a4 {
-  padding:10mm;
-  box-sizing:border-box;
+}
+button{
+padding:10px;
+margin:6px;
+cursor:pointer;
+border-radius:6px;
 }
 </style>
+
 </head>
 
 <body>
+<div class="top-buttons">
+
+<a class="switch-btn"
+href="https://sobcombo.github.io/sobcombo/"
+target="_blank">
+Switch to Basic Calc
+</a>
+
+<a class="switch-btn"
+href="https://sobcombo.github.io/r/"
+target="_blank">
+Switch to Daily Report
+</a>
+
+</div>
+
+<div class="center-switch">
+
+<a class="switch-btn"
+href="https://sobcombo.github.io/reverse/"
+target="_blank">
+Reverse Combo Finder
+</a>
+
+</div>
 
 <h2>SOB coMboS calculator V3.0</h2>
 
 <div class="container">
 
 <select id="combo" onchange="calc()">
+
 <option value="">Select Combo</option>
-<option value="170,80,70,150">390/300 TU Explorer Combo</option>
-<option value="170,80,0,227">397/307 Adventure Combo</option>
-<option value="170,80,28,200">398/308 ECO FUN Combo</option>
-<option value="170,80,255,0">425/335 Snow Adventure Combo</option>
-<option value="400,300,0,99">499/399 Aastha Combo</option>
-<option value="370,180,0,175">545/355 Shiv Ganesha Combo</option>
-<option value="550,375,0,50">600/425 Namah Combo</option>
-<option value="170,170,0,529,NA">699/NA Ultimate Play Combo</option>
-<option value="370,180,325,50">745/555 Viewing Fun Combo</option>
-<option value="550,375,249,170">969/794 Symbolic Combo</option>
-<option value="170,80,355,574">1099/1009 Delight Combo</option>
-<option value="370,180,355,574">1299/1109 Mini Blast Combo</option>
-<option value="550,375,250,599">1399/1224 All in Fun Combo</option>
-<option value="1350,775,0,150">1500/925 Divine Rush Combo</option>
-<option value="1400,1400,449,2350,NA">4199/NA Ultimate Mega Combo</option>
+
+<option value="170,80,70,150">
+390/300 TU Explorer Combo
+</option>
+
+<option value="170,80,0,227">
+397/307 Adventure Combo
+</option>
+
+<option value="170,80,28,200">
+398/308 ECO FUN Combo
+</option>
+
+<option value="170,80,255,0">
+425/335 Snow Adventure Combo
+</option>
+
+<option value="400,300,0,99">
+499/399 Aastha Combo
+</option>
+
+<option value="370,180,0,175">
+545/355 Shiv Ganesha Combo
+</option>
+
+<option value="550,375,0,50">
+600/425 Namah Combo
+</option>
+
+<option value="170,170,0,529,NA">
+699/NA Ultimate Play Combo
+</option>
+
+<option value="370,180,325,50">
+745/555 Viewing Fun Combo
+</option>
+
+<option value="550,375,249,170">
+969/794 Symbolic Combo
+</option>
+
+<option value="170,80,355,574">
+1099/1009 Delight Combo
+</option>
+
+<option value="370,180,355,574">
+1299/1109 Mini Blast Combo
+</option>
+
+<option value="550,375,250,599">
+1399/1224 All in Fun Combo
+</option>
+
+<option value="1350,775,0,150">
+1500/925 Divine Rush Combo
+</option>
+
+<option value="1400,1400,449,2350,NA">
+4199/NA Ultimate Mega Combo
+</option>
+
 </select>
 
 <br>
 
-<input type="number" id="adults" min="0" placeholder="No. of Adults" oninput="calc()">
+<input
+type="number"
+id="adults"
+min="0"
+max="100"
+maxlength="3"
+placeholder="No. of Adults"
+oninput="
+this.value=this.value.replace(/[^0-9]/g,'');
+if(this.value.length>3)this.value=this.value.slice(0,3);
+if(this.value>100)this.value=100;
+calc();
+"
+>
+
 <br>
-<input type="number" id="children" min="0" placeholder="No. of Children" oninput="calc()">
+
+<input
+type="number"
+id="children"
+min="0"
+max="100"
+maxlength="3"
+placeholder="No. of Children"
+oninput="
+this.value=this.value.replace(/[^0-9]/g,'');
+if(this.value.length>3)this.value=this.value.slice(0,3);
+if(this.value>100)this.value=100;
+calc();
+"
+>
 
 <p id="warning" style="color:red;"></p>
 
 <div class="box">
-<div class="row"><span>TPU</span><span>Rs. <span id="tpu">0</span></span></div>
-<div class="row"><span>OEPL</span><span>Rs. <span id="oepl">0</span></span></div>
-<div class="row"><span>PAEPL</span><span>Rs. <span id="paepl">0</span></span></div>
-<hr>
-<div class="row"><b>Total</b><span>Rs. <span id="total">0</span></span></div>
+
+<div class="row">
+<span>TPU</span>
+<span>Rs. <span id="tpu">0</span></span>
 </div>
-<p id="inclusions" style="
-margin-top:12px;
-font-size:14px;
-padding:0 10px;
-text-align:center;
-"></p>
-<input type="tel" id="sobInput" maxlength="6" placeholder="Enter 6-digit SOB ID">
+
+<div class="row">
+<span>OEPL</span>
+<span>Rs. <span id="oepl">0</span></span>
+</div>
+
+<div class="row">
+<span>PAEPL</span>
+<span>Rs. <span id="paepl">0</span></span>
+</div>
+
+<hr>
+
+<div class="row">
+<b style="font-size:14px;">TOTAL</b>
+<span>Rs. <span id="total">0</span></span>
+</div>
+
+</div>
 
 <br>
 
-<button onclick="saveEntry()">Save SOB</button>
-<button onclick="resetForm()">Reset Calculator</button>
-<button onclick="resetAllData()">Reset SOB IDs</button>
+<input
+type="tel"
+id="sobInput"
+maxlength="6"
+placeholder="Enter 6-digit SOB ID"
+>
 
 <br>
 
-<button onclick="printA4()">Print A4</button>
-<button onclick="print80()">Print 80mm</button>
+<button onclick="saveEntry()">
+Save SOB
+</button>
+
+<button onclick="resetForm()">
+Reset Calculator
+</button>
+
+<button onclick="resetAllData()">
+Reset SOB IDs
+</button>
+
+<br>
+
+<button onclick="printA4()">
+Print A4
+</button>
+
+<button onclick="print80mm()">
+Print 80MM
+</button>
 
 </div>
 
 <div id="printArea">
 
 <div id="a4">
+
 <div class="header">
-<div>POS# : __________</div>
-<div>USERNA<b>M</b>E.<b>S</b> : ____________</div>
-<div>DATE : <span id="date"></span></div>
+
+<div>
+POS# : __________
 </div>
 
+<div>
+USERNA<b>M</b>E.<b>S</b> : ____________
+</div>
+
+<div>
+DATE : <span id="date"></span>
+</div>
+
+</div>
+
+<div class="table-wrapper">
 <table>
+
 <thead>
+
 <tr>
+
 <th>SR</th>
 <th>SOB ID</th>
 <th>TPU</th>
 <th>OEPL</th>
 <th>PAEPL</th>
 <th>TOTAL</th>
+<th class="deleteColumn" style="width:40px;">DEL</th>
+<th>ACTIVITIES' AMOUNTS</th>
 <th>TIME</th>
+
 </tr>
+
 </thead>
 
 <tbody id="dataBody"></tbody>
 
 <tfoot>
+
 <tr>
-<td colspan="2"><b>TOTAL</b></td>
-<td id="tpuT"></td>
-<td id="oeplT"></td>
-<td id="paeplT"></td>
-<td id="grandT"></td>
+
+<td colspan="2">
+<b style="font-size:11px;">TOTAL</b>
+</td>
+
+<td id="tpuT"><b>0</b></td>
+<td id="oeplT"><b>0</b></td>
+<td id="paeplT"><b>0</b></td>
+<td id="grandT"><b>0</b></td>
+
+<td class="deleteColumn"></td>
+
+<td id="activityTotals" class="activityTotalsCell"></td>
 <td></td>
+
 </tr>
+
 </tfoot>
+
 </table>
 </div>
-
-<div id="thermal">
-<div class="line">POS# : ____________</div>
-<div class="line">USERNAME.S : ____________</div>
-<div class="line">DATE : <span id="date2"></span></div>
-<hr>
-<div class="line"><b>SR  SOB ID (TOTAL)</b></div>
-<div class="line"><b>TPU | OEPL | PAEPL</b></div>
-<hr>
-<div id="thermalData"></div>
-<div class="line">TOTAL TPU : <span id="tpuT2"></span></div>
-<div class="line">TOTAL OEPL : <span id="oeplT2"></span></div>
-<div class="line">TOTAL PAEPL : <span id="paeplT2"></span></div>
-<hr>
-<div class="line"><b>GRAND TOTAL : <span id="grandT2"></span></b></div>
 </div>
 
 </div>
 
 <div class="footer-left">
-Last Updated: 05/05/2026 | V3.0
-</div>
-
-<div class="footer-right">
-Created for my Team :)<br>by MS
+Last Updated: 16/05/2026 | V3.0
 </div>
 
 <script>
 
-let data = JSON.parse(localStorage.getItem("sobData")) || [];
+let data =
+JSON.parse(localStorage.getItem("sobData")) || [];
 
-const tpuEl = document.getElementById("tpu");
-const oeplEl = document.getElementById("oepl");
-const paeplEl = document.getElementById("paepl");
-const totalEl = document.getElementById("total");
+const todayKey =
+new Date().toLocaleDateString('en-GB');
+
+const savedDate =
+localStorage.getItem("sobDate");
+
+if(savedDate !== todayKey){
+
+data = [];
+
+localStorage.removeItem("sobData");
+
+localStorage.setItem("sobDate",todayKey);
+
+}
+
+const tpuEl =
+document.getElementById("tpu");
+
+const oeplEl =
+document.getElementById("oepl");
+
+const paeplEl =
+document.getElementById("paepl");
+
+const totalEl =
+document.getElementById("total");
 
 function calc(){
+
 let v = combo.value;
+
 if(!v) return;
 
 let p = v.split(",");
-let ta = +p[0], tc = +p[1], o = +p[2], pi = +p[3];
-let na = p[4]==="NA";
 
-let a = Math.max(0,+adults.value||0);
-let c = Math.max(0,+children.value||0);
+let ta = +p[0];
+let tc = +p[1];
+let o = +p[2];
+let pi = +p[3];
 
-warning.innerText = (na && c>0) ? "⚠ Children not allowed" : "";
+let na = p[4] === "NA";
 
-let tpu = a*ta + c*tc;
-let oepl = (a+c)*o;
-let paepl = (a+c)*pi;
-let total = tpu + oepl + paepl;
+let a =
+Math.max(0,+adults.value||0);
 
-let t = combo.options[combo.selectedIndex].text;
-let inclusions = "";
+let c =
+Math.max(0,+children.value||0);
 
-if (t.includes("Aastha"))
-  inclusions = "Park Entry + Nij Aatma Manthan + 2 Times Drop";
+warning.innerText =
+(na && c>0)
+? "⚠ Children not allowed"
+: "";
 
-else if (t.includes("Shiv Ganesha"))
-  inclusions = "Park Entry + Viewing Gallery + 1 Time Drop Only + Eyelusion + World of Ganesha";
+let tpu =
+(a*ta) + (c*tc);
 
-else if (t.includes("Viewing Fun"))
-  inclusions = "Park Entry + Viewing Gallery + Snow Park + Food (Rs.110) + 1 Time Drop Only";
+let oepl =
+(a+c)*o;
 
-else if (t.includes("Symbolic"))
-  inclusions = "Park Entry + Viewing Gallery + Nij Aatma Manthan + World of Ganesha + Snow Park + 2 Times Drop + Wax Museum";
+let paepl =
+(a+c)*pi;
 
-else if (t.includes("Delight"))
-  inclusions = "Park Entry + Snow Park + Wax Museum + Eyelusion + 5 Rides + 12D Cinema + Mirror Maze + Horror House + Food (Rs.50) + 1 Time Drop Only + World of Ganesha + Souvenir (Rs.75)";
-
-else if (t.includes("Mini Blast"))
-  inclusions = "Park Entry + Viewing Gallery + Snow Park + Wax Museum + Eyelusion + 5 Rides + 12D Cinema + Mirror Maze + Horror House + Food (Rs.50) + 1 Time Drop Only + World of Ganesha + Souvenir (Rs.75)";
-
-else if (t.includes("All in Fun"))
-  inclusions = "Park Entry + Viewing Gallery + Nij Aatma Manthan + Snow Park + Wax Museum + Eyelusion + 5 Rides + 2 Times Drop + World of Ganesha";
-
-else if (t.includes("TU Explorer"))
-  inclusions = "Park Entry + Wax Museum + Eyelusion + World of Ganesha";
-
-else if (t.includes("Snow Adventure"))
-  inclusions = "Park Entry + Snow Park";
-
-else if (t.includes("Ultimate Play"))
-  inclusions = "Park Entry + 10 Rides + Go Kart + 3 Times Drop";
-
-else if (t.includes("Adventure Combo"))
-  inclusions = "Park Entry + 5 Rides/Games + 1 Time Drop Only";
-
-else if (t.includes("ECO FUN"))
-  inclusions = "Park Entry + 12D Cinema + Mirror Maze + Horror House + Wax Museum";
-
-else if (t.includes("Namah"))
-  inclusions = "Park Entry + Viewing Gallery + Nij Aatma Manthan + 1 Time Drop Only";
-
-else if (t.includes("Divine Rush"))
-  inclusions = "Park Entry + Viewing Gallery + Nij Aatma Manthan + Nij Aatma Abhishek + 3 Times Drop + World of Ganesha";
-
-else if (t.includes("Ultimate Mega"))
-  inclusions = "Park Entry + Viewing Gallery + Nij Aatma Manthan + Nij Aatma Abhishek + Snow Park + Wax Museum + Eyelusion + 10 Rides + Go Kart + Box Cricket + VR Zone + Souvenir (Rs.110) + Food (Rs.110) + Bungee Jumping + 3 Times Drop + World of Ganesha + 12D Cinema + Mirror Maze + Horror House";
-
-document.getElementById("inclusions").innerText = inclusions;
+let total =
+tpu + oepl + paepl;
 
 tpuEl.innerText = tpu;
 oeplEl.innerText = oepl;
 paeplEl.innerText = paepl;
 totalEl.innerText = total;
+saveFormState();
+return {
+tpu,
+oepl,
+paepl,
+total
+};
 
-return {tpu,oepl,paepl,total};
+}
+function saveFormState(){
+
+localStorage.setItem("lastCombo", combo.value);
+
+localStorage.setItem("lastAdults", adults.value);
+
+localStorage.setItem("lastChildren", children.value);
+
+}
+function getVendorBreakup(comboName,pax){
+
+function line(items){
+
+return items
+.map(i => `${i.name}: ${i.price * pax}`)
+.join(" | ");
+
+}
+
+if(comboName.includes("Snow Adventure")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:255}
+])}
+`;
+
+}
+
+else if(comboName.includes("Adventure Combo")){
+
+return `
+PAEPL → ${line([
+{name:"Gamezone",price:227}
+])}
+`;
+
+}
+
+else if(comboName.includes("TU Explorer")){
+
+return `
+OEPL → ${line([
+{name:"Wax",price:70}
+])}
+<br>
+PAEPL → ${line([
+{name:"Eyelusion",price:70},
+{name:"WOG",price:80}
+])}
+`;
+
+}
+
+else if(comboName.includes("ECO FUN")){
+
+return `
+OEPL → ${line([
+{name:"Wax",price:28}
+])}
+<br>
+PAEPL → ${line([
+{name:"Mayalok",price:200}
+])}
+`;
+
+}
+
+else if(comboName.includes("Aastha")){
+
+return `
+PAEPL → ${line([
+{name:"Gamezone",price:99}
+])}
+`;
+
+}
+
+else if(comboName.includes("Shiv Ganesha")){
+
+return `
+PAEPL → ${line([
+{name:"Eyelusion",price:50},
+{name:"Gamezone",price:50},
+{name:"WOG",price:75}
+])}
+`;
+
+}
+
+else if(comboName.includes("Namah")){
+
+return `
+PAEPL → ${line([
+{name:"Gamezone",price:50}
+])}
+`;
+
+}
+
+else if(comboName.includes("Ultimate Play")){
+
+return `
+PAEPL → ${line([
+{name:"Gamezone",price:529}
+])}
+`;
+
+}
+
+else if(comboName.includes("Viewing Fun")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:225},
+{name:"Food",price:100}
+])}
+<br>
+PAEPL → ${line([
+{name:"Gamezone",price:50}
+])}
+`;
+
+}
+
+else if(comboName.includes("Symbolic")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:200},
+{name:"Wax",price:49}
+])}
+<br>
+PAEPL → ${line([
+{name:"Gamezone",price:100},
+{name:"WOG",price:70}
+])}
+`;
+
+}
+
+else if(comboName.includes("Delight")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:200},
+{name:"Food",price:45},
+{name:"Souvenir",price:60},
+{name:"Wax",price:50}
+])}
+<br>
+PAEPL → ${line([
+{name:"Eyelusion",price:50},
+{name:"Mayalok",price:200},
+{name:"Gamezone",price:249},
+{name:"WOG",price:75}
+])}
+`;
+
+}
+
+else if(comboName.includes("Mini Blast")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:200},
+{name:"Food",price:45},
+{name:"Souvenir",price:60},
+{name:"Wax",price:50}
+])}
+<br>
+PAEPL → ${line([
+{name:"Eyelusion",price:50},
+{name:"Mayalok",price:200},
+{name:"Gamezone",price:249},
+{name:"WOG",price:75}
+])}
+`;
+
+}
+
+else if(comboName.includes("All in Fun")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:200},
+{name:"Wax",price:50}
+])}
+<br>
+PAEPL → ${line([
+{name:"Eyelusion",price:50},
+{name:"Mayalok",price:200},
+{name:"Gamezone",price:279},
+{name:"WOG",price:70}
+])}
+`;
+
+}
+
+else if(comboName.includes("Divine Rush")){
+
+return `
+PAEPL → ${line([
+{name:"Gamezone",price:100},
+{name:"WOG",price:50}
+])}
+`;
+
+}
+
+else if(comboName.includes("Ultimate Mega")){
+
+return `
+OEPL → ${line([
+{name:"Snow",price:150},
+{name:"Food",price:99},
+{name:"Souvenir",price:100},
+{name:"Wax",price:100}
+])}
+<br>
+PAEPL → ${line([
+{name:"Eyelusion",price:50},
+{name:"Mayalok",price:150},
+{name:"Gamezone",price:2100},
+{name:"WOG",price:50}
+])}
+`;
+
+}
+
+return "-";
+
 }
 
 function saveEntry(){
 
-let raw = sobInput.value.trim();
+let raw =
+sobInput.value.trim();
 
-// strict validation
 if(!/^[1-9][0-9]{5}$/.test(raw)){
-  alert("Enter valid 6-digit SOB ID (no leading 0)");
-  return;
+
+alert(
+"Enter valid 6-digit SOB ID"
+);
+
+return;
+
 }
 
-let sob = "SOB000" + raw;
+let sob =
+"SOB000" + raw;
 
-// 🔥 DUPLICATE CHECK
 if(data.some(d => d.sob === sob)){
-  alert("This SOB ID already exists");
-  return;
+
+alert(
+"This SOB ID already exists"
+);
+
+return;
+
 }
 
-let r = calc(); if(!r) return;
+let r = calc();
 
-data.push({sob,...r,time:new Date().toLocaleTimeString()});
-localStorage.setItem("sobData",JSON.stringify(data));
+if(!r) return;
+
+let pax =
+(+adults.value || 0) +
+(+children.value || 0);
+
+let comboName =
+combo.options[
+combo.selectedIndex
+].text;
+
+let breakup =
+getVendorBreakup(comboName,pax);
+
+data.push({
+
+sob,
+...r,
+
+comboName,
+
+adults:
+(+adults.value || 0),
+
+children:
+(+children.value || 0),
+
+breakup,
+
+time:
+new Date().toLocaleTimeString()
+
+});
+
+localStorage.setItem(
+"sobData",
+JSON.stringify(data)
+);
 
 render();
-sobInput.value="";
+
+sobInput.value = "";
+
 }
 
 function resetForm(){
-combo.selectedIndex=0;
-adults.value="";
-children.value="";
-sobInput.value="";
-tpuEl.innerText=oeplEl.innerText=paeplEl.innerText=totalEl.innerText=0;
-warning.innerText="";
-document.getElementById("inclusions").innerText = "";
+
+combo.selectedIndex = 0;
+
+adults.value = "";
+children.value = "";
+sobInput.value = "";
+localStorage.removeItem("lastCombo");
+
+localStorage.removeItem("lastAdults");
+
+localStorage.removeItem("lastChildren");
+tpuEl.innerText = 0;
+oeplEl.innerText = 0;
+paeplEl.innerText = 0;
+totalEl.innerText = 0;
+
+warning.innerText = "";
+
 }
 
 function resetAllData(){
-if(!confirm("Delete all?")) return;
-data=[]; localStorage.removeItem("sobData"); render();
+
+if(
+!confirm(
+"Delete all saved SOB IDs?"
+)
+) return;
+
+data = [];
+
+localStorage.removeItem(
+"sobData"
+);
+
+render();
+
 }
 
+function deleteEntry(index){
+
+if(
+!confirm("Delete this SOB ID?")
+) return;
+
+data.splice(index,1);
+
+localStorage.setItem(
+"sobData",
+JSON.stringify(data)
+);
+
+render();
+
+}
+function formatTime(t){
+
+let d = new Date("1970-01-01 " + t);
+
+return d.toLocaleTimeString([], {
+hour: '2-digit',
+minute: '2-digit',
+hour12: true
+});
+
+}
 function render(){
 
-dataBody.innerHTML="";
-let totalAll=0, tpuSum=0, oeplSum=0, paeplSum=0, th="";
+dataBody.innerHTML = "";
+
+let totalAll = 0;
+let tpuSum = 0;
+let oeplSum = 0;
+let paeplSum = 0;
+let oeplActivities = {};
+let paeplActivities = {};
 
 data.forEach((d,i)=>{
 
-dataBody.innerHTML+=`
+dataBody.innerHTML += `
+
 <tr>
+
 <td>${i+1}</td>
-<td>${d.sob}</td>
+
+<td>
+<b>${d.sob}</b>
+<br>
+<span style="font-size:9px;white-space:nowrap;">
+(${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+(${d.adults}.A + ${d.children}.C)
+</span>
+</td>
+
 <td>${d.tpu}</td>
 <td>${d.oepl}</td>
 <td>${d.paepl}</td>
 <td>${d.total}</td>
-<td>${d.time}</td>
-</tr>`;
 
-th+=`
-<div class="line">${i+1}. ${d.sob} (${d.total})</div>
-<div class="line">${d.tpu} | ${d.oepl} | ${d.paepl}</div>
-<hr>`;
+<td class="deleteColumn">
+<button class="deleteBtn" onclick="deleteEntry(${i})">X</button>
+</td>
+
+<td class="activityCell">
+${d.breakup}
+</td>
+
+<td style="font-size:10px;">
+${formatTime(d.time)}
+</td>
+
+</tr>
+
+`;
 
 tpuSum += d.tpu;
 oeplSum += d.oepl;
 paeplSum += d.paepl;
 totalAll += d.total;
+
+// Activity totals calculation
+
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = d.breakup;
+
+let text = tempDiv.innerText.split("\n");
+
+text.forEach(line => {
+
+line = line.trim();
+
+if(line.startsWith("OEPL")){
+
+let activities = line.replace("OEPL →","").split("|");
+
+activities.forEach(a=>{
+
+let parts = a.split(":");
+
+if(parts.length < 2) return;
+
+let name = parts[0].trim();
+
+let value = parseInt(parts[1]) || 0;
+
+oeplActivities[name] =
+(oeplActivities[name] || 0) + value;
+
 });
 
-thermalData.innerHTML=th;
-
-grandT.innerText = totalAll;
-grandT2.innerText = totalAll;
-
-tpuT.innerText = tpuSum;
-oeplT.innerText = oeplSum;
-paeplT.innerText = paeplSum;
-
-tpuT2.innerText = tpuSum;
-oeplT2.innerText = oeplSum;
-paeplT2.innerText = paeplSum;
 }
 
-function printA4(){ a4.style.display="block"; thermal.style.display="none"; window.print(); }
-function print80(){ a4.style.display="none"; thermal.style.display="block"; window.print(); }
+if(line.startsWith("PAEPL")){
 
-function setDate() {
-  const today = new Date().toLocaleDateString();
-  document.getElementById("date").innerText = today;
-  document.getElementById("date2").innerText = today;
+let activities = line.replace("PAEPL →","").split("|");
+
+activities.forEach(a=>{
+
+let parts = a.split(":");
+
+if(parts.length < 2) return;
+
+let name = parts[0].trim();
+
+let value = parseInt(parts[1]) || 0;
+
+paeplActivities[name] =
+(paeplActivities[name] || 0) + value;
+
+});
+
 }
 
+});
+
+});
+
+
+function formatActivities(obj){
+
+return Object.entries(obj)
+.map(([k,v]) => `${k}: ${v}`)
+.join(" | ");
+
+}
+
+grandT.innerHTML = "<b>" + totalAll + "</b>";
+tpuT.innerHTML = "<b>" + tpuSum + "</b>";
+oeplT.innerHTML = "<b>" + oeplSum + "</b>";
+paeplT.innerHTML = "<b>" + paeplSum + "</b>";
+
+activityTotals.innerHTML = `
+
+OEPL → ${formatActivities(oeplActivities)}
+
+<br>
+
+PAEPL → ${formatActivities(paeplActivities)}
+
+`;
+
+}
+
+function printA4(){
+
+window.print();
+
+}
+
+function setDate(){
+
+const today =
+new Date().toLocaleDateString('en-GB');
+
+document.getElementById("date").innerText =
+today;
+
+}
+function restoreFormState(){
+
+combo.value =
+localStorage.getItem("lastCombo") || "";
+
+adults.value =
+localStorage.getItem("lastAdults") || "";
+
+children.value =
+localStorage.getItem("lastChildren") || "";
+
+if(combo.value){
+calc();
+}
+
+}
+function print80mm(){
+
+let totalAll = 0;
+let tpuSum = 0;
+let oeplSum = 0;
+let paeplSum = 0;
+
+let oeplActivities = {};
+let paeplActivities = {};
+
+let html = `
+
+<html>
+
+<head>
+
+<title>80MM Print</title>
+
+<style>
+
+body{
+font-family:Arial;
+width:72mm;
+margin:0 auto;
+padding:2mm;
+font-size:11px;
+}
+
+.center{
+text-align:center;
+}
+
+.row{
+margin-bottom:3px;
+}
+
+.flex{
+display:flex;
+justify-content:space-between;
+}
+
+.block{
+border:1px solid #000;
+padding:3px;
+margin-top:2px;
+}
+
+.doubleLine{
+border-top:3px double #000;
+margin:6px 0;
+}
+
+.small{
+font-size:10px;
+line-height:14px;
+}
+
+.bold{
+font-weight:bold;
+}
+
+.totalBox{
+border:1px solid #000;
+padding:4px;
+margin-top:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="center bold">
+SOB DAILY REPORT
+</div>
+
+<div class="center small">
+${new Date().toLocaleDateString('en-GB')}
+</div>
+
+<div class="doubleLine"></div>
+
+`;
+
+data.forEach((d,i)=>{
+
+tpuSum += d.tpu;
+oeplSum += d.oepl;
+paeplSum += d.paepl;
+totalAll += d.total;
+
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = d.breakup;
+
+let text = tempDiv.innerText.split("\n");
+
+text.forEach(line => {
+
+line = line.trim();
+
+if(line.startsWith("OEPL")){
+
+let activities = line.replace("OEPL →","").split("|");
+
+activities.forEach(a=>{
+
+let parts = a.split(":");
+
+if(parts.length < 2) return;
+
+let name = parts[0].trim();
+
+let value = parseInt(parts[1]) || 0;
+
+oeplActivities[name] =
+(oeplActivities[name] || 0) + value;
+
+});
+
+}
+
+if(line.startsWith("PAEPL")){
+
+let activities = line.replace("PAEPL →","").split("|");
+
+activities.forEach(a=>{
+
+let parts = a.split(":");
+
+if(parts.length < 2) return;
+
+let name = parts[0].trim();
+
+let value = parseInt(parts[1]) || 0;
+
+paeplActivities[name] =
+(paeplActivities[name] || 0) + value;
+
+});
+
+}
+
+});
+
+html += `
+
+<div class="row bold">
+SR: ${i+1}
+</div>
+
+<div class="row">
+SOB ID: ${d.sob}
+</div>
+
+<div class="row">
+TIME: ${formatTime(d.time)}
+</div>
+
+<div class="block">
+
+<div class="flex">
+<span>TPU</span>
+<span>${d.tpu}</span>
+</div>
+
+<div class="flex">
+<span>OEPL</span>
+<span>${d.oepl}</span>
+</div>
+
+<div class="flex">
+<span>PAEPL</span>
+<span>${d.paepl}</span>
+</div>
+
+<div class="flex bold" style="margin-top:4px;">
+<span>TOTAL</span>
+<span>${d.total}</span>
+</div>
+
+</div>
+
+<div class="small" style="margin-top:4px;">
+${d.breakup}
+</div>
+
+<div class="doubleLine"></div>
+
+`;
+
+});
+
+function formatActivities(obj){
+
+return Object.entries(obj)
+.map(([k,v]) => `${k}: ${v}`)
+.join(" | ");
+
+}
+
+html += `
+
+<div class="totalBox">
+
+<div class="center bold">
+GRAND TOTAL
+</div>
+
+<div class="flex">
+<span>TOTAL TPU</span>
+<span>${tpuSum}</span>
+</div>
+
+<div class="flex">
+<span>TOTAL OEPL</span>
+<span>${oeplSum}</span>
+</div>
+
+<div class="flex">
+<span>TOTAL PAEPL</span>
+<span>${paeplSum}</span>
+</div>
+
+<div class="flex bold" style="margin-top:4px;">
+<span>GRAND TOTAL</span>
+<span>${totalAll}</span>
+</div>
+
+</div>
+
+<div class="doubleLine"></div>
+
+<div class="small">
+
+<div>
+<b>OEPL Activities</b>
+</div>
+
+<div>
+${formatActivities(oeplActivities)}
+</div>
+
+<br>
+
+<div>
+<b>PAEPL Activities</b>
+</div>
+
+<div>
+${formatActivities(paeplActivities)}
+</div>
+
+</div>
+
+</body>
+
+</html>
+
+`;
+
+let w = window.open("", "", "width=400,height=700");
+
+w.document.write(html);
+
+w.document.close();
+
+w.focus();
+
+setTimeout(()=>{
+
+w.print();
+
+w.close();
+
+},500);
+
+}
+restoreFormState();
 setDate();
 
 render();
@@ -406,4 +1453,5 @@ render();
 </script>
 
 </body>
+
 </html>
