@@ -1302,13 +1302,6 @@ border-bottom:2px solid #000;
 height:14px;
 }
 
-.writeLineDate{
-display:inline-block;
-width:78px;
-border-bottom:2px solid #000;
-height:14px;
-}
-
 .writeLineLong{
 display:inline-block;
 width:170px;
@@ -1506,20 +1499,43 @@ line-height:16px;
 <div class="header">
 
 <div class="headerRow">
+<div class="headerLabel">DATE :</div>
+
+<span style="
+display:inline-block;
+width:60px;
+border-bottom:2px solid #000;
+height:14px;
+font-size:11px;
+text-align:center;
+line-height:14px;
+">
+${new Date().toLocaleDateString('en-GB')}
+</span>
+
+</div>
+
+<div style="height:8px;"></div>
+
+<div class="headerRow">
 <div class="headerLabel">POS# :</div>
 <span class="writeLineSmall"></span>
 </div>
 
-<div class="headerRow">
-<div class="headerLabel">DATE :</div>
-<span class="writeLineDate"></span>
-</div>
+<div style="height:8px;"></div>
 
-<div class="headerRow" style="margin-top:6px;">
-<div style="font-size:14px;">
+<div class="headerRow">
+
+<div style="
+font-size:14px;
+width:52px;
+text-align:left;
+">
 USERNA<b>M</b>E.<b>S</b> :
 </div>
+
 <span class="writeLineLong"></span>
+
 </div>
 
 </div>
