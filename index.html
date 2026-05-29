@@ -1226,8 +1226,8 @@ paeplActivities[name] =
 function formatActivityText(html){
 
 return html
-.replace(/<br\s*\/?>/gi,"\n")
-.replace(/<\/?[^>]+(>|$)/g,"");
+.replace(/<br\s*\/?>/gi,"<br>")
+.replace(/<\/?((?!br)[^>])+>/g,"");
 
 }
 
@@ -1408,13 +1408,18 @@ line-height:12px;
 
 .activity{
 margin:0;
-padding:0px 5px 0px 5px;
+padding:0px 1px 0px 1px;
 font-size:13px;
-line-height:14px;
-white-space:normal;
+line-height:12px;
+white-space:pre-line;
 word-break:break-word;
 font-weight:bold;
+}
+
+.activity br{
+line-height:0;
 display:block;
+margin:0;
 }
 
 /* SUMMARY TABLES */
