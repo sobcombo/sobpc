@@ -1226,8 +1226,10 @@ paeplActivities[name] =
 function formatActivityText(html){
 
 return html
+.replace(/OEPL/g,"<u>OEPL</u>")
+.replace(/PAEPL/g,"<u>PAEPL</u>")
 .replace(/<br\s*\/?>/gi,"<span style='display:block;height:0'></span>")
-.replace(/<\/?((?!span)[^>])+>/g,"");
+.replace(/<\/?((?!span|u)[^>])+>/g,"");
 
 }
 
@@ -1339,7 +1341,7 @@ margin:10px 0;
 
 .entry{
 padding:0;
-margin-bottom:6px;
+margin-bottom:10px;
 border:1.5px solid #000;
 border-radius:2px;
 box-sizing:border-box;
