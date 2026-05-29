@@ -1254,8 +1254,6 @@ let html = `
 
 <style>
 
-<style>
-
 @page{
 size:80mm auto;
 margin:1.5mm;
@@ -1275,89 +1273,139 @@ font-weight:bold;
 font-weight:bold;
 box-sizing:border-box;
 }
+
+/* HEADER */
+
 .header{
-text-align:right;
-margin-bottom:14px;
-font-size:13px;
-line-height:24px;
+width:100%;
+margin-bottom:10px;
 }
 
-.headerRow{
+.dateRow{
+width:100%;
+text-align:right;
+font-size:13px;
+font-weight:bold;
+margin-bottom:2px;
+}
+
+.posRow{
+width:100%;
 display:flex;
 justify-content:flex-end;
 align-items:center;
-gap:8px;
-}
-
-.headerLabel{
-width:52px;
-text-align:left;
+font-size:12px;
 font-weight:bold;
+margin-bottom:10px;
+gap:5px;
 }
 
-.writeLineSmall{
+.posLine{
 display:inline-block;
-width:42px;
+width:145px;
+border-bottom:2px solid #000;
+height:12px;
+}
+
+.usernameRow{
+display:flex;
+align-items:center;
+justify-content:center;
+width:100%;
+font-size:14px;
+font-weight:bold;
+margin-bottom:12px;
+}
+
+.usernameLabel{
+white-space:nowrap;
+padding-right:6px;
+}
+
+.usernameLine{
+flex:1;
 border-bottom:2px solid #000;
 height:14px;
 }
 
-.writeLineLong{
-display:inline-block;
-width:170px;
-border-bottom:2px solid #000;
-height:14px;
-}
+/* DOUBLE LINE */
 
 .doubleLine{
 border-top:3px double #000;
 margin:10px 0;
 }
 
+/* ENTRY BOX */
+
 .entry{
-padding:4px 0;
-border:none;
+padding:0;
+margin-bottom:6px;
+border:1.5px solid #000;
+border-radius:2px;
+box-sizing:border-box;
+overflow:hidden;
 }
+
+.line{
+display:none;
+}
+
+/* SOB ID */
 
 .topRow{
 display:flex;
-justify-content:space-between;
-align-items:flex-start;
-font-size:15px;
+justify-content:center;
+align-items:center;
+font-size:22px;
 font-weight:bold;
 margin-bottom:2px;
+text-align:center;
 }
+
+/* SMALL DETAILS ROW */
 
 .smallRow{
 display:flex;
 justify-content:space-between;
-font-size:13px;
+align-items:center;
+font-size:10px;
+margin-top:0;
+margin-bottom:2px;
+padding:0 5px;
+gap:4px;
 font-weight:bold;
-margin-bottom:4px;
 }
+
+/* AMOUNT TABLE */
 
 .amountTable{
 width:100%;
 border-collapse:collapse;
 margin-top:2px;
-margin-bottom:2px;
+margin-bottom:0;
 }
 
 .amountTable td{
 border:1px solid #333;
 text-align:center;
 padding:3px 1px;
-font-size:13px;
+font-size:12px;
 font-weight:bold;
 }
 
+/* ACTIVITIES */
+
 .activity{
-margin-top:2px;
+margin-top:1px;
+padding:4px 6px 5px 6px;
 font-size:11px;
 line-height:15px;
-padding:2px 2px;
+white-space:pre-line;
+word-break:break-word;
 font-weight:bold;
 }
+
+/* SUMMARY TABLES */
 
 .summaryTable{
 width:100%;
@@ -1380,17 +1428,8 @@ font-weight:bold;
 padding:6px !important;
 background:#f2f2f2;
 }
-.header{
-text-align:right;
-font-size:11px;
-line-height:17px;
-margin-bottom:10px;
-font-weight:normal !important;
-}
 
-.header div{
-font-weight:normal !important;
-}
+/* OLD SUPPORT CLASSES */
 
 .center{
 text-align:center;
@@ -1398,58 +1437,6 @@ text-align:center;
 
 .bold{
 font-weight:bold;
-}
-
-.line{
-border-top:2px dashed #555;
-margin:7px 0;
-}
-
-.entry{
-padding:3px;
-margin-bottom:6px;
-border:1.5px solid #000;
-border-radius:2px;
-box-sizing:border-box;
-}
-
-.line{
-display:none;
-}
-
-.topRow{
-display:flex;
-justify-content:space-between;
-align-items:center;
-font-size:18px;
-font-weight:bold;
-margin-bottom:2px;
-}
-
-.smallRow{
-display:flex;
-justify-content:space-between;
-align-items:center;
-font-size:9px;
-margin-top:2px;
-margin-bottom:4px;
-gap:4px;
-}
-
-.amountTable td{
-border:1px solid #333;
-text-align:center;
-padding:2px 1px;
-font-size:11px;
-font-weight:bold;
-}
-
-.activity{
-margin-top:4px;
-font-size:8px;
-line-height:11px;
-white-space:pre-line;
-word-break:break-word;
 }
 
 .amountBox{
@@ -1498,43 +1485,22 @@ line-height:16px;
 
 <div class="header">
 
-<div class="headerRow">
-<div class="headerLabel">DATE :</div>
-
-<span style="
-display:inline-block;
-width:60px;
-border-bottom:2px solid #000;
-height:14px;
-font-size:11px;
-text-align:center;
-line-height:14px;
-">
-${new Date().toLocaleDateString('en-GB')}
-</span>
-
+<div class="dateRow">
+DATE : ${new Date().toLocaleDateString('en-GB')}
 </div>
 
-<div style="height:8px;"></div>
-
-<div class="headerRow">
-<div class="headerLabel">POS# :</div>
-<span class="writeLineSmall"></span>
+<div class="posRow">
+<div>POS# :</div>
+<div class="posLine"></div>
 </div>
 
-<div style="height:8px;"></div>
+<div class="usernameRow">
 
-<div class="headerRow">
-
-<div style="
-font-size:14px;
-width:52px;
-text-align:left;
-">
+<div class="usernameLabel">
 USERNA<b>M</b>E.<b>S</b> :
 </div>
 
-<span class="writeLineLong"></span>
+<div class="usernameLine"></div>
 
 </div>
 
@@ -1557,12 +1523,18 @@ html += `
 
 <div class="entry">
 
-<div class="topRow">
-
-<div>
-${i+1}) ${d.sob}
+<div style="
+font-size:11px;
+font-weight:bold;
+padding-left:5px;
+padding-top:3px;
+line-height:11px;
+">
+${i+1})
 </div>
 
+<div class="topRow">
+${d.sob}
 </div>
 
 <div class="smallRow">
