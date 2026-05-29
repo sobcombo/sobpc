@@ -1226,8 +1226,8 @@ paeplActivities[name] =
 function formatActivityText(html){
 
 return html
-.replace(/<br\s*\/?>/gi,"<br>")
-.replace(/<\/?((?!br)[^>])+>/g,"");
+.replace(/<br\s*\/?>/gi,"<span style='display:block;height:0'></span>")
+.replace(/<\/?((?!span)[^>])+>/g,"");
 
 }
 
@@ -1411,7 +1411,7 @@ margin:0;
 padding:0px 1px 0px 1px;
 font-size:13px;
 line-height:12px;
-white-space:pre-line;
+white-space:normal;
 word-break:break-word;
 font-weight:bold;
 }
