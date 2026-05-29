@@ -1368,12 +1368,28 @@ text-align:center;
 display:flex;
 justify-content:space-between;
 align-items:center;
-font-size:10px;
+font-size:11px;
 margin-top:0;
-margin-bottom:2px;
-padding:0 5px;
-gap:4px;
+margin-bottom:1px;
+padding:0 6px;
 font-weight:bold;
+width:100%;
+}
+
+.smallRow div{
+flex:1;
+}
+
+.smallRow div:nth-child(1){
+text-align:left;
+}
+
+.smallRow div:nth-child(2){
+text-align:center;
+}
+
+.smallRow div:nth-child(3){
+text-align:right;
 }
 
 /* AMOUNT TABLE */
@@ -1396,10 +1412,10 @@ font-weight:bold;
 /* ACTIVITIES */
 
 .activity{
-margin-top:1px;
-padding:4px 6px 5px 6px;
-font-size:11px;
-line-height:15px;
+margin-top:0;
+padding:2px 6px 2px 6px;
+font-size:12px;
+line-height:13px;
 white-space:pre-line;
 word-break:break-word;
 font-weight:bold;
@@ -1523,34 +1539,24 @@ html += `
 
 <div class="entry">
 
-<div style="
-font-size:11px;
-font-weight:bold;
-padding-left:5px;
-padding-top:3px;
-line-height:11px;
-">
-${i+1})
+<div class="smallRow">
+
+<div>
+${i+1}) [${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}]
+</div>
+
+<div>
+[${d.adults}A + ${d.children}C]
+</div>
+
+<div>
+[${formatTime(d.time)}]
+</div>
+
 </div>
 
 <div class="topRow">
 ${d.sob}
-</div>
-
-<div class="smallRow">
-
-<div>
-${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}
-</div>
-
-<div>
-${d.adults}A + ${d.children}C
-</div>
-
-<div>
-${formatTime(d.time)}
-</div>
-
 </div>
 
 <table class="amountTable">
