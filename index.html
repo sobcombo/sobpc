@@ -1276,19 +1276,44 @@ font-weight:bold;
 box-sizing:border-box;
 }
 .header{
-text-align:center;
-font-size:15px;
+text-align:right;
+margin-bottom:14px;
+font-size:13px;
 line-height:24px;
-margin-bottom:12px;
+}
+
+.headerRow{
+display:flex;
+justify-content:flex-end;
+align-items:center;
+gap:8px;
+}
+
+.headerLabel{
+width:52px;
+text-align:left;
 font-weight:bold;
 }
 
-.header .writeLine{
+.writeLineSmall{
 display:inline-block;
-min-width:140px;
+width:42px;
 border-bottom:2px solid #000;
-height:18px;
-vertical-align:middle;
+height:14px;
+}
+
+.writeLineDate{
+display:inline-block;
+width:78px;
+border-bottom:2px solid #000;
+height:14px;
+}
+
+.writeLineLong{
+display:inline-block;
+width:170px;
+border-bottom:2px solid #000;
+height:14px;
 }
 
 .doubleLine{
@@ -1402,36 +1427,41 @@ display:none;
 .topRow{
 display:flex;
 justify-content:space-between;
-align-items:flex-start;
-font-size:13px;
+align-items:center;
+font-size:18px;
 font-weight:bold;
+margin-bottom:2px;
 }
 
 .smallRow{
 display:flex;
 justify-content:space-between;
-font-size:11px;
-margin-top:3px;
+align-items:center;
+font-size:9px;
+margin-top:2px;
+margin-bottom:4px;
+gap:4px;
 }
 
-.amountRow{
-display:flex;
-justify-content:space-between;
-margin-top:6px;
-font-size:11px;
+.amountTable td{
+border:1px solid #333;
 text-align:center;
+padding:2px 1px;
+font-size:11px;
+font-weight:bold;
+}
+
+.activity{
+margin-top:4px;
+font-size:8px;
+line-height:11px;
+white-space:pre-line;
+word-break:break-word;
 }
 
 .amountBox{
 width:25%;
 line-height:16px;
-}
-
-.activity{
-margin-top:5px;
-font-size:10px;
-line-height:15px;
-white-space:pre-line;
 }
 
 .grand{
@@ -1475,18 +1505,21 @@ line-height:16px;
 
 <div class="header">
 
-<div>
-<b>POS#</b>
-<span class="writeLine"></span>
+<div class="headerRow">
+<div class="headerLabel">POS# :</div>
+<span class="writeLineSmall"></span>
 </div>
 
-<div>
-USERNA<b>M</b>E.<b>S</b>
-<span class="writeLine"></span>
+<div class="headerRow">
+<div class="headerLabel">DATE :</div>
+<span class="writeLineDate"></span>
 </div>
 
-<div>
-<b>DATE :</b> ${new Date().toLocaleDateString('en-GB')}
+<div class="headerRow" style="margin-top:6px;">
+<div style="font-size:14px;">
+USERNA<b>M</b>E.<b>S</b> :
+</div>
+<span class="writeLineLong"></span>
 </div>
 
 </div>
@@ -1514,20 +1547,20 @@ html += `
 ${i+1}) ${d.sob}
 </div>
 
-<div>
-${formatTime(d.time)}
-</div>
-
 </div>
 
 <div class="smallRow">
 
 <div>
-(${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}
 </div>
 
 <div>
-(${d.adults}.A + ${d.children}.C)
+${d.adults}A + ${d.children}C
+</div>
+
+<div>
+${formatTime(d.time)}
 </div>
 
 </div>
