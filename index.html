@@ -1245,14 +1245,14 @@ let html = `
 
 @page{
 size:80mm auto;
-margin:2.5mm;
+margin:0;
 }
 
 body{
 font-family:Arial,sans-serif;
 width:76mm;
-margin:0;
-padding:0mm;
+margin:0 auto;
+padding:0;
 font-size:13px;
 color:#000;
 font-weight:bold;
@@ -1268,47 +1268,50 @@ box-sizing:border-box;
 .header{
 width:100%;
 margin-bottom:8px;
-font-weight:bold;
+padding:0 6mm;
+box-sizing:border-box;
 }
 
-/* DATE */
+/* TOP ROW */
 
-.dateRow{
+.topHeaderRow{
+display:flex;
+justify-content:space-between;
+align-items:flex-end;
 width:100%;
-text-align:right;
 font-size:13px;
-margin-bottom:3px;
-padding-right:2px;
+margin-bottom:8px;
 }
 
 /* POS */
 
-.posRow{
+.posWrap{
 display:flex;
-justify-content:flex-end;
-align-items:center;
-font-size:12px;
-margin-bottom:8px;
-padding-right:2px;
-}
-
-.posLabel{
+align-items:flex-end;
 white-space:nowrap;
-margin-right:4px;
 }
 
 .posLine{
-width:145px;
+width:85px;
 border-bottom:2px solid #000;
-height:10px;
+margin-left:4px;
+height:12px;
+}
+
+/* DATE */
+
+.dateWrap{
+white-space:nowrap;
+font-size:13px;
 }
 
 /* USERNAME */
 
 .usernameRow{
 display:flex;
-align-items:center;
 justify-content:center;
+align-items:flex-end;
+width:100%;
 font-size:14px;
 margin-bottom:10px;
 }
@@ -1322,6 +1325,7 @@ margin-right:6px;
 flex:1;
 border-bottom:2px solid #000;
 height:12px;
+max-width:150px;
 }
 
 /* DOUBLE LINE */
@@ -1352,7 +1356,7 @@ display:none;
 display:flex;
 justify-content:center;
 align-items:center;
-font-size:16px;
+font-size:13px;
 font-weight:bold;
 margin-bottom:2px;
 text-align:center;
@@ -1409,8 +1413,8 @@ line-height:12px;
 .activity{
 margin:0;
 padding:5px 5px 5px 5px;
-font-size:13px;
-line-height:12px;
+font-size:12px;
+line-height:13px;
 white-space:normal;
 word-break:break-word;
 font-weight:bold;
@@ -1502,13 +1506,17 @@ line-height:16px;
 
 <div class="header">
 
-<div class="dateRow">
+<div class="topHeaderRow">
+
+<div class="posWrap">
+<div>POS# :</div>
+<div class="posLine"></div>
+</div>
+
+<div class="dateWrap">
 DATE : ${new Date().toLocaleDateString('en-GB')}
 </div>
 
-<div class="posRow">
-<div>POS# :</div>
-<div class="posLine"></div>
 </div>
 
 <div class="usernameRow">
