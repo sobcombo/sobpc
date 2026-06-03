@@ -61,7 +61,13 @@ line-height:1;
 margin:0;
 min-width:auto;
 }
-
+.editBtn{
+padding:2px 5px;
+font-size:11px;
+line-height:1;
+margin-left:4px;
+cursor:pointer;
+}
 #a4{
 padding:8mm;
 box-sizing:border-box;
@@ -974,6 +980,46 @@ JSON.stringify(data)
 render();
 
 }
+function editSob(index){
+
+let currentSob = data[index].sob.replace("SOB000","");
+
+let newSob = prompt(
+"Enter correct 6-digit SOB ID",
+currentSob
+);
+
+if(newSob === null) return;
+
+newSob = newSob.trim();
+
+if(!/^[1-9][0-9]{5}$/.test(newSob)){
+alert("Enter valid 6-digit SOB ID");
+return;
+}
+
+let fullSob = "SOB000" + newSob;
+
+if(
+data.some((d,i)=>
+i !== index &&
+d.sob === fullSob
+)
+){
+alert("This SOB ID already exists");
+return;
+}
+
+data[index].sob = fullSob;
+
+localStorage.setItem(
+"sobData",
+JSON.stringify(data)
+);
+
+render();
+
+}
 function formatTime(t){
 
 let d = new Date("1970-01-01 " + t);
@@ -1006,6 +1052,14 @@ dataBody.innerHTML += `
 
 <td>
 <b>${d.sob}</b>
+
+<button
+class="editBtn"
+onclick="editSob(${i})"
+title="Edit SOB ID">
+✏️
+</button>
+
 <br>
 <span style="font-size:9px;white-space:nowrap;">
 (${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
