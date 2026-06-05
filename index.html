@@ -3,7 +3,7 @@
 
 <head>
 
-<title>SOB coMboS calculator</title>
+<title>SOB coMboS calculator V3.0</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -61,13 +61,7 @@ line-height:1;
 margin:0;
 min-width:auto;
 }
-.editBtn{
-padding:2px 5px;
-font-size:11px;
-line-height:1;
-margin-left:4px;
-cursor:pointer;
-}
+
 #a4{
 padding:8mm;
 box-sizing:border-box;
@@ -242,10 +236,6 @@ font-size:11px;
 display:none !important;
 }
 
-    .editBtn{
-        display:none !important;
-    }
-
 }
 .table-wrapper{
     width:100%;
@@ -268,12 +258,6 @@ table{
 }
 
 }
-button{
-padding:10px;
-margin:6px;
-cursor:pointer;
-border-radius:6px;
-}
 </style>
 
 </head>
@@ -282,19 +266,30 @@ border-radius:6px;
 <div class="top-buttons">
 
 <a class="switch-btn"
+href="https://sobcombo.github.io/sobcombo/"
+target="_blank">
+Switch to Basic Calc
+</a>
+
+<a class="switch-btn"
 href="https://sobcombo.github.io/r/"
 target="_blank">
 Switch to Daily Report
 </a>
-  
+
+</div>
+
+<div class="center-switch">
+
 <a class="switch-btn"
 href="https://sobcombo.github.io/reverse/"
 target="_blank">
 Reverse Combo Finder
 </a>
+
 </div>
 
-<h2>SOB coMboS calculator</h2>
+<h2>SOB coMboS calculator V3.0</h2>
 
 <div class="container">
 
@@ -455,10 +450,6 @@ Reset SOB IDs
 Print A4
 </button>
 
-<button onclick="print80mm()">
-Print 80MM
-</button>
-
 </div>
 
 <div id="printArea">
@@ -487,8 +478,7 @@ DATE : <span id="date"></span>
 <thead>
 
 <tr>
-    
-<th class="editColumn">EDIT</th>
+
 <th>SR</th>
 <th>SOB ID</th>
 <th>TPU</th>
@@ -509,7 +499,7 @@ DATE : <span id="date"></span>
 
 <tr>
 
-<td colspan="3">
+<td colspan="2">
 <b style="font-size:11px;">TOTAL</b>
 </td>
 
@@ -534,7 +524,7 @@ DATE : <span id="date"></span>
 </div>
 
 <div class="footer-left">
-Last Updated: 30/05/2026 | V4.0
+Last Updated: 16/05/2026 | V3.0
 </div>
 
 <script>
@@ -985,57 +975,7 @@ JSON.stringify(data)
 render();
 
 }
-function editEntry(index){
 
-let currentSob = data[index].sob.replace("SOB000","");
-
-let newSob = prompt(
-"Enter correct 6-digit SOB ID",
-currentSob
-);
-
-if(newSob === null) return;
-
-newSob = newSob.trim();
-
-if(!/^[1-9][0-9]{5}$/.test(newSob)){
-alert("Enter valid 6-digit SOB ID");
-return;
-}
-
-let fullSob = "SOB000" + newSob;
-
-if(
-data.some((d,i)=>
-i !== index &&
-d.sob === fullSob
-)
-){
-alert("This SOB ID already exists");
-return;
-}
-
-data[index].sob = fullSob;
-
-localStorage.setItem(
-"sobData",
-JSON.stringify(data)
-);
-
-render();
-
-}
-function formatTime(t){
-
-let d = new Date("1970-01-01 " + t);
-
-return d.toLocaleTimeString([], {
-hour: '2-digit',
-minute: '2-digit',
-hour12: true
-});
-
-}
 function render(){
 
 dataBody.innerHTML = "";
@@ -1053,21 +993,11 @@ dataBody.innerHTML += `
 
 <tr>
 
-<td class="editColumn">
-<button
-class="editBtn"
-onclick="editEntry(${i})"
-title="Edit Entry">
-✎
-</button>
-</td>
-
 <td>${i+1}</td>
 
 <td>
 <b>${d.sob}</b>
 <br>
-
 <span style="font-size:9px;white-space:nowrap;">
 (${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
 (${d.adults}.A + ${d.children}.C)
@@ -1080,11 +1010,7 @@ title="Edit Entry">
 <td>${d.total}</td>
 
 <td class="deleteColumn">
-<button
-class="deleteBtn"
-onclick="deleteEntry(${i})">
-X
-</button>
+<button class="deleteBtn" onclick="deleteEntry(${i})">X</button>
 </td>
 
 <td class="activityCell">
@@ -1161,6 +1087,17 @@ paeplActivities[name] =
 
 });
 
+function formatTime(t){
+
+let d = new Date("1970-01-01 " + t);
+
+return d.toLocaleTimeString([], {
+hour: '2-digit',
+minute: '2-digit',
+hour12: true
+});
+
+}
 
 function formatActivities(obj){
 
@@ -1218,327 +1155,14 @@ calc();
 }
 
 }
-function print80mm(){
 
-let totalAll = 0;
-let tpuSum = 0;
-let oeplSum = 0;
-let paeplSum = 0;
+restoreFormState();
+setDate();
 
-let oeplActivities = {};
-let paeplActivities = {};
+render();
 
-function addActivityTotals(text){
+</script>
 
-let tempDiv = document.createElement("div");
+</body>
 
-tempDiv.innerHTML = text;
-
-let lines = tempDiv.innerText.split("\n");
-
-lines.forEach(line=>{
-
-line = line.trim();
-
-if(line.startsWith("OEPL")){
-
-let activities =
-line.replace("OEPL →","").split("|");
-
-activities.forEach(a=>{
-
-let parts = a.split(":");
-
-if(parts.length < 2) return;
-
-let name = parts[0].trim();
-
-let value = parseInt(parts[1]) || 0;
-
-oeplActivities[name] =
-(oeplActivities[name] || 0) + value;
-
-});
-
-}
-
-if(line.startsWith("PAEPL")){
-
-let activities =
-line.replace("PAEPL →","").split("|");
-
-activities.forEach(a=>{
-
-let parts = a.split(":");
-
-if(parts.length < 2) return;
-
-let name = parts[0].trim();
-
-let value = parseInt(parts[1]) || 0;
-
-paeplActivities[name] =
-(paeplActivities[name] || 0) + value;
-
-});
-
-}
-
-});
-
-}
-
-function formatActivityText(html){
-
-return html
-.replace(/OEPL/g,"<u>OEPL</u>")
-.replace(/PAEPL/g,"<u>PAEPL</u>")
-.replace(/<br\s*\/?>/gi,"<span style='display:block;height:0'></span>")
-.replace(/<\/?((?!span|u)[^>])+>/g,"");
-
-}
-
-let html = `
-
-<!DOCTYPE html>
-
-<html>
-
-<head>
-
-<title>80MM PRINT</title>
-
-<style>
-
-@page{
-size:80mm auto;
-margin:3mm;
-}
-
-body{
-font-family:Arial,sans-serif;
-width:76mm;
-margin:0 auto;
-padding:0;
-font-size:13px;
-color:#000;
-font-weight:normal;
-}
-
-*{
-font-weight:bold;
-box-sizing:border-box;
-}
-
-/* HEADER */
-
-.header{
-width:100%;
-margin-bottom:8px;
-padding:0 6mm;
-box-sizing:border-box;
-}
-
-/* TOP ROW */
-
-.topHeaderRow{
-display:flex;
-justify-content:space-between;
-align-items:flex-end;
-width:100%;
-font-size:13px;
-margin-bottom:8px;
-}
-
-/* POS */
-
-.posWrap{
-display:flex;
-align-items:flex-end;
-white-space:nowrap;
-}
-
-.posLine{
-width:85px;
-border-bottom:1px solid #000;
-margin-left:4px;
-height:12px;
-}
-
-/* DATE */
-
-.dateWrap{
-white-space:nowrap;
-font-size:13px;
-}
-
-/* USERNAME */
-
-.usernameRow{
-display:flex;
-justify-content:center;
-align-items:flex-end;
-width:100%;
-font-size:14px;
-margin-bottom:10px;
-}
-
-.usernameLabel{
-white-space:nowrap;
-margin-right:6px;
-}
-
-.usernameLine{
-flex:1;
-border-bottom:1px solid #000;
-height:12px;
-max-width:150px;
-}
-
-/* DOUBLE LINE */
-
-.doubleLine{
-border-top:3px double #000;
-margin:10px 0;
-}
-
-/* ENTRY BOX */
-
-.entry{
-padding:0;
-margin-bottom:14px;
-border:1.5px solid #000;
-border-radius:2px;
-box-sizing:border-box;
-overflow:hidden;
-}
-
-.line{
-display:none;
-}
-
-/* SOB ID */
-
-.topRow{
-display:flex;
-justify-content:center;
-align-items:center;
-font-size:14px;
-font-weight:bold;
-margin-bottom:2px;
-text-align:center;
-}
-
-/* SMALL DETAILS ROW */
-
-.smallRow{
-display:flex;
-justify-content:space-between;
-align-items:center;
-font-size:9px;
-margin-top:0;
-margin-bottom:1px;
-padding:0 6px;
-font-weight:bold;
-width:100%;
-}
-
-.smallRow div{
-flex:1;
-}
-
-.smallRow div:nth-child(1){
-text-align:left;
-}
-
-.smallRow div:nth-child(2){
-text-align:center;
-}
-
-.smallRow div:nth-child(3){
-text-align:right;
-}
-
-/* AMOUNT TABLE */
-
-.amountTable{
-width:100%;
-border-collapse:collapse;
-margin-top:0;
-margin-bottom:0;
-}
-
-.amountTable td{
-border:1px solid #333;
-text-align:center;
-padding:2px 1px;
-font-size:12px;
-font-weight:bold;
-line-height:12px;
-}
-
-.activity{
-margin:0;
-padding:5px 5px 5px 5px;
-font-size:12px;
-line-height:13px;
-white-space:normal;
-word-break:break-word;
-font-weight:bold;
-}
-
-.activity br{
-line-height:0;
-display:block;
-margin:0;
-}
-
-/* SUMMARY TABLES */
-
-.summaryTable{
-width:100%;
-border-collapse:collapse;
-margin-top:8px;
-margin-bottom:8px;
-}
-
-.summaryTable td{
-border:2px solid #333;
-text-align:center;
-padding:5px 3px;
-font-size:12px;
-font-weight:bold;
-}
-
-.summaryHead{
-font-size:14px !important;
-font-weight:bold;
-padding:6px !important;
-background:#f2f2f2;
-}
-
-/* OLD SUPPORT CLASSES */
-
-.center{
-text-align:center;
-}
-
-.bold{
-font-weight:bold;
-}
-
-.amountBox{
-width:25%;
-line-height:16px;
-}
-
-.grand{
-margin-top:10px;
-}
-
-.grandRow{
-display:flex;
-justify-content:space-between;
-text-align:center;
-font-size:11px;
-margin
+</html>
