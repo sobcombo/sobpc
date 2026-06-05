@@ -3,7 +3,7 @@
 
 <head>
 
-<title>SOB coMboS calculator V3.0</title>
+<title>SOB coMboS calculator</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -32,11 +32,6 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 padding:10px 12px 0 12px;
-}
-.center-switch{
-display:flex;
-justify-content:center;
-margin-top:8px;
 }
 
 .switch-btn{
@@ -138,6 +133,13 @@ font-weight:bold;
   padding: 6px 6px 6px 12px;
   vertical-align: top;
 }
+.editBtn{
+padding:2px 6px;
+font-size:11px;
+line-height:1;
+margin:0;
+min-width:auto;
+}
 .footer-left{
 position:fixed;
 bottom:5px;
@@ -182,11 +184,12 @@ overflow:visible;
 .footer-right,
 h2,
 .top-buttons,
-.center-switch,
 .deleteBtn{
 display:none !important;
 }
-
+.editColumn{
+display:none !important;
+}
 #printArea{
 display:block !important;
 width:100%;
@@ -266,9 +269,9 @@ table{
 <div class="top-buttons">
 
 <a class="switch-btn"
-href="https://sobcombo.github.io/sobcombo/"
+href="https://sobcombo.github.io/reverse/"
 target="_blank">
-Switch to Basic Calc
+Reverse Combo Finder
 </a>
 
 <a class="switch-btn"
@@ -279,17 +282,7 @@ Switch to Daily Report
 
 </div>
 
-<div class="center-switch">
-
-<a class="switch-btn"
-href="https://sobcombo.github.io/reverse/"
-target="_blank">
-Reverse Combo Finder
-</a>
-
-</div>
-
-<h2>SOB coMboS calculator V3.0</h2>
+<h2>SOB coMboS calculator</h2>
 
 <div class="container">
 
@@ -479,13 +472,14 @@ DATE : <span id="date"></span>
 
 <tr>
 
+<th class="editColumn" style="width:40px;">EDIT</th>
+<th class="deleteColumn" style="width:40px;">DEL</th>
 <th>SR</th>
 <th>SOB ID</th>
 <th>TPU</th>
 <th>OEPL</th>
 <th>PAEPL</th>
 <th>TOTAL</th>
-<th class="deleteColumn" style="width:40px;">DEL</th>
 <th>ACTIVITIES' AMOUNTS</th>
 <th>TIME</th>
 
@@ -499,6 +493,9 @@ DATE : <span id="date"></span>
 
 <tr>
 
+<td class="editColumn"></td>
+<td class="deleteColumn"></td>
+
 <td colspan="2">
 <b style="font-size:11px;">TOTAL</b>
 </td>
@@ -507,8 +504,6 @@ DATE : <span id="date"></span>
 <td id="oeplT"><b>0</b></td>
 <td id="paeplT"><b>0</b></td>
 <td id="grandT"><b>0</b></td>
-
-<td class="deleteColumn"></td>
 
 <td id="activityTotals" class="activityTotalsCell"></td>
 <td></td>
@@ -524,7 +519,7 @@ DATE : <span id="date"></span>
 </div>
 
 <div class="footer-left">
-Last Updated: 16/05/2026 | V3.0
+Last Updated: 06/06/2026 | V4.0
 </div>
 
 <script>
@@ -976,6 +971,119 @@ render();
 
 }
 
+function editEntry(index){
+
+let d = data[index];
+
+let newSob = prompt(
+"Edit SOB ID (6 digits)",
+d.sob.replace("SOB000","")
+);
+
+if(newSob === null) return;
+
+if(!/^[1-9][0-9]{5}$/.test(newSob)){
+alert("Invalid SOB ID");
+return;
+}
+
+let newAdults = prompt(
+"Adults Count",
+d.adults
+);
+
+if(newAdults === null) return;
+
+let newChildren = prompt(
+"Children Count",
+d.children
+);
+
+if(newChildren === null) return;
+
+let newTime = prompt(
+"Time",
+d.time
+);
+
+if(newTime === null) return;
+
+let comboNames =
+Array.from(combo.options)
+.slice(1)
+.map((o,i)=>`${i+1}. ${o.text}`)
+.join("\n");
+
+let comboChoice = prompt(
+"Select Combo Number:\n\n" + comboNames,
+1
+);
+
+if(comboChoice === null) return;
+
+let comboIndex = parseInt(comboChoice);
+
+if(
+isNaN(comboIndex) ||
+comboIndex < 1 ||
+comboIndex >= combo.options.length
+){
+alert("Invalid Combo");
+return;
+}
+
+let comboOption =
+combo.options[comboIndex];
+
+let comboValue =
+comboOption.value.split(",");
+
+let ta = +comboValue[0];
+let tc = +comboValue[1];
+let oepl = +comboValue[2];
+let paepl = +comboValue[3];
+
+let adultsCount = +newAdults || 0;
+let childrenCount = +newChildren || 0;
+
+let tpu =
+(adultsCount * ta) +
+(childrenCount * tc);
+
+let oeplAmt =
+(adultsCount + childrenCount) * oepl;
+
+let paeplAmt =
+(adultsCount + childrenCount) * paepl;
+
+let total =
+tpu + oeplAmt + paeplAmt;
+
+let pax =
+adultsCount + childrenCount;
+
+data[index] = {
+...data[index],
+sob: "SOB000" + newSob,
+comboName: comboOption.text,
+adults: adultsCount,
+children: childrenCount,
+tpu: tpu,
+oepl: oeplAmt,
+paepl: paeplAmt,
+total: total,
+breakup: getVendorBreakup(comboOption.text,pax),
+time: newTime
+};
+
+localStorage.setItem(
+"sobData",
+JSON.stringify(data)
+);
+
+render();
+}
+  
 function render(){
 
 dataBody.innerHTML = "";
@@ -993,6 +1101,14 @@ dataBody.innerHTML += `
 
 <tr>
 
+<td class="editColumn">
+<button class="editBtn" onclick="editEntry(${i})">✏️</button>
+</td>
+
+<td class="deleteColumn">
+<button class="deleteBtn" onclick="deleteEntry(${i})">X</button>
+</td>
+
 <td>${i+1}</td>
 
 <td>
@@ -1008,10 +1124,6 @@ dataBody.innerHTML += `
 <td>${d.oepl}</td>
 <td>${d.paepl}</td>
 <td>${d.total}</td>
-
-<td class="deleteColumn">
-<button class="deleteBtn" onclick="deleteEntry(${i})">X</button>
-</td>
 
 <td class="activityCell">
 ${d.breakup}
