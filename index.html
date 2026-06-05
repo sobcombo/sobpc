@@ -1374,11 +1374,11 @@ font-size:10px;
 ">
 
 <span>
-${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}
+${i+1}) ${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}
 </span>
 
 <span>
-${d.adults}A + ${d.children}C
+${d.adults} A + ${d.children} C
 </span>
 
 <span>
@@ -1506,8 +1506,10 @@ display:flex;
 justify-content:space-between;
 font-size:12px;
 ">
-<span>POS# : ________</span>
-<span>USERNA<b>M</b>E.<b>S</b> : ________</span>
+<span>POS# : _____</span>
+<span style="font-weight:normal;">
+USERNA<b>M</b>E.<b>S</b> : ___________
+</span>
 </div>
 
 </div>
@@ -1538,26 +1540,44 @@ ${entriesHtml}
 
 </div>
 <div style="
-margin-top:10px;
+border:1px solid #000;
+margin-top:8px;
+padding:6px;
 font-size:11px;
 line-height:16px;
 ">
 
-<hr>
-
-<b>OEPL TOTAL BREAKUP</b>
-
-<br>
+<div style="
+text-align:center;
+border-bottom:1px solid #000;
+padding-bottom:3px;
+margin-bottom:4px;
+">
+OEPL TOTAL BREAKUP
+</div>
 
 ${Object.entries(oeplActivities)
 .map(([k,v])=>`${k}: ${v}`)
 .join("<br>")}
 
-<br><br>
+</div>
 
-<b>PAEPL TOTAL BREAKUP</b>
+<div style="
+border:1px solid #000;
+margin-top:8px;
+padding:6px;
+font-size:11px;
+line-height:16px;
+">
 
-<br>
+<div style="
+text-align:center;
+border-bottom:1px solid #000;
+padding-bottom:3px;
+margin-bottom:4px;
+">
+PAEPL TOTAL BREAKUP
+</div>
 
 ${Object.entries(paeplActivities)
 .map(([k,v])=>`${k}: ${v}`)
