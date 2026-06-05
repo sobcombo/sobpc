@@ -487,7 +487,8 @@ DATE : <span id="date"></span>
 <thead>
 
 <tr>
-
+    
+<th class="editColumn">EDIT</th>
 <th>SR</th>
 <th>SOB ID</th>
 <th>TPU</th>
@@ -508,7 +509,7 @@ DATE : <span id="date"></span>
 
 <tr>
 
-<td colspan="2">
+<td colspan="3">
 <b style="font-size:11px;">TOTAL</b>
 </td>
 
@@ -984,7 +985,7 @@ JSON.stringify(data)
 render();
 
 }
-function editSob(index){
+function editEntry(index){
 
 let currentSob = data[index].sob.replace("SOB000","");
 
@@ -1052,19 +1053,21 @@ dataBody.innerHTML += `
 
 <tr>
 
+<td class="editColumn">
+<button
+class="editBtn"
+onclick="editEntry(${i})"
+title="Edit Entry">
+✎
+</button>
+</td>
+
 <td>${i+1}</td>
 
 <td>
 <b>${d.sob}</b>
-
-<button
-class="editBtn"
-onclick="editSob(${i})"
-title="Edit SOB ID">
-✏️
-</button>
-
 <br>
+
 <span style="font-size:9px;white-space:nowrap;">
 (${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
 (${d.adults}.A + ${d.children}.C)
@@ -1077,7 +1080,11 @@ title="Edit SOB ID">
 <td>${d.total}</td>
 
 <td class="deleteColumn">
-<button class="deleteBtn" onclick="deleteEntry(${i})">X</button>
+<button
+class="deleteBtn"
+onclick="deleteEntry(${i})">
+X
+</button>
 </td>
 
 <td class="activityCell">
@@ -1534,247 +1541,4 @@ display:flex;
 justify-content:space-between;
 text-align:center;
 font-size:11px;
-margin-top:5px;
-}
-
-.grandBox{
-width:25%;
-line-height:16px;
-}
-
-.label{
-font-size:10px;
-line-height:13px;
-}
-
-.value{
-margin-top:3px;
-font-size:12px;
-}
-
-.activityTotals{
-margin-top:10px;
-font-size:10px;
-line-height:16px;
-}
-.editBtn,
-.deleteBtn{
-    display:none !important;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="header">
-
-<div class="topHeaderRow">
-
-<div class="posWrap">
-<div>POS# :</div>
-<div class="posLine"></div>
-</div>
-
-<div class="dateWrap">
-DATE : ${new Date().toLocaleDateString('en-GB')}
-</div>
-
-</div>
-
-<div class="usernameRow">
-
-<div class="usernameLabel">
-USERNA<b>M</b>E.<b>S</b> :
-</div>
-
-<div class="usernameLine"></div>
-
-</div>
-
-</div>
-
-<div class="line"></div>
-
-`;
-
-data.forEach((d,i)=>{
-
-tpuSum += d.tpu;
-oeplSum += d.oepl;
-paeplSum += d.paepl;
-totalAll += d.total;
-
-addActivityTotals(d.breakup);
-
-html += `
-
-<div class="entry">
-
-<div class="smallRow">
-
-<div>
-${i+1}) [${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}]
-</div>
-
-<div>
-[${d.adults}A + ${d.children}C]
-</div>
-
-<div>
-[${formatTime(d.time)}]
-</div>
-
-</div>
-
-<div class="topRow">
-${d.sob}
-</div>
-
-<table class="amountTable">
-
-<tr>
-<td>TPU</td>
-<td>OEPL</td>
-<td>PAEPL</td>
-<td>TOTAL</td>
-</tr>
-
-<tr>
-<td>${d.tpu}</td>
-<td>${d.oepl}</td>
-<td>${d.paepl}</td>
-<td>${d.total}</td>
-</tr>
-
-</table>
-
-<div class="activity">
-${formatActivityText(d.breakup)}
-</div>
-
-</div>
-
-`;
-
-});
-
-html += `
-
-<div class="doubleLine"></div>
-
-<table class="summaryTable">
-
-<tr>
-<td class="summaryHead" colspan="4">
-GRAND TOTAL
-</td>
-</tr>
-
-<tr>
-<td>TOTAL TPU</td>
-<td>TOTAL OEPL</td>
-<td>TOTAL PAEPL</td>
-<td>GRAND TOTAL</td>
-</tr>
-
-<tr>
-<td>${tpuSum}</td>
-<td>${oeplSum}</td>
-<td>${paeplSum}</td>
-<td>${totalAll}</td>
-</tr>
-
-</table>
-
-<table class="summaryTable">
-
-<tr>
-<td class="summaryHead" colspan="4">
-OEPL ACTIVITIES TOTAL
-</td>
-</tr>
-
-<tr>
-${Object.entries(oeplActivities).map(([k,v])=>{
-
-let vendor = "";
-
-if(k==="Wax") vendor="Victory";
-if(k==="Snow") vendor="Shrinathji Ent";
-if(k==="Food") vendor="Foods";
-if(k==="Souvenir") vendor="Mayan";
-
-return `<td>${k}<br>(${vendor})</td>`;
-
-}).join("")}
-</tr>
-
-<tr>
-${Object.entries(oeplActivities).map(([k,v])=>`
-<td>${v}</td>
-`).join("")}
-</tr>
-
-</table>
-
-<table class="summaryTable">
-
-<tr>
-<td class="summaryHead" colspan="4">
-PAEPL ACTIVITIES TOTAL
-</td>
-</tr>
-
-<tr>
-${Object.entries(paeplActivities).map(([k,v])=>{
-
-let vendor = "";
-
-if(k==="Mayalok") vendor="Divine";
-if(k==="Eyelusion") vendor="Rinz";
-if(k==="Gamezone") vendor="Saachi";
-if(k==="WOG") vendor="Mahadev";
-
-return `<td>${k}<br>(${vendor})</td>`;
-
-}).join("")}
-</tr>
-
-<tr>
-${Object.entries(paeplActivities).map(([k,v])=>`
-<td>${v}</td>
-`).join("")}
-</tr>
-
-</table>
-
-`;
-
-let printWindow = window.open('', '_blank');
-
-printWindow.document.open();
-
-printWindow.document.write(html);
-
-printWindow.document.close();
-
-setTimeout(()=>{
-
-printWindow.focus();
-
-printWindow.print();
-
-},700);
-
-}
-restoreFormState();
-setDate();
-
-render();
-
-</script>
-
-</body>
-
-</html>
+margin
