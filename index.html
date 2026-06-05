@@ -83,9 +83,41 @@ font-size:18px;
 }
 
 button{
-padding:10px;
+padding:12px 18px;
 margin:6px;
 cursor:pointer;
+
+border:none;
+border-radius:14px;
+
+font-weight:bold;
+font-size:14px;
+
+background:linear-gradient(
+to bottom,
+#ffffff,
+#e8e8e8
+);
+
+box-shadow:
+0 4px 0 #bdbdbd,
+0 5px 10px rgba(0,0,0,0.15);
+
+transition:all .15s ease;
+}
+
+button:hover{
+transform:translateY(-1px);
+box-shadow:
+0 5px 0 #bdbdbd,
+0 7px 12px rgba(0,0,0,0.2);
+}
+
+button:active{
+transform:translateY(3px);
+box-shadow:
+0 1px 0 #bdbdbd,
+0 2px 4px rgba(0,0,0,0.15);
 }
 
 table{
