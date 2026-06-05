@@ -474,6 +474,9 @@ Reset SOB IDs
 <button onclick="printA4()">
 Print A4
 </button>
+<button onclick="print80mm()">
+Print 80mm
+</button>
 
 </div>
 
@@ -1115,7 +1118,18 @@ JSON.stringify(data)
 
 render();
 }
-  
+
+function formatTime(t){
+
+let d = new Date("1970-01-01 " + t);
+
+return d.toLocaleTimeString([], {
+hour: '2-digit',
+minute: '2-digit',
+hour12: true
+});
+
+}
 function render(){
 
 dataBody.innerHTML = "";
@@ -1231,18 +1245,6 @@ paeplActivities[name] =
 
 });
 
-function formatTime(t){
-
-let d = new Date("1970-01-01 " + t);
-
-return d.toLocaleTimeString([], {
-hour: '2-digit',
-minute: '2-digit',
-hour12: true
-});
-
-}
-
 function formatActivities(obj){
 
 return Object.entries(obj)
@@ -1273,6 +1275,315 @@ function printA4(){
 window.print();
 
 }
+function print80mm(){
+
+let tpuSum = 0;
+let oeplSum = 0;
+let paeplSum = 0;
+let grandSum = 0;
+
+let oeplActivities = {};
+let paeplActivities = {};
+let entriesHtml = "";
+
+data.forEach((d,i)=>{
+
+tpuSum += d.tpu;
+oeplSum += d.oepl;
+paeplSum += d.paepl;
+grandSum += d.total;
+let tempDiv = document.createElement("div");
+
+tempDiv.innerHTML = d.breakup;
+
+let lines = tempDiv.innerText.split("\n");
+
+lines.forEach(line=>{
+
+line = line.trim();
+
+if(line.startsWith("OEPL")){
+
+let acts =
+line.replace("OEPL →","")
+.split("|");
+
+acts.forEach(a=>{
+
+let p = a.split(":");
+
+if(p.length < 2) return;
+
+let name = p[0].trim();
+
+let value =
+parseInt(p[1]) || 0;
+
+oeplActivities[name] =
+(oeplActivities[name] || 0)
++ value;
+
+});
+
+}
+
+if(line.startsWith("PAEPL")){
+
+let acts =
+line.replace("PAEPL →","")
+.split("|");
+
+acts.forEach(a=>{
+
+let p = a.split(":");
+
+if(p.length < 2) return;
+
+let name = p[0].trim();
+
+let value =
+parseInt(p[1]) || 0;
+
+paeplActivities[name] =
+(paeplActivities[name] || 0)
++ value;
+
+});
+
+}
+
+});
+entriesHtml += `
+
+<div class="entry">
+
+<div style="
+text-align:center;
+font-size:16px;
+padding:4px 0;
+border-bottom:1px solid #000;
+">
+${d.sob}
+</div>
+
+<div style="
+display:flex;
+justify-content:space-between;
+padding:3px 6px;
+font-size:10px;
+">
+
+<span>
+${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}
+</span>
+
+<span>
+${d.adults}A + ${d.children}C
+</span>
+
+<span>
+${formatTime(d.time)}
+</span>
+
+</div>
+
+<table style="
+width:100%;
+border-collapse:collapse;
+">
+
+<tr>
+<td>TPU</td>
+<td>OEPL</td>
+<td>PAEPL</td>
+<td>TOTAL</td>
+</tr>
+
+<tr>
+<td>${d.tpu}</td>
+<td>${d.oepl}</td>
+<td>${d.paepl}</td>
+<td>${d.total}</td>
+</tr>
+
+</table>
+
+<div style="
+padding:4px 6px;
+font-size:11px;
+line-height:15px;
+">
+${d.breakup}
+</div>
+
+</div>
+
+`;
+
+});
+
+let receipt = `
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<link
+href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap"
+rel="stylesheet">
+<title>80MM Print</title>
+
+<style>
+
+@page{
+size:80mm auto;
+margin:3mm;
+}
+
+body{
+width:74mm;
+margin:auto;
+font-family:'Arimo',sans-serif;
+font-size:12px;
+font-weight:bold;
+}
+
+.header{
+text-align:center;
+margin-bottom:10px;
+}
+
+.line{
+border-top:2px double #000;
+margin:6px 0;
+}
+
+.entry{
+border:1px solid #000;
+margin-bottom:8px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+td{
+border:1px solid #000;
+text-align:center;
+padding:3px;
+font-size:11px;
+}
+
+.summary{
+margin-top:10px;
+}
+
+.summary table td{
+font-size:12px;
+padding:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div style="
+text-align:left;
+font-size:12px;
+margin-bottom:4px;
+">
+DATE : ${new Date().toLocaleDateString('en-GB')}
+</div>
+
+<div style="
+display:flex;
+justify-content:space-between;
+font-size:12px;
+">
+<span>POS# : ________</span>
+<span>USERNA<b>M</b>E.<b>S</b> : ________</span>
+</div>
+
+</div>
+
+<div class="line"></div>
+
+${entriesHtml}
+
+<div class="summary">
+
+<table>
+
+<tr>
+<td>TPU</td>
+<td>OEPL</td>
+<td>PAEPL</td>
+<td>TOTAL</td>
+</tr>
+
+<tr>
+<td>${tpuSum}</td>
+<td>${oeplSum}</td>
+<td>${paeplSum}</td>
+<td>${grandSum}</td>
+</tr>
+
+</table>
+
+</div>
+<div style="
+margin-top:10px;
+font-size:11px;
+line-height:16px;
+">
+
+<hr>
+
+<b>OEPL TOTAL BREAKUP</b>
+
+<br>
+
+${Object.entries(oeplActivities)
+.map(([k,v])=>`${k}: ${v}`)
+.join("<br>")}
+
+<br><br>
+
+<b>PAEPL TOTAL BREAKUP</b>
+
+<br>
+
+${Object.entries(paeplActivities)
+.map(([k,v])=>`${k}: ${v}`)
+.join("<br>")}
+
+</div>
+</body>
+
+</html>
+
+`;
+
+let win = window.open("","_blank");
+
+win.document.write(receipt);
+
+win.document.close();
+
+win.focus();
+
+setTimeout(()=>{
+win.print();
+},500);
+
+}
+
 
 function setDate(){
 
