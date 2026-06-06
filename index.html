@@ -1413,7 +1413,17 @@ padding:4px 6px;
 font-size:11px;
 line-height:15px;
 ">
-${d.breakup}
+${
+d.breakup
+.replace(
+/OEPL →/g,
+'<span style="border-bottom:1px solid #000;">OEPL</span> →'
+)
+.replace(
+/PAEPL →/g,
+'<span style="border-bottom:1px solid #000;">PAEPL</span> →'
+)
+}
 </div>
 
 </div>
@@ -1497,22 +1507,30 @@ padding:5px;
 <div class="header">
 
 <div style="
-text-align:left;
-font-size:12px;
-margin-bottom:4px;
-">
-DATE : ${new Date().toLocaleDateString('en-GB')}
-</div>
-
-<div style="
 display:flex;
 justify-content:space-between;
 font-size:12px;
+margin-bottom:2px;
 ">
-<span>POS# : _____</span>
-<span style="font-weight:normal;">
-USERNA<b>M</b>E.<b>S</b> : ___________
+
+<span>
+DATE : ${new Date().toLocaleDateString('en-GB')}
 </span>
+
+<span>
+POS# : _______
+</span>
+
+</div>
+
+<div style="
+text-align:left;
+font-size:12px;
+font-weight:normal;
+">
+
+USERNA<b>M</b>E.<b>S</b> : ____________________________
+
 </div>
 
 </div>
@@ -1520,8 +1538,21 @@ USERNA<b>M</b>E.<b>S</b> : ___________
 <div class="line"></div>
 
 ${entriesHtml}
+<div style="
+border:1px solid #000;
+margin-top:8px;
+">
 
-<div class="summary">
+<div style="
+text-align:center;
+font-size:12px;
+font-weight:bold;
+padding:4px;
+border-bottom:1px solid #000;
+background:#f5f5f5;
+">
+GRAND TOTAL
+</div>
 
 <table>
 
@@ -1545,46 +1576,101 @@ ${entriesHtml}
 <div style="
 border:1px solid #000;
 margin-top:8px;
-padding:6px;
-font-size:11px;
-line-height:16px;
 ">
 
 <div style="
 text-align:center;
+font-weight:bold;
+padding:4px;
 border-bottom:1px solid #000;
-padding-bottom:3px;
-margin-bottom:4px;
 ">
-OEPL TOTAL BREAKUP
+OEPL Activities Total
 </div>
+
+<table style="
+width:100%;
+border-collapse:collapse;
+">
 
 ${Object.entries(oeplActivities)
-.map(([k,v])=>`${k}: ${v}`)
-.join("<br>")}
+.map(([k,v])=>`
+
+<tr>
+
+<td style="
+border:1px solid #000;
+padding:4px;
+text-align:left;
+font-size:10px;
+">
+${fullActivityName(k)}
+</td>
+
+<td style="
+border:1px solid #000;
+padding:4px;
+text-align:right;
+width:25%;
+">
+₹${v}
+</td>
+
+</tr>
+
+`).join("")}
+
+</table>
 
 </div>
+
 
 <div style="
 border:1px solid #000;
 margin-top:8px;
-padding:6px;
-font-size:11px;
-line-height:16px;
 ">
 
 <div style="
 text-align:center;
+font-weight:bold;
+padding:4px;
 border-bottom:1px solid #000;
-padding-bottom:3px;
-margin-bottom:4px;
 ">
-PAEPL TOTAL BREAKUP
+PAEPL Activities Total
 </div>
 
+<table style="
+width:100%;
+border-collapse:collapse;
+">
+
 ${Object.entries(paeplActivities)
-.map(([k,v])=>`${k}: ${v}`)
-.join("<br>")}
+.map(([k,v])=>`
+
+<tr>
+
+<td style="
+border:1px solid #000;
+padding:4px;
+text-align:left;
+font-size:10px;
+">
+${fullActivityName(k)}
+</td>
+
+<td style="
+border:1px solid #000;
+padding:4px;
+text-align:right;
+width:25%;
+">
+₹${v}
+</td>
+
+</tr>
+
+`).join("")}
+
+</table>
 
 </div>
 </body>
@@ -1606,7 +1692,31 @@ win.print();
 },500);
 
 }
+function fullActivityName(name){
 
+const names = {
+
+"Snow":"Snow Park (Shrinathji Ent)",
+
+"Food":"Food Court (Shrinathji Foods)",
+
+"Wax":"Wax Museum (Victory Fun Park)",
+
+"Souvenir":"Souvenir (Mayan Assts)",
+
+"Gamezone":"Gamezone (Saachi)",
+
+"Eyelusion":"Eyelusion (Rinz)",
+
+"Mayalok":"Mayalok (Divine)",
+
+"WOG":"World of Ganesha (Mahadev)"
+
+};
+
+return names[name] || name;
+
+}
 
 function setDate(){
 
