@@ -1358,12 +1358,25 @@ entriesHtml += `
 <div class="entry">
 
 <div style="
+position:relative;
 text-align:center;
 font-size:16px;
 padding:4px 0;
 border-bottom:1px solid #000;
 ">
+
+<span style="
+position:absolute;
+left:5px;
+font-size:12px;
+top:50%;
+transform:translateY(-50%);
+">
+${i+1})
+</span>
+
 ${d.sob}
+
 </div>
 
 <div style="
@@ -1374,7 +1387,7 @@ font-size:10px;
 ">
 
 <span>
-${i+1}) ${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}
+${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}
 </span>
 
 <span>
