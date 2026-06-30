@@ -179,7 +179,7 @@ margin:6px;
 cursor:pointer;
 
 border:none;
-border-radius:14px;
+border-radius:28px;
 
 font-weight:bold;
 font-size:14px;
@@ -343,6 +343,9 @@ h2,
 display:none !important;
 }
 .editColumn{
+display:none !important;
+}
+tfoot button{
 display:none !important;
 }
 #printArea{
@@ -604,25 +607,32 @@ placeholder="Enter 6-digit SOB ID"
 
 <br>
 
-<button onclick="saveEntry()">
+<button
+onclick="saveEntry()"
+style="background:#2e7d32;color:white;">
 Save SOB
 </button>
 
-<button onclick="resetForm()">
+<button
+onclick="resetForm()"
+style="background:#f57c00;color:white;">
 Reset Calculator
 </button>
 
-<button onclick="resetAllData()">
-Reset SOB IDs
+<button
+onclick="restoreTodayData()"
+style="background:#1976d2;color:white;">
+Restore Today's SOB IDs
 </button>
 
 <br>
 
 <button onclick="printA4()">
-Print A4
+📄 Print A4
 </button>
+
 <button onclick="print80mm()">
-Print 80mm
+🧾 Print 80mm
 </button>
 
 </div>
@@ -688,7 +698,16 @@ DATE : <span id="date"></span>
 <td id="grandT"><b>0</b></td>
 
 <td id="activityTotals" class="activityTotalsCell"></td>
-<td></td>
+<td style="text-align:center;">
+
+<button
+id="resetAllBtn"
+onclick="resetAllData()"
+style="font-size:10px;padding:4px 6px;margin:2px;background:#d32f2f;color:white;">
+Reset All
+</button>
+
+</td>
 
 </tr>
 
@@ -701,10 +720,13 @@ DATE : <span id="date"></span>
 </div>
 
 <div class="footer-left">
-Last Updated: 06/06/2026 | V4.0
+26F30 | V4.1
 </div>
 
 <script>
+  
+const APP_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbw_Vhlq9wHwMBBrY0gmzfLSObRzxR_ATE2jonce0aoO38O5xcjbzkG5I1sFhp61NvTQ/exec";
 
 let data =
 JSON.parse(localStorage.getItem("sobData")) || [];
@@ -1085,9 +1107,37 @@ time:
 new Date().toLocaleTimeString()
 
 });
+fetch(APP_SCRIPT_URL,{
+    method:"POST",
+    mode:"cors",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+        date:new Date().toLocaleDateString("en-GB"),
+        sob:sob,
+        comboName:comboName,
+        adults:+adults.value||0,
+        children:+children.value||0,
+        tpu:r.tpu,
+        oepl:r.oepl,
+        paepl:r.paepl,
+        total:r.total,
+        breakup:breakup,
+        time:new Date().toLocaleTimeString()
+    })
+})
+.then(r=>r.json())
+.then(console.log)
+.catch(console.error);
 
 localStorage.setItem(
 "sobData",
+JSON.stringify(data)
+);
+
+localStorage.setItem(
+"sobDataBackup",
 JSON.stringify(data)
 );
 
@@ -1117,20 +1167,63 @@ totalEl.innerText = 0;
 warning.innerText = "";
 
 }
+async function restoreTodayData(){
 
+    let backup = localStorage.getItem("sobData");
+
+    if(backup){
+
+        data = JSON.parse(backup);
+
+        render();
+
+        return;
+
+    }
+
+    const today =
+        new Date().toLocaleDateString("en-GB");
+
+    const res = await fetch(
+        APP_SCRIPT_URL +
+        "?date=" +
+        encodeURIComponent(today)
+    );
+
+    const rows = await res.json();
+
+    if(rows.length===0){
+
+        alert("No data found.");
+
+        return;
+
+    }
+
+    data = rows;
+
+    localStorage.setItem(
+    "sobData",
+    JSON.stringify(rows)
+);
+
+    render();
+
+}
 function resetAllData(){
 
 if(
-!confirm(
-"Delete all saved SOB IDs?"
-)
+!confirm("Delete all saved SOB IDs?")
 ) return;
+
+localStorage.setItem(
+"sobDataBackup",
+JSON.stringify(data)
+);
 
 data = [];
 
-localStorage.removeItem(
-"sobData"
-);
+localStorage.removeItem("sobData");
 
 render();
 
@@ -1146,6 +1239,11 @@ data.splice(index,1);
 
 localStorage.setItem(
 "sobData",
+JSON.stringify(data)
+);
+
+localStorage.setItem(
+"sobDataBackup",
 JSON.stringify(data)
 );
 
@@ -1260,6 +1358,11 @@ time: newTime
 
 localStorage.setItem(
 "sobData",
+JSON.stringify(data)
+);
+
+localStorage.setItem(
+"sobDataBackup",
 JSON.stringify(data)
 );
 
