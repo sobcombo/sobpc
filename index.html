@@ -1118,9 +1118,9 @@ new Date().toLocaleTimeString()
 });
 fetch(APP_SCRIPT_URL,{
     method:"POST",
-    headers:{
-        "Content-Type":"application/json"
-    },
+  headers:{
+    "Content-Type":"text/plain"
+  },
     body:JSON.stringify({
         date:new Date().toLocaleDateString("en-GB"),
         sob:sob,
