@@ -1299,122 +1299,69 @@ render();
 
 function editEntry(index){
 
+editingIndex = index;
+
 let d = data[index];
 
-let newSob = prompt(
-"Edit SOB ID (6 digits)",
-d.sob.replace("SOB000","")
-);
+document.getElementById("editSob").value =
+d.sob.replace("SOB000","");
+document.getElementById("editSob")
+.setAttribute("maxlength","6");
+document.getElementById("editAdults").value =
+d.adults;
 
-if(newSob === null) return;
+document.getElementById("editChildren").value =
+d.children;
 
-if(!/^[1-9][0-9]{5}$/.test(newSob)){
-alert("Invalid SOB ID");
-return;
+let parts =
+d.time.match(/(\d+):(\d+):(\d+)\s?(AM|PM)?/i);
+
+if(parts){
+
+let hrs12 = parseInt(parts[1]);
+let mins = parts[2];
+let ampm = parts[4] || "AM";
+
+document.getElementById("editHour").value =
+hrs12;
+
+document.getElementById("editMinute").value =
+mins;
+
+document.getElementById("editAmPm").value =
+ampm.toUpperCase();
+
 }
 
-let newAdults = prompt(
-"Adults Count",
-d.adults
-);
+let comboSelect =
+document.getElementById("editCombo");
 
-if(newAdults === null) return;
+comboSelect.innerHTML = "";
 
-let newChildren = prompt(
-"Children Count",
-d.children
-);
-
-if(newChildren === null) return;
-
-let newTime = prompt(
-"Time",
-d.time
-);
-
-if(newTime === null) return;
-
-let comboNames =
 Array.from(combo.options)
 .slice(1)
-.map((o,i)=>`${i+1}. ${o.text}`)
-.join("\n");
+.forEach(opt=>{
 
-let comboChoice = prompt(
-"Select Combo Number:\n\n" + comboNames,
-1
-);
+let o =
+document.createElement("option");
 
-if(comboChoice === null) return;
+o.value = opt.value;
+o.textContent = opt.text;
 
-let comboIndex = parseInt(comboChoice);
-
-if(
-isNaN(comboIndex) ||
-comboIndex < 1 ||
-comboIndex >= combo.options.length
-){
-alert("Invalid Combo");
-return;
+if(opt.text === d.comboName){
+o.selected = true;
 }
 
-let comboOption =
-combo.options[comboIndex];
+comboSelect.appendChild(o);
 
-let comboValue =
-comboOption.value.split(",");
+});
 
-let ta = +comboValue[0];
-let tc = +comboValue[1];
-let oepl = +comboValue[2];
-let paepl = +comboValue[3];
+document.getElementById("editModal").style.display =
+"block";
 
-let adultsCount = +newAdults || 0;
-let childrenCount = +newChildren || 0;
+document.getElementById("editSob").focus();
 
-let tpu =
-(adultsCount * ta) +
-(childrenCount * tc);
-
-let oeplAmt =
-(adultsCount + childrenCount) * oepl;
-
-let paeplAmt =
-(adultsCount + childrenCount) * paepl;
-
-let total =
-tpu + oeplAmt + paeplAmt;
-
-let pax =
-adultsCount + childrenCount;
-
-data[index] = {
-...data[index],
-sob: "SOB000" + newSob,
-comboName: comboOption.text,
-adults: adultsCount,
-children: childrenCount,
-tpu: tpu,
-oepl: oeplAmt,
-paepl: paeplAmt,
-total: total,
-breakup: getVendorBreakup(comboOption.text,pax),
-time: newTime
-};
-
-localStorage.setItem(
-"sobData",
-JSON.stringify(data)
-);
-
-localStorage.setItem(
-"sobDataBackup",
-JSON.stringify(data)
-);
-
-render();
 }
-
 function formatTime(t){
 
 const d = new Date(`1970-01-01T${t}`);
