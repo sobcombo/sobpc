@@ -599,7 +599,15 @@ calc();
 </div>
 
 <br>
-
+<input
+type="text"
+id="username"
+placeholder="Enter your username"
+style="
+background:#f2f2f2;
+color:#555;
+font-weight:bold;
+">
 <input
 type="tel"
 id="sobInput"
@@ -1057,7 +1065,18 @@ function saveEntry(){
 
 let raw =
 sobInput.value.trim();
+let username=document
+.getElementById("username")
+.value
+.trim();
 
+if(username===""){
+
+alert("Enter username");
+
+return;
+
+}
 if(!/^[1-9][0-9]{5}$/.test(raw)){
 
 alert(
@@ -1094,8 +1113,10 @@ combo.options[
 combo.selectedIndex
 ].text;
 
-let breakup =
-getVendorBreakup(comboName,pax);
+let breakup=getVendorBreakup(
+comboName,
+pax
+).replace(/<br\s*\/?>/gi,"\n");
 
 data.push({
 
@@ -1122,18 +1143,32 @@ fetch(APP_SCRIPT_URL,{
     "Content-Type":"text/plain"
   },
     body:JSON.stringify({
-        date:new Date().toLocaleDateString("en-GB"),
-        sob:sob,
-        comboName:comboName,
-        adults:+adults.value||0,
-        children:+children.value||0,
-        tpu:r.tpu,
-        oepl:r.oepl,
-        paepl:r.paepl,
-        total:r.total,
-        breakup:breakup,
-        time:new Date().toLocaleTimeString()
-    })
+
+date:new Date().toLocaleDateString("en-GB"),
+
+username:username,
+
+sob:sob,
+
+comboName:comboName,
+
+adults:+adults.value||0,
+
+children:+children.value||0,
+
+tpu:r.tpu,
+
+oepl:r.oepl,
+
+paepl:r.paepl,
+
+total:r.total,
+
+breakup:breakup.replace(/<br\s*\/?>/gi,"\n"),
+
+time:new Date().toLocaleTimeString()
+
+})
 })
 .then(r=>r.json())
 .then(console.log)
@@ -1148,7 +1183,10 @@ localStorage.setItem(
 "sobDataBackup",
 JSON.stringify(data)
 );
-
+localStorage.setItem(
+"username",
+username
+);
 render();
 
 sobInput.value = "";
@@ -1432,7 +1470,7 @@ dataBody.innerHTML += `
 <td>${d.total}</td>
 
 <td class="activityCell">
-${d.breakup}
+${String(d.breakup).replace(/\n/g,"<br>")}
 </td>
 
 <td style="font-size:10px;">
@@ -2018,6 +2056,8 @@ calc();
 }
 
 restoreFormState();
+  document.getElementById("username").value=
+localStorage.getItem("username")||"";
 setDate();
 
 render();
