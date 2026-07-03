@@ -243,10 +243,14 @@ font-weight:bold;
 }
 
 .activityCell{
-text-align:left;
+background:#eaeaea;
 font-size:10px;
+font-weight:bold;
+text-align:left !important;
 padding:6px 6px 6px 12px;
 vertical-align:top;
+white-space:pre-line;
+line-height:14px;
 }
 
 .activityCell pre{
@@ -709,7 +713,6 @@ font-weight:bold;
 outline:none;
 text-align:center;
 ">
-Username
 </span>
 
 <datalist id="userList"></datalist>
@@ -788,43 +791,43 @@ Reset All
 </div>
 
 <script>
-  
 const APP_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbw_Vhlq9wHwMBBrY0gmzfLSObRzxR_ATE2jonce0aoO38O5xcjbzkG5I1sFhp61NvTQ/exec";
 
-let data =
-JSON.parse(localStorage.getItem("sobData")) || [];
+let data = JSON.parse(localStorage.getItem("sobData")) || [];
+let editingIndex = -1;
 
-const todayKey =
-new Date().toLocaleDateString('en-GB');
+const combo = document.getElementById("combo");
+const adults = document.getElementById("adults");
+const children = document.getElementById("children");
+const sobInput = document.getElementById("sobInput");
+const warning = document.getElementById("warning");
+const tpuEl = document.getElementById("tpu");
+const oeplEl = document.getElementById("oepl");
+const paeplEl = document.getElementById("paepl");
+const totalEl = document.getElementById("total");
+const dataBody = document.getElementById("dataBody");
+const grandT = document.getElementById("grandT");
+const tpuT = document.getElementById("tpuT");
+const oeplT = document.getElementById("oeplT");
+const paeplT = document.getElementById("paeplT");
+const activityTotals = document.getElementById("activityTotals");
+const loadingScreen = document.getElementById("loadingScreen");
+const percent = document.getElementById("percent");
+const userList = document.getElementById("userList");
+const usernameEl = document.getElementById("username");
+const dateEl = document.getElementById("date");
 
-const savedDate =
-localStorage.getItem("sobDate");
+const todayKey = new Date().toLocaleDateString('en-GB');
+const savedDate = localStorage.getItem("sobDate");
 
 if(savedDate !== todayKey){
-
 data = [];
-
 localStorage.removeItem("sobData");
-
 localStorage.setItem("sobDate",todayKey);
-
 }
 
-const tpuEl =
-document.getElementById("tpu");
-
-const oeplEl =
-document.getElementById("oepl");
-
-const paeplEl =
-document.getElementById("paepl");
-
-const totalEl =
-document.getElementById("total");
-
 function calc(){
-
 let v = combo.value;
 
 if(!v){
@@ -845,615 +848,279 @@ let pi = +p[3];
 
 let na = p[4] === "NA";
 
-let a =
-Math.max(0,+adults.value||0);
+let a = Math.max(0,+adults.value||0);
+let c = Math.max(0,+children.value||0);
 
-let c =
-Math.max(0,+children.value||0);
+warning.innerText = (na && c>0) ? "⚠ Children not allowed" : "";
 
-warning.innerText =
-(na && c>0)
-? "⚠ Children not allowed"
-: "";
-
-let tpu =
-(a*ta) + (c*tc);
-
-let oepl =
-(a+c)*o;
-
-let paepl =
-(a+c)*pi;
-
-let total =
-tpu + oepl + paepl;
+let tpu = (a*ta) + (c*tc);
+let oepl = (a+c)*o;
+let paepl = (a+c)*pi;
+let total = tpu + oepl + paepl;
 
 tpuEl.innerText = tpu;
 oeplEl.innerText = oepl;
 paeplEl.innerText = paepl;
 totalEl.innerText = total;
 saveFormState();
-return {
-tpu,
-oepl,
-paepl,
-total
-};
-
+return { tpu, oepl, paepl, total };
 }
+
 function saveFormState(){
-
 localStorage.setItem("lastCombo", combo.value);
-
 localStorage.setItem("lastAdults", adults.value);
-
 localStorage.setItem("lastChildren", children.value);
-
 }
+
 function getVendorBreakup(comboName,pax){
-
 function line(items){
-
-return items
-.map(i => `${i.name}: ${i.price * pax}`)
-.join(" | ");
-
+return items.map(i => `${i.name}: ${i.price * pax}`).join(" | ");
 }
 
 if(comboName.includes("Snow Adventure")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:255}
-])}
-`;
-
+return `OEPL → ${line([{name:"Snow",price:255}])}`;
 }
-
 else if(comboName.includes("Adventure Combo")){
-
-return `
-PAEPL → ${line([
-{name:"Gamezone",price:227}
-])}
-`;
-
+return `PAEPL → ${line([{name:"Gamezone",price:227}])}`;
 }
-
 else if(comboName.includes("TU Explorer")){
-
-return `
-OEPL → ${line([
-{name:"Wax",price:70}
-])}
-\n
-PAEPL → ${line([
-{name:"Eyelusion",price:70},
-{name:"WOG",price:80}
-])}
-`;
-
+return `OEPL → ${line([{name:"Wax",price:70}])}\n\nPAEPL → ${line([{name:"Eyelusion",price:70},{name:"WOG",price:80}])}`;
 }
-
 else if(comboName.includes("ECO FUN")){
-
-return `
-OEPL → ${line([
-{name:"Wax",price:28}
-])}
-\n
-PAEPL → ${line([
-{name:"Mayalok",price:200}
-])}
-`;
-
+return `OEPL → ${line([{name:"Wax",price:28}])}\n\nPAEPL → ${line([{name:"Mayalok",price:200}])}`;
 }
-
 else if(comboName.includes("Aastha")){
-
-return `
-PAEPL → ${line([
-{name:"Gamezone",price:99}
-])}
-`;
-
+return `PAEPL → ${line([{name:"Gamezone",price:99}])}`;
 }
-
 else if(comboName.includes("Shiv Ganesha")){
-
-return `
-PAEPL → ${line([
-{name:"Eyelusion",price:50},
-{name:"Gamezone",price:50},
-{name:"WOG",price:75}
-])}
-`;
-
+return `PAEPL → ${line([{name:"Eyelusion",price:50},{name:"Gamezone",price:50},{name:"WOG",price:75}])}`;
 }
-
 else if(comboName.includes("Namah")){
-
-return `
-PAEPL → ${line([
-{name:"Gamezone",price:50}
-])}
-`;
-
+return `PAEPL → ${line([{name:"Gamezone",price:50}])}`;
 }
-
 else if(comboName.includes("Ultimate Play")){
-
-return `
-PAEPL → ${line([
-{name:"Gamezone",price:529}
-])}
-`;
-
+return `PAEPL → ${line([{name:"Gamezone",price:529}])}`;
 }
-
 else if(comboName.includes("Viewing Fun")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:225},
-{name:"Food",price:100}
-])}
-\n
-PAEPL → ${line([
-{name:"Gamezone",price:50}
-])}
-`;
-
+return `OEPL → ${line([{name:"Snow",price:225},{name:"Food",price:100}])}\n\nPAEPL → ${line([{name:"Gamezone",price:50}])}`;
 }
-
 else if(comboName.includes("Symbolic")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:200},
-{name:"Wax",price:49}
-])}
-\n
-PAEPL → ${line([
-{name:"Gamezone",price:100},
-{name:"WOG",price:70}
-])}
-`;
-
+return `OEPL → ${line([{name:"Snow",price:200},{name:"Wax",price:49}])}\n\nPAEPL → ${line([{name:"Gamezone",price:100},{name:"WOG",price:70}])}`;
 }
-
 else if(comboName.includes("Delight")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:200},
-{name:"Food",price:45},
-{name:"Souvenir",price:60},
-{name:"Wax",price:50}
-])}
-\n
-PAEPL → ${line([
-{name:"Eyelusion",price:50},
-{name:"Mayalok",price:200},
-{name:"Gamezone",price:249},
-{name:"WOG",price:75}
-])}
-`;
-
+return `OEPL → ${line([{name:"Snow",price:200},{name:"Food",price:45},{name:"Souvenir",price:60},{name:"Wax",price:50}])}\n\nPAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:200},{name:"Gamezone",price:249},{name:"WOG",price:75}])}`;
 }
-
 else if(comboName.includes("Mini Blast")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:200},
-{name:"Food",price:45},
-{name:"Souvenir",price:60},
-{name:"Wax",price:50}
-])}
-\n
-PAEPL → ${line([
-{name:"Eyelusion",price:50},
-{name:"Mayalok",price:200},
-{name:"Gamezone",price:249},
-{name:"WOG",price:75}
-])}
-`;
-
+return `OEPL → ${line([{name:"Snow",price:200},{name:"Food",price:45},{name:"Souvenir",price:60},{name:"Wax",price:50}])}\n\nPAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:200},{name:"Gamezone",price:249},{name:"WOG",price:75}])}`;
 }
-
 else if(comboName.includes("All in Fun")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:200},
-{name:"Wax",price:50}
-])}
-\n
-PAEPL → ${line([
-{name:"Eyelusion",price:50},
-{name:"Mayalok",price:200},
-{name:"Gamezone",price:279},
-{name:"WOG",price:70}
-])}
-`;
-
+return `OEPL → ${line([{name:"Snow",price:200},{name:"Wax",price:50}])}\n\nPAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:200},{name:"Gamezone",price:279},{name:"WOG",price:70}])}`;
 }
-
 else if(comboName.includes("Divine Rush")){
-
-return `
-PAEPL → ${line([
-{name:"Gamezone",price:100},
-{name:"WOG",price:50}
-])}
-`;
-
+return `PAEPL → ${line([{name:"Gamezone",price:100},{name:"WOG",price:50}])}`;
 }
-
 else if(comboName.includes("Ultimate Mega")){
-
-return `
-OEPL → ${line([
-{name:"Snow",price:150},
-{name:"Food",price:99},
-{name:"Souvenir",price:100},
-{name:"Wax",price:100}
-])}
-\n
-PAEPL → ${line([
-{name:"Eyelusion",price:50},
-{name:"Mayalok",price:150},
-{name:"Gamezone",price:2100},
-{name:"WOG",price:50}
-])}
-`;
-
+return `OEPL → ${line([{name:"Snow",price:150},{name:"Food",price:99},{name:"Souvenir",price:100},{name:"Wax",price:100}])}\n\nPAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:150},{name:"Gamezone",price:2100},{name:"WOG",price:50}])}`;
 }
 
 return "-";
-
 }
 
 function saveEntry(){
-
-let raw =
-sobInput.value.trim();
-let username=document
-.getElementById("username")
-.value
-.trim();
+let raw = sobInput.value.trim();
+let username = usernameEl.innerText.trim();
 
 if(!/^[1-9][0-9]{5}$/.test(raw)){
-
-alert(
-"Enter valid 6-digit SOB ID"
-);
-
+alert("Enter valid 6-digit SOB ID");
 return;
-
 }
 
-let sob =
-"SOB000" + raw;
+let sob = "SOB000" + raw;
 
 if(data.some(d => d.sob === sob)){
-
-alert(
-"This SOB ID already exists"
-);
-
+alert("This SOB ID already exists");
 return;
-
 }
 
 let r = calc();
-
 if(!r) return;
 
-let pax =
-(+adults.value || 0) +
-(+children.value || 0);
-
-let comboName =
-combo.options[
-combo.selectedIndex
-].text;
-
-let breakup=getVendorBreakup(
-comboName,
-pax
-).replace(/<br\s*\/?>/gi,"\n");
+let pax = (+adults.value || 0) + (+children.value || 0);
+let comboName = combo.options[combo.selectedIndex].text;
+let breakup = getVendorBreakup(comboName,pax);
 
 data.push({
-
 sob,
 ...r,
-
 comboName,
-
-adults:
-(+adults.value || 0),
-
-children:
-(+children.value || 0),
-
+adults:(+adults.value || 0),
+children:(+children.value || 0),
 breakup,
-
-time:new Date().toLocaleTimeString([],{
-hour:"2-digit",
-minute:"2-digit",
-hour12:true
-});
-
-fetch(APP_SCRIPT_URL,{
-    method:"POST",
-  headers:{
-    "Content-Type":"text/plain"
-  },
-    body:JSON.stringify({
-
-date:new Date().toLocaleDateString("en-GB"),
-
-username:username,
-
-sob:sob,
-
-comboName:comboName,
-
-adults:+adults.value||0,
-
-children:+children.value||0,
-
-tpu:r.tpu,
-
-oepl:r.oepl,
-
-paepl:r.paepl,
-
-total:r.total,
-
-breakup:breakup.replace(/<br\s*\/?>/gi,"\n"),
-
 time:new Date().toLocaleTimeString([],{
 hour:"2-digit",
 minute:"2-digit",
 hour12:true
 })
+});
 
+fetch(APP_SCRIPT_URL,{
+method:"POST",
+headers:{
+"Content-Type":"text/plain"
+},
+body:JSON.stringify({
+date:new Date().toLocaleDateString("en-GB"),
+username:username,
+sob:sob,
+comboName:comboName,
+adults:+adults.value||0,
+children:+children.value||0,
+tpu:r.tpu,
+oepl:r.oepl,
+paepl:r.paepl,
+total:r.total,
+breakup:breakup,
+time:new Date().toLocaleTimeString([],{
+hour:"2-digit",
+minute:"2-digit",
+hour12:true
+})
 })
 })
 .then(r=>r.json())
 .then(console.log)
 .catch(console.error);
 
-localStorage.setItem(
-"sobData",
-JSON.stringify(data)
-);
-
-localStorage.setItem(
-"sobDataBackup",
-JSON.stringify(data)
-);
-localStorage.setItem(
-"username",
-username
-);
+localStorage.setItem("sobData",JSON.stringify(data));
+localStorage.setItem("sobDataBackup",JSON.stringify(data));
+localStorage.setItem("username",username);
 render();
-
 sobInput.value = "";
-
 }
 
 function resetForm(){
-
 combo.selectedIndex = 0;
-
 adults.value = "";
 children.value = "";
 sobInput.value = "";
 localStorage.removeItem("lastCombo");
-
 localStorage.removeItem("lastAdults");
-
 localStorage.removeItem("lastChildren");
 tpuEl.innerText = 0;
 oeplEl.innerText = 0;
 paeplEl.innerText = 0;
 totalEl.innerText = 0;
-
 warning.innerText = "";
-
 }
+
 async function restoreTodayData(){
-loadingScreen.style.display="flex";
+if(loadingScreen) loadingScreen.style.display = "flex";
+if(percent) percent.innerHTML = "0%";
 
-let p=0;
-
-let timer=setInterval(()=>{
-
-p+=5;
-
-percent.innerHTML=p+"%";
-
-},40);
-    let backup = localStorage.getItem("sobData");
-
-    if(backup){
-
-        data = JSON.parse(backup);
-
-        render();
-
-        return;
-
+let p = 0;
+let timer = setInterval(() => {
+    if (p < 95 && percent) {
+        p += 5;
+        percent.innerHTML = p + "%";
     }
+}, 40);
 
-    const today =
-        new Date().toLocaleDateString("en-GB");
+try{
+const today = new Date().toLocaleDateString("en-GB");
+const user = usernameEl.innerText.trim();
+const url = APP_SCRIPT_URL + "?date=" + encodeURIComponent(today) + "&username=" + encodeURIComponent(user);
+const res = await fetch(url);
+const rows = await res.json();
 
-   const user =
-document.getElementById("username").innerText.trim();
-
-const url =
-APP_SCRIPT_URL+
-"?date="+encodeURIComponent(today)+
-"&username="+encodeURIComponent(user);
-
-const res=await fetch(url);
-
-    const rows = await res.json();
 let users=[...new Set(rows.map(r=>r.username).filter(Boolean))];
-
 userList.innerHTML="";
-
 users.forEach(u=>{
-
 let o=document.createElement("option");
-
 o.value=u;
-
 userList.appendChild(o);
-
 });
-    if(rows.length===0){
 
-        alert("No data found.");
-
-        return;
-
-    }
-
-    data = rows;
-
-    localStorage.setItem(
-    "sobData",
-    JSON.stringify(rows)
-);
-
-    render();
-clearInterval(timer);
-
-percent.innerHTML="100%";
-
-setTimeout(()=>{
-
-loadingScreen.style.display="none";
-
-},250);
+if(rows.length===0){
+alert("No data found.");
+return;
 }
-function resetAllData(){
 
-if(
-!confirm("Delete all saved SOB IDs?")
-) return;
-
-localStorage.setItem(
-"sobDataBackup",
-JSON.stringify(data)
-);
-
-data = [];
-
-localStorage.removeItem("sobData");
-
+data = rows;
+localStorage.setItem("sobData",JSON.stringify(rows));
 render();
+if(percent) percent.innerHTML = "100%";
+}
+catch(e){
+console.error(e);
+alert("Restore failed. Check the script response and username/date filters.");
+}
+finally{
+clearInterval(timer);
+setTimeout(() => {
+    if(loadingScreen) loadingScreen.style.display = "none";
+}, 300);
+}
+}
 
+function resetAllData(){
+if(!confirm("Delete all saved SOB IDs?")) return;
+localStorage.setItem("sobDataBackup",JSON.stringify(data));
+data = [];
+localStorage.removeItem("sobData");
+render();
 }
 
 function deleteEntry(index){
-
-if(
-!confirm("Delete this SOB ID?")
-) return;
-
+if(!confirm("Delete this SOB ID?")) return;
 data.splice(index,1);
-
-localStorage.setItem(
-"sobData",
-JSON.stringify(data)
-);
-
-localStorage.setItem(
-"sobDataBackup",
-JSON.stringify(data)
-);
-
+localStorage.setItem("sobData",JSON.stringify(data));
+localStorage.setItem("sobDataBackup",JSON.stringify(data));
 render();
-
 }
 
 function editEntry(index){
-
 editingIndex = index;
-
 let d = data[index];
+document.getElementById("editSob").value = d.sob.replace("SOB000","");
+document.getElementById("editSob").setAttribute("maxlength","6");
+document.getElementById("editAdults").value = d.adults;
+document.getElementById("editChildren").value = d.children;
 
-document.getElementById("editSob").value =
-d.sob.replace("SOB000","");
-document.getElementById("editSob")
-.setAttribute("maxlength","6");
-document.getElementById("editAdults").value =
-d.adults;
-
-document.getElementById("editChildren").value =
-d.children;
-
-let parts =
-d.time.match(/(\d+):(\d+):(\d+)\s?(AM|PM)?/i);
+let parts = d.time.match(/(\d+):(\d+):(\d+)\s?(AM|PM)?/i);
 
 if(parts){
-
 let hrs12 = parseInt(parts[1]);
 let mins = parts[2];
 let ampm = parts[4] || "AM";
-
-document.getElementById("editHour").value =
-hrs12;
-
-document.getElementById("editMinute").value =
-mins;
-
-document.getElementById("editAmPm").value =
-ampm.toUpperCase();
-
+document.getElementById("editHour").value = hrs12;
+document.getElementById("editMinute").value = mins;
+document.getElementById("editAmPm").value = ampm.toUpperCase();
 }
 
-let comboSelect =
-document.getElementById("editCombo");
-
+let comboSelect = document.getElementById("editCombo");
 comboSelect.innerHTML = "";
 
 Array.from(combo.options)
 .slice(1)
 .forEach(opt=>{
-
-let o =
-document.createElement("option");
-
+let o = document.createElement("option");
 o.value = opt.value;
 o.textContent = opt.text;
-
 if(opt.text === d.comboName){
 o.selected = true;
 }
-
 comboSelect.appendChild(o);
-
 });
 
-document.getElementById("editModal").style.display =
-"block";
-
+document.getElementById("editModal").style.display = "block";
 document.getElementById("editSob").focus();
-
 }
+
 function formatTime(t){
 return t;
 }
-function render(){
 
+function render(){
 dataBody.innerHTML = "";
 
 let totalAll = 0;
@@ -1464,11 +1131,8 @@ let oeplActivities = {};
 let paeplActivities = {};
 
 data.forEach((d,i)=>{
-
 dataBody.innerHTML += `
-
 <tr>
-
 <td class="editColumn">
 <button class="editBtn" onclick="editEntry(${i})">✏️</button>
 </td>
@@ -1500,9 +1164,7 @@ dataBody.innerHTML += `
 <td style="font-size:10px;">
 ${formatTime(d.time)}
 </td>
-
 </tr>
-
 `;
 
 tpuSum += d.tpu;
@@ -1510,69 +1172,39 @@ oeplSum += d.oepl;
 paeplSum += d.paepl;
 totalAll += d.total;
 
-// Activity totals calculation
-
 let tempDiv = document.createElement("div");
 tempDiv.innerHTML = d.breakup;
-
 let text = tempDiv.innerText.split("\n");
 
 text.forEach(line => {
-
 line = line.trim();
 
 if(line.startsWith("OEPL")){
-
 let activities = line.replace("OEPL →","").split("|");
-
 activities.forEach(a=>{
-
 let parts = a.split(":");
-
 if(parts.length < 2) return;
-
 let name = parts[0].trim();
-
 let value = parseInt(parts[1]) || 0;
-
-oeplActivities[name] =
-(oeplActivities[name] || 0) + value;
-
+oeplActivities[name] = (oeplActivities[name] || 0) + value;
 });
-
 }
 
 if(line.startsWith("PAEPL")){
-
 let activities = line.replace("PAEPL →","").split("|");
-
 activities.forEach(a=>{
-
 let parts = a.split(":");
-
 if(parts.length < 2) return;
-
 let name = parts[0].trim();
-
 let value = parseInt(parts[1]) || 0;
-
-paeplActivities[name] =
-(paeplActivities[name] || 0) + value;
-
+paeplActivities[name] = (paeplActivities[name] || 0) + value;
 });
-
 }
-
 });
-
 });
 
 function formatActivities(obj){
-
-return Object.entries(obj)
-.map(([k,v]) => `${k}: ${v}`)
-.join(" | ");
-
+return Object.entries(obj).map(([k,v]) => `${k}: ${v}`).join(" | ");
 }
 
 grandT.innerHTML = "<b>" + totalAll + "</b>";
@@ -1580,21 +1212,16 @@ tpuT.innerHTML = "<b>" + tpuSum + "</b>";
 oeplT.innerHTML = "<b>" + oeplSum + "</b>";
 paeplT.innerHTML = "<b>" + paeplSum + "</b>";
 
-activityTotals.innerHTML=
-
+activityTotals.innerHTML =
 "<u>OEPL</u> → "+formatActivities(oeplActivities)+
 "<br>"+
 "<u>PAEPL</u> → "+formatActivities(paeplActivities);
-
 }
 
 function printA4(){
-
 window.print();
-
 }
 function print80mm(){
-
 let tpuSum = 0;
 let oeplSum = 0;
 let paeplSum = 0;
@@ -1605,76 +1232,42 @@ let paeplActivities = {};
 let entriesHtml = "";
 
 data.forEach((d,i)=>{
-
 tpuSum += d.tpu;
 oeplSum += d.oepl;
 paeplSum += d.paepl;
 grandSum += d.total;
 let tempDiv = document.createElement("div");
-
 tempDiv.innerHTML = d.breakup;
-
 let lines = tempDiv.innerText.split("\n");
 
 lines.forEach(line=>{
-
 line = line.trim();
 
 if(line.startsWith("OEPL")){
-
-let acts =
-line.replace("OEPL →","")
-.split("|");
-
+let acts = line.replace("OEPL →","").split("|");
 acts.forEach(a=>{
-
 let p = a.split(":");
-
 if(p.length < 2) return;
-
 let name = p[0].trim();
-
-let value =
-parseInt(p[1]) || 0;
-
-oeplActivities[name] =
-(oeplActivities[name] || 0)
-+ value;
-
+let value = parseInt(p[1]) || 0;
+oeplActivities[name] = (oeplActivities[name] || 0) + value;
 });
-
 }
 
 if(line.startsWith("PAEPL")){
-
-let acts =
-line.replace("PAEPL →","")
-.split("|");
-
+let acts = line.replace("PAEPL →","").split("|");
 acts.forEach(a=>{
-
 let p = a.split(":");
-
 if(p.length < 2) return;
-
 let name = p[0].trim();
-
-let value =
-parseInt(p[1]) || 0;
-
-paeplActivities[name] =
-(paeplActivities[name] || 0)
-+ value;
-
+let value = parseInt(p[1]) || 0;
+paeplActivities[name] = (paeplActivities[name] || 0) + value;
 });
-
 }
-
 });
+
 entriesHtml += `
-
 <div class="entry">
-
 <div style="
 position:relative;
 text-align:center;
@@ -1682,7 +1275,6 @@ font-size:16px;
 padding:4px 0;
 border-bottom:1px solid #000;
 ">
-
 <span style="
 position:absolute;
 left:5px;
@@ -1692,9 +1284,7 @@ transform:translateY(-50%);
 ">
 ${i+1})
 </span>
-
 ${d.sob}
-
 </div>
 
 <div style="
@@ -1703,26 +1293,15 @@ justify-content:space-between;
 padding:3px 6px;
 font-size:10px;
 ">
-
-<span>
-${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}
-</span>
-
-<span>
-${d.adults} A + ${d.children} C
-</span>
-
-<span>
-${formatTime(d.time)}
-</span>
-
+<span>${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}</span>
+<span>${d.adults} A + ${d.children} C</span>
+<span>${formatTime(d.time)}</span>
 </div>
 
 <table style="
 width:100%;
 border-collapse:collapse;
 ">
-
 <tr>
 <td>TPU</td>
 <td>OEPL</td>
@@ -1736,7 +1315,6 @@ border-collapse:collapse;
 <td>${d.paepl}</td>
 <td>${d.total}</td>
 </tr>
-
 </table>
 
 <div style="
@@ -1744,47 +1322,24 @@ padding:4px 6px;
 font-size:11px;
 line-height:15px;
 ">
-${
-d.breakup
-.replace(
-/OEPL →/g,
-'<span style="border-bottom:1px solid #000;">OEPL</span> →'
-)
-.replace(
-/PAEPL →/g,
-'<span style="border-bottom:1px solid #000;">PAEPL</span> →'
-)
-}
+${d.breakup.replace(/OEPL →/g,'<span style="border-bottom:1px solid #000;">OEPL</span> →').replace(/PAEPL →/g,'<span style="border-bottom:1px solid #000;">PAEPL</span> →')}
 </div>
-
 </div>
-
 `;
-
 });
 
 let receipt = `
-
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
 <meta charset="UTF-8">
-
-<link
-href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap"
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
 <title>80MM Print</title>
-
 <style>
-
 @page{
 size:80mm auto;
 margin:3mm;
 }
-
 body{
 width:74mm;
 margin:auto;
@@ -1792,66 +1347,51 @@ font-family:'Arimo',sans-serif;
 font-size:12px;
 font-weight:bold;
 }
-
 .header{
 text-align:center;
 margin-bottom:10px;
 }
-
 .line{
 border-top:2px double #000;
 margin:6px 0;
 }
-
 .entry{
 border:1px solid #000;
 margin-bottom:8px;
 }
-
 table{
 width:100%;
 border-collapse:collapse;
 }
-
 td{
 border:1px solid #000;
 text-align:center;
 padding:3px;
 font-size:11px;
 }
-
 .summary{
 margin-top:10px;
 }
-
 .summary table td{
 font-size:12px;
 padding:5px;
 }
-
 </style>
-
 </head>
-
 <body>
-
 <div class="header">
-
 <div style="
 display:flex;
 justify-content:space-between;
 font-size:12px;
 margin-bottom:2px;
 ">
-
 <span>
 DATE : ${new Date().toLocaleDateString('en-GB')}
 </span>
-
 <span>
 POS# : _______
 </span>
-
 </div>
 
 <div style="
@@ -1859,23 +1399,20 @@ text-align:left;
 font-size:12px;
 font-weight:normal;
 ">
-
 USERNA<b>M</b>E.S :
-
-<input
+<span
 id="username"
-placeholder="Enter username"
+contenteditable="true"
 style="
-border:none;
+display:inline-block;
+min-width:130px;
 border-bottom:1px solid black;
-background:#f3f3f3;
-width:140px;
-padding:2px;
-font-size:12px;
+font-weight:bold;
+outline:none;
+text-align:center;
 ">
-
+</span>
 </div>
-
 </div>
 
 <div class="line"></div>
@@ -1885,7 +1422,6 @@ ${entriesHtml}
 border:1px solid #000;
 margin-top:8px;
 ">
-
 <div style="
 text-align:center;
 font-size:12px;
@@ -1898,7 +1434,6 @@ GRAND TOTAL
 </div>
 
 <table>
-
 <tr>
 <td>TPU</td>
 <td>OEPL</td>
@@ -1912,7 +1447,6 @@ GRAND TOTAL
 <td>${paeplSum}</td>
 <td>${grandSum}</td>
 </tr>
-
 </table>
 
 </div>
@@ -1920,7 +1454,6 @@ GRAND TOTAL
 border:1px solid #000;
 margin-top:8px;
 ">
-
 <div style="
 text-align:center;
 font-weight:bold;
@@ -1934,12 +1467,8 @@ OEPL Activities Total
 width:100%;
 border-collapse:collapse;
 ">
-
-${Object.entries(oeplActivities)
-.map(([k,v])=>`
-
+${Object.entries(oeplActivities).map(([k,v])=>`
 <tr>
-
 <td style="
 border:1px solid #000;
 padding:4px;
@@ -1948,7 +1477,6 @@ font-size:10px;
 ">
 ${fullActivityName(k)}
 </td>
-
 <td style="
 border:1px solid #000;
 padding:4px;
@@ -1957,21 +1485,15 @@ width:25%;
 ">
 ₹${v}
 </td>
-
 </tr>
-
 `).join("")}
-
 </table>
-
 </div>
-
 
 <div style="
 border:1px solid #000;
 margin-top:8px;
 ">
-
 <div style="
 text-align:center;
 font-weight:bold;
@@ -1985,12 +1507,8 @@ PAEPL Activities Total
 width:100%;
 border-collapse:collapse;
 ">
-
-${Object.entries(paeplActivities)
-.map(([k,v])=>`
-
+${Object.entries(paeplActivities).map(([k,v])=>`
 <tr>
-
 <td style="
 border:1px solid #000;
 padding:4px;
@@ -1999,7 +1517,6 @@ font-size:10px;
 ">
 ${fullActivityName(k)}
 </td>
-
 <td style="
 border:1px solid #000;
 padding:4px;
@@ -2008,92 +1525,56 @@ width:25%;
 ">
 ₹${v}
 </td>
-
 </tr>
-
 `).join("")}
-
 </table>
-
 </div>
 </body>
-
 </html>
-
 `;
 
 let win = window.open("","_blank");
-
 win.document.write(receipt);
-
 win.document.close();
-
 win.focus();
-
 setTimeout(()=>{
 win.print();
 },500);
-
 }
+
 function fullActivityName(name){
-
 const names = {
-
 "Snow":"Snow Park (Shrinathji Ent)",
-
 "Food":"Food Court (Shrinathji Foods)",
-
 "Wax":"Wax Museum (Victory Fun Park)",
-
 "Souvenir":"Souvenir (Mayan Assts)",
-
 "Gamezone":"Gamezone (Saachi)",
-
 "Eyelusion":"Eyelusion (Rinz)",
-
 "Mayalok":"Mayalok (Divine)",
-
 "WOG":"World of Ganesha (Mahadev)"
-
 };
-
 return names[name] || name;
-
 }
 
 function setDate(){
-
-const today =
-new Date().toLocaleDateString('en-GB');
-
-document.getElementById("date").innerText =
-today;
-
+const today = new Date().toLocaleDateString('en-GB');
+dateEl.innerText = today;
 }
+
 function restoreFormState(){
-
-combo.value =
-localStorage.getItem("lastCombo") || "";
-
-adults.value =
-localStorage.getItem("lastAdults") || "";
-
-children.value =
-localStorage.getItem("lastChildren") || "";
+combo.value = localStorage.getItem("lastCombo") || "";
+adults.value = localStorage.getItem("lastAdults") || "";
+children.value = localStorage.getItem("lastChildren") || "";
 
 if(combo.value){
 calc();
 }
-
 }
 
 restoreFormState();
-  document.getElementById("username").innerText.trim()=
-localStorage.getItem("username") || "Username";
+usernameEl.innerText = localStorage.getItem("username") || "";
 setDate();
-
 render();
-
 </script>
 <div id="loadingScreen">
 
