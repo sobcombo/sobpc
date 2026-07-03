@@ -243,22 +243,22 @@ font-weight:bold;
 }
 
 .activityCell{
-background:#eaeaea;
+background:transparent;
 font-size:10px;
 font-weight:bold;
 text-align:left !important;
 padding:6px 6px 6px 12px;
 vertical-align:top;
-white-space:pre-line;
-line-height:14px;
+white-space:normal;
 }
 
 .activityCell pre{
 margin:0;
 font:inherit;
 white-space:pre-wrap;
-line-height:13px;
+line-height:12px;
 }
+
 .activityTotalsCell {
   background: #eaeaea;
   font-size: 10px;
@@ -364,6 +364,111 @@ font-weight:bold;
 box-shadow:0 0 20px rgba(0,0,0,.25);
 
 }
+
+.editCard{
+background:#ffffff;
+max-width:360px;
+width:95%;
+max-height:85vh;
+overflow-y:auto;
+border:1px solid rgba(255,255,255,.8);
+backdrop-filter:blur(8px);
+margin:10px auto;
+padding:14px;
+border-radius:20px;
+box-shadow:
+10px 14px 40px rgba(0,0,0,.25),
+4px 6px 15px rgba(0,0,0,.15);
+animation:popIn .2s ease;
+}
+
+.editTitle{
+font-size:20px;
+font-weight:bold;
+margin-bottom:15px;
+color:#1565c0;
+}
+
+.editField{
+width:100%;
+margin:8px 0;
+padding:12px;
+border-radius:12px;
+border:2px solid #e0e0e0;
+font-size:15px;
+transition:.2s;
+}
+
+.timeField{
+width:100%;
+min-width:0;
+margin:8px 0;
+box-sizing:border-box;
+}
+
+.editField:focus{
+outline:none;
+border-color:#1565c0;
+box-shadow:0 0 10px rgba(21,101,192,.25);
+}
+
+.editActions{
+display:flex;
+justify-content:center;
+gap:10px;
+margin-top:15px;
+position:sticky;
+bottom:0;
+background:white;
+padding-top:10px;
+}
+
+.saveBtn{
+background:linear-gradient(
+135deg,
+#00c853,
+#009624
+);
+color:white;
+box-shadow:
+4px 4px 0 #00701a,
+6px 8px 14px rgba(0,0,0,.25);
+}
+
+.cancelBtn{
+background:linear-gradient(
+135deg,
+#ff5252,
+#d50000
+);
+color:white;
+box-shadow:
+4px 4px 0 #9b0000,
+6px 8px 14px rgba(0,0,0,.25);
+}
+
+.saveBtn,
+.cancelBtn{
+height:46px;
+min-width:120px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:15px;
+font-weight:bold;
+}
+
+@keyframes popIn{
+from{
+transform:scale(.9);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
+
 @media print {
 
 @page{
@@ -786,6 +891,47 @@ Reset All
 
 </div>
 
+<div id="editModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;">
+<div class="editCard">
+<div class="editTitle">✏️ Edit SOB Entry</div>
+<div style="text-align:left;font-size:13px;font-weight:bold;">SOB ID</div>
+<input id="editSob" class="editField" type="tel" maxlength="6" inputmode="numeric" placeholder="SOB ID" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value.length>6)this.value=this.value.slice(0,6);">
+<div style="display:flex;gap:8px;">
+<div style="flex:1;">
+<div style="text-align:left;font-size:13px;font-weight:bold;">Adults</div>
+<input id="editAdults" class="editField" type="number" min="0" max="100" placeholder="Adults" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value>100)this.value=100;">
+</div>
+<div style="flex:1;">
+<div style="text-align:left;font-size:13px;font-weight:bold;">Children</div>
+<input id="editChildren" class="editField" type="number" min="0" max="100" placeholder="Children" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value>100)this.value=100;">
+</div>
+</div>
+<div style="text-align:left;font-size:13px;font-weight:bold;">Combo Type</div>
+<select id="editCombo" class="editField"></select>
+<div style="display:flex;gap:8px;">
+<div style="flex:1;min-width:0;">
+<div style="text-align:left;font-size:13px;font-weight:bold;">Hour</div>
+<select id="editHour" class="editField timeField"></select>
+</div>
+<div style="flex:1;min-width:0;">
+<div style="text-align:left;font-size:13px;font-weight:bold;">Minute</div>
+<select id="editMinute" class="editField timeField"></select>
+</div>
+<div style="flex:1;min-width:0;">
+<div style="text-align:left;font-size:13px;font-weight:bold;">AM/PM</div>
+<select id="editAmPm" class="editField timeField">
+<option>AM</option>
+<option>PM</option>
+</select>
+</div>
+</div>
+<div class="editActions">
+<button class="saveBtn" onclick="saveEdit()">Save</button>
+<button class="cancelBtn" onclick="closeEditModal()">Cancel</button>
+</div>
+</div>
+</div>
+
 <div class="footer-left">
 26G03 | V4.1
 </div>
@@ -817,6 +963,14 @@ const percent = document.getElementById("percent");
 const userList = document.getElementById("userList");
 const usernameEl = document.getElementById("username");
 const dateEl = document.getElementById("date");
+const editModal = document.getElementById("editModal");
+const editSob = document.getElementById("editSob");
+const editAdults = document.getElementById("editAdults");
+const editChildren = document.getElementById("editChildren");
+const editCombo = document.getElementById("editCombo");
+const editHour = document.getElementById("editHour");
+const editMinute = document.getElementById("editMinute");
+const editAmPm = document.getElementById("editAmPm");
 
 const todayKey = new Date().toLocaleDateString('en-GB');
 const savedDate = localStorage.getItem("sobDate");
@@ -825,6 +979,32 @@ if(savedDate !== todayKey){
 data = [];
 localStorage.removeItem("sobData");
 localStorage.setItem("sobDate",todayKey);
+}
+
+function pad2(n){
+return String(n).padStart(2,"0");
+}
+
+function formatRestoredTime(t){
+let d = new Date(t);
+if(isNaN(d)) return t || "";
+let h = d.getHours();
+let m = pad2(d.getMinutes());
+let ampm = h >= 12 ? "PM" : "AM";
+h = h % 12 || 12;
+return `${h}:${m} ${ampm}`;
+}
+
+function setEditTimeOptions(){
+editHour.innerHTML = "";
+for(let i=1;i<=12;i++){
+editHour.innerHTML += `<option value="${i}">${i}</option>`;
+}
+editMinute.innerHTML = "";
+for(let i=0;i<60;i++){
+let mm = pad2(i);
+editMinute.innerHTML += `<option value="${mm}">${mm}</option>`;
+}
 }
 
 function calc(){
@@ -957,7 +1137,7 @@ adults:(+adults.value || 0),
 children:(+children.value || 0),
 breakup,
 time:new Date().toLocaleTimeString([],{
-hour:"2-digit",
+hour:"numeric",
 minute:"2-digit",
 hour12:true
 })
@@ -981,7 +1161,7 @@ paepl:r.paepl,
 total:r.total,
 breakup:breakup,
 time:new Date().toLocaleTimeString([],{
-hour:"2-digit",
+hour:"numeric",
 minute:"2-digit",
 hour12:true
 })
@@ -1045,8 +1225,11 @@ alert("No data found.");
 return;
 }
 
-data = rows;
-localStorage.setItem("sobData",JSON.stringify(rows));
+data = rows.map(r => ({
+...r,
+time: formatRestoredTime(r.time)
+}));
+localStorage.setItem("sobData",JSON.stringify(data));
 render();
 if(percent) percent.innerHTML = "100%";
 }
@@ -1078,42 +1261,105 @@ localStorage.setItem("sobDataBackup",JSON.stringify(data));
 render();
 }
 
-function editEntry(index){
+function openEditModal(index){
 editingIndex = index;
 let d = data[index];
-document.getElementById("editSob").value = d.sob.replace("SOB000","");
-document.getElementById("editSob").setAttribute("maxlength","6");
-document.getElementById("editAdults").value = d.adults;
-document.getElementById("editChildren").value = d.children;
 
-let parts = d.time.match(/(\d+):(\d+):(\d+)\s?(AM|PM)?/i);
+editSob.value = d.sob.replace("SOB000","");
+editAdults.value = d.adults;
+editChildren.value = d.children;
 
-if(parts){
-let hrs12 = parseInt(parts[1]);
-let mins = parts[2];
-let ampm = parts[4] || "AM";
-document.getElementById("editHour").value = hrs12;
-document.getElementById("editMinute").value = mins;
-document.getElementById("editAmPm").value = ampm.toUpperCase();
-}
-
-let comboSelect = document.getElementById("editCombo");
-comboSelect.innerHTML = "";
-
-Array.from(combo.options)
-.slice(1)
-.forEach(opt=>{
+editCombo.innerHTML = "";
+Array.from(combo.options).slice(1).forEach(opt=>{
 let o = document.createElement("option");
 o.value = opt.value;
 o.textContent = opt.text;
-if(opt.text === d.comboName){
-o.selected = true;
-}
-comboSelect.appendChild(o);
+if(opt.text === d.comboName) o.selected = true;
+editCombo.appendChild(o);
 });
 
-document.getElementById("editModal").style.display = "block";
-document.getElementById("editSob").focus();
+setEditTimeOptions();
+
+let tm = (d.time || "").match(/(\d{1,2}):(\d{2})\s?(AM|PM)/i);
+if(tm){
+editHour.value = String(parseInt(tm[1]));
+editMinute.value = tm[2];
+editAmPm.value = tm[3].toUpperCase();
+} else {
+let now = new Date();
+let h = now.getHours();
+let ampm = h >= 12 ? "PM" : "AM";
+h = h % 12 || 12;
+editHour.value = String(h);
+editMinute.value = pad2(now.getMinutes());
+editAmPm.value = ampm;
+}
+
+editModal.style.display = "block";
+}
+
+function closeEditModal(){
+editModal.style.display = "none";
+editingIndex = -1;
+}
+
+function saveEdit(){
+if(editingIndex < 0) return;
+
+let raw = editSob.value.trim();
+if(!/^[0-9]{6}$/.test(raw)){
+alert("Enter valid 6-digit SOB ID");
+return;
+}
+
+let sob = "SOB000" + raw;
+if(data.some((d,i) => i !== editingIndex && d.sob === sob)){
+alert("This SOB ID already exists");
+return;
+}
+
+let comboValue = editCombo.value;
+let comboText = editCombo.options[editCombo.selectedIndex]?.text || "";
+let tempCombo = combo.value;
+let tempAdults = adults.value;
+let tempChildren = children.value;
+
+combo.value = comboValue;
+adults.value = editAdults.value;
+children.value = editChildren.value;
+let r = calc();
+
+combo.value = tempCombo;
+adults.value = tempAdults;
+children.value = tempChildren;
+calc();
+
+if(!r) return;
+
+let pax = (+editAdults.value || 0) + (+editChildren.value || 0);
+let breakup = getVendorBreakup(comboText, pax);
+
+data[editingIndex] = {
+...data[editingIndex],
+sob,
+comboName: comboText,
+adults: (+editAdults.value || 0),
+children: (+editChildren.value || 0),
+tpu: r.tpu,
+oepl: r.oepl,
+paepl: r.paepl,
+total: r.total,
+breakup,
+time: `${editHour.value}:${editMinute.value} ${editAmPm.value}`
+};
+
+localStorage.setItem("sobData",JSON.stringify(data));
+render();
+closeEditModal();
+}
+
+function editEntry(index){
+openEditModal(index);
 }
 
 function formatTime(t){
@@ -1571,6 +1817,7 @@ calc();
 }
 }
 
+setEditTimeOptions();
 restoreFormState();
 usernameEl.innerText = localStorage.getItem("username") || "";
 setDate();
