@@ -872,7 +872,7 @@ return `
 OEPL → ${line([
 {name:"Wax",price:70}
 ])}
-<br>
+\n
 PAEPL → ${line([
 {name:"Eyelusion",price:70},
 {name:"WOG",price:80}
@@ -887,7 +887,7 @@ return `
 OEPL → ${line([
 {name:"Wax",price:28}
 ])}
-<br>
+\n
 PAEPL → ${line([
 {name:"Mayalok",price:200}
 ])}
@@ -944,7 +944,7 @@ OEPL → ${line([
 {name:"Snow",price:225},
 {name:"Food",price:100}
 ])}
-<br>
+\n
 PAEPL → ${line([
 {name:"Gamezone",price:50}
 ])}
@@ -959,7 +959,7 @@ OEPL → ${line([
 {name:"Snow",price:200},
 {name:"Wax",price:49}
 ])}
-<br>
+\n
 PAEPL → ${line([
 {name:"Gamezone",price:100},
 {name:"WOG",price:70}
@@ -977,7 +977,7 @@ OEPL → ${line([
 {name:"Souvenir",price:60},
 {name:"Wax",price:50}
 ])}
-<br>
+\n
 PAEPL → ${line([
 {name:"Eyelusion",price:50},
 {name:"Mayalok",price:200},
@@ -997,7 +997,7 @@ OEPL → ${line([
 {name:"Souvenir",price:60},
 {name:"Wax",price:50}
 ])}
-<br>
+\n
 PAEPL → ${line([
 {name:"Eyelusion",price:50},
 {name:"Mayalok",price:200},
@@ -1015,7 +1015,7 @@ OEPL → ${line([
 {name:"Snow",price:200},
 {name:"Wax",price:50}
 ])}
-<br>
+\n
 PAEPL → ${line([
 {name:"Eyelusion",price:50},
 {name:"Mayalok",price:200},
@@ -1046,7 +1046,7 @@ OEPL → ${line([
 {name:"Souvenir",price:100},
 {name:"Wax",price:100}
 ])}
-<br>
+\n
 PAEPL → ${line([
 {name:"Eyelusion",price:50},
 {name:"Mayalok",price:150},
@@ -1070,13 +1070,6 @@ let username=document
 .value
 .trim();
 
-if(username===""){
-
-alert("Enter username");
-
-return;
-
-}
 if(!/^[1-9][0-9]{5}$/.test(raw)){
 
 alert(
@@ -1230,11 +1223,15 @@ async function restoreTodayData(){
     const today =
         new Date().toLocaleDateString("en-GB");
 
-    const res = await fetch(
-        APP_SCRIPT_URL +
-        "?date=" +
-        encodeURIComponent(today)
-    );
+   const user =
+document.getElementById("username").value.trim();
+
+const url =
+APP_SCRIPT_URL+
+"?date="+encodeURIComponent(today)+
+"&username="+encodeURIComponent(user);
+
+const res=await fetch(url);
 
     const rows = await res.json();
 
@@ -1787,7 +1784,19 @@ font-size:12px;
 font-weight:normal;
 ">
 
-USERNA<b>M</b>E.<b>S</b> : ____________________________
+USERNA<b>M</b>E.S :
+
+<input
+id="username"
+placeholder="Enter username"
+style="
+border:none;
+border-bottom:1px solid black;
+background:#f3f3f3;
+width:140px;
+padding:2px;
+font-size:12px;
+">
 
 </div>
 
