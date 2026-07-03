@@ -245,11 +245,16 @@ font-weight:bold;
 .activityCell{
 text-align:left;
 font-size:10px;
-font-weight:bold;
 padding:6px 6px 6px 12px;
 vertical-align:top;
 }
 
+.activityCell pre{
+margin:0;
+font:inherit;
+white-space:pre-wrap;
+line-height:13px;
+}
 .activityTotalsCell {
   background: #eaeaea;
   font-size: 10px;
@@ -692,21 +697,22 @@ POS# : __________
 <div>
 USERNA<b>M</b>E.<b>S</b> :
 
-<input
+<span
 id="username"
-list="userList"
-placeholder=""
+contenteditable="true"
+spellcheck="false"
 style="
-border:none;
-border-bottom:1px solid black;
-background:#f3f3f3;
-width:130px;
+display:inline-block;
+min-width:130px;
+border-bottom:1px solid #000;
 font-weight:bold;
 outline:none;
+text-align:center;
 ">
+Username
+</span>
 
 <datalist id="userList"></datalist>
-
 </div>
 
 <div>
@@ -1174,10 +1180,12 @@ children:
 
 breakup,
 
-time:
-new Date().toLocaleTimeString()
-
+time:new Date().toLocaleTimeString([],{
+hour:"2-digit",
+minute:"2-digit",
+hour12:true
 });
+
 fetch(APP_SCRIPT_URL,{
     method:"POST",
   headers:{
@@ -1207,7 +1215,11 @@ total:r.total,
 
 breakup:breakup.replace(/<br\s*\/?>/gi,"\n"),
 
-time:new Date().toLocaleTimeString()
+time:new Date().toLocaleTimeString([],{
+hour:"2-digit",
+minute:"2-digit",
+hour12:true
+})
 
 })
 })
@@ -1282,7 +1294,7 @@ percent.innerHTML=p+"%";
         new Date().toLocaleDateString("en-GB");
 
    const user =
-document.getElementById("username").value.trim();
+document.getElementById("username").innerText.trim();
 
 const url =
 APP_SCRIPT_URL+
@@ -1438,17 +1450,7 @@ document.getElementById("editSob").focus();
 
 }
 function formatTime(t){
-
-const d = new Date(`1970-01-01T${t}`);
-
-if(isNaN(d)) return t;
-
-return d.toLocaleTimeString([],{
-hour:"2-digit",
-minute:"2-digit",
-hour12:true
-});
-
+return t;
 }
 function render(){
 
@@ -1492,7 +1494,7 @@ dataBody.innerHTML += `
 <td>${d.total}</td>
 
 <td class="activityCell">
-${String(d.breakup).replace(/\n/g,"<br>")}
+<pre>${d.breakup}</pre>
 </td>
 
 <td style="font-size:10px;">
@@ -2086,8 +2088,8 @@ calc();
 }
 
 restoreFormState();
-  document.getElementById("username").value=
-localStorage.getItem("username")||"";
+  document.getElementById("username").innerText.trim()=
+localStorage.getItem("username") || "Username";
 setDate();
 
 render();
