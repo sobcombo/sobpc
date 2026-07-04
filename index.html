@@ -116,7 +116,7 @@ margin:0;
 min-width:auto;
 }
 
-#a4{
+.a4{
 padding:8mm;
 box-sizing:border-box;
 overflow:hidden;
@@ -234,6 +234,72 @@ display:flex;
 justify-content:space-between;
 font-size:13px;
 margin-bottom:10px;
+align-items:center;
+gap:6px;
+flex-wrap:wrap;
+}
+
+.header-left,
+.header-center,
+.header-right{
+display:flex;
+align-items:center;
+gap:4px;
+min-width:0;
+flex:1 1 auto;
+}
+
+.header-center{
+justify-content:center;
+}
+
+.header-right{
+justify-content:flex-end;
+}
+
+.restoreTick{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+width:18px;
+height:18px;
+border:none;
+background:transparent;
+color:#1b5e20;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+padding:0;
+margin:0 0 0 4px;
+line-height:1;
+text-shadow:0 1px 0 rgba(255,255,255,.8);
+}
+
+.restoreTick.hidden{
+display:none;
+}
+
+.headerText{
+display:inline-block;
+white-space:nowrap;
+}
+
+.headerLine{
+display:inline-block;
+min-width:60px;
+max-width:110px;
+width:auto;
+border-bottom:1px solid #000;
+font-weight:bold;
+outline:none;
+text-align:center;
+padding:0 4px;
+line-height:1.2;
+}
+
+#printArea .headerLine{
+min-width:50px;
+max-width:95px;
 }
 
 .activityRow{
@@ -426,12 +492,12 @@ padding-top:10px;
 .saveBtn{
 background:linear-gradient(
 135deg,
-#00c853,
-#009624
+#1976d2,
+#0d47a1
 );
 color:white;
 box-shadow:
-4px 4px 0 #00701a,
+4px 4px 0 #0b3a82,
 6px 8px 14px rgba(0,0,0,.25);
 }
 
@@ -502,6 +568,9 @@ display:none !important;
 tfoot button{
 display:none !important;
 }
+.restoreTick{
+display:none !important;
+}
 #printArea{
 display:block !important;
 width:100%;
@@ -546,9 +615,27 @@ word-break:break-word;
 .header{
 margin-bottom:8px;
 font-size:11px;
+gap:4px;
+flex-wrap:nowrap;
 }
+
+.header-left,
+.header-center,
+.header-right{
+gap:3px;
+}
+
+.headerLine{
+min-width:42px;
+max-width:85px;
+}
+
 .deleteColumn{
 display:none !important;
+}
+.activityTotalsCell,
+tfoot td{
+border:1px solid #000 !important;
 }
 
 }
@@ -765,7 +852,7 @@ placeholder="Enter 6-digit SOB ID"
 
 <button
 onclick="saveEntry()"
-style="background:#2e7d32;color:white;">
+style="background:#1976d2;color:white;">
 Save SOB
 </button>
 
@@ -773,12 +860,6 @@ Save SOB
 onclick="resetForm()"
 style="background:#f57c00;color:white;">
 Reset Calculator
-</button>
-
-<button
-onclick="restoreTodayData()"
-style="background:#1976d2;color:white;">
-Restore Today's SOB IDs
 </button>
 
 <br>
@@ -799,32 +880,26 @@ Restore Today's SOB IDs
 
 <div class="header">
 
-<div>
-POS# : __________
+<div class="header-left">
+<span class="headerText">POS# :</span>
+<span id="posText" contenteditable="true" spellcheck="false" class="headerLine"></span>
+<button id="restoreTick" class="restoreTick hidden" onclick="restoreTodayData()">☑️</button>
 </div>
 
-<div>
-USERNA<b>M</b>E.<b>S</b> :
-
+<div class="header-center">
+<span class="headerText">USERNA<b>M</b>E.<b>S</b> :</span>
 <span
 id="username"
 contenteditable="true"
 spellcheck="false"
-style="
-display:inline-block;
-min-width:130px;
-border-bottom:1px solid #000;
-font-weight:bold;
-outline:none;
-text-align:center;
-">
+class="headerLine">
 </span>
-
+<button id="userTick" class="restoreTick hidden" onclick="restoreTodayData()">☑️</button>
 <datalist id="userList"></datalist>
 </div>
 
-<div>
-DATE : <span id="date"></span>
+<div class="header-right">
+<span class="headerText">DATE :</span> <span id="date"></span>
 </div>
 
 </div>
@@ -933,7 +1008,7 @@ Reset All
 </div>
 
 <div class="footer-left">
-26G03 | V4.2
+26G04 | V4.2
 </div>
 
 <script>
@@ -962,6 +1037,9 @@ const loadingScreen = document.getElementById("loadingScreen");
 const percent = document.getElementById("percent");
 const userList = document.getElementById("userList");
 const usernameEl = document.getElementById("username");
+const posText = document.getElementById("posText");
+const restoreTick = document.getElementById("restoreTick");
+const userTick = document.getElementById("userTick");
 const dateEl = document.getElementById("date");
 const editModal = document.getElementById("editModal");
 const editSob = document.getElementById("editSob");
@@ -983,6 +1061,10 @@ localStorage.setItem("sobDate",todayKey);
 
 function pad2(n){
 return String(n).padStart(2,"0");
+}
+
+function normalizeUsername(name){
+return (name || "").trim().toLowerCase();
 }
 
 function formatRestoredTime(t){
@@ -1106,9 +1188,49 @@ return `OEPL → ${line([{name:"Snow",price:150},{name:"Food",price:99},{name:"S
 return "-";
 }
 
+function updateRestoreUI(){
+let posVal = posText.innerText.trim();
+let userVal = usernameEl.innerText.trim();
+restoreTick.classList.toggle("hidden", !/^restore$/i.test(posVal));
+userTick.classList.toggle("hidden", userVal.length === 0);
+}
+
+async function restoreTodayData(){
+let posVal = posText.innerText.trim();
+let userVal = usernameEl.innerText.trim();
+
+if(!/^restore$/i.test(posVal)) return;
+
+let userKey = normalizeUsername(userVal);
+const today = new Date().toLocaleDateString("en-GB");
+const url = APP_SCRIPT_URL + "?date=" + encodeURIComponent(today) + "&username=" + encodeURIComponent(userVal) + "&usernameKey=" + encodeURIComponent(userKey);
+const res = await fetch(url);
+const rows = await res.json();
+
+let filtered = rows;
+if(userKey){
+filtered = rows.filter(r => normalizeUsername(r.username || r.usernameKey || "") === userKey);
+}
+
+if(filtered.length === 0 && userKey){
+alert("No data found for this username.");
+return;
+}
+
+data = (userKey ? filtered : rows).map(r => ({
+...r,
+time: formatRestoredTime(r.time)
+}));
+
+localStorage.setItem("sobData",JSON.stringify(data));
+render();
+updateRestoreUI();
+}
+
 function saveEntry(){
 let raw = sobInput.value.trim();
 let username = usernameEl.innerText.trim();
+let usernameKey = normalizeUsername(username);
 
 if(!/^[1-9][0-9]{5}$/.test(raw)){
 alert("Enter valid 6-digit SOB ID");
@@ -1151,6 +1273,7 @@ headers:{
 body:JSON.stringify({
 date:new Date().toLocaleDateString("en-GB"),
 username:username,
+usernameKey:usernameKey,
 sob:sob,
 comboName:comboName,
 adults:+adults.value||0,
@@ -1174,6 +1297,7 @@ hour12:true
 localStorage.setItem("sobData",JSON.stringify(data));
 localStorage.setItem("sobDataBackup",JSON.stringify(data));
 localStorage.setItem("username",username);
+localStorage.setItem("usernameKey",usernameKey);
 render();
 sobInput.value = "";
 }
@@ -1191,58 +1315,6 @@ oeplEl.innerText = 0;
 paeplEl.innerText = 0;
 totalEl.innerText = 0;
 warning.innerText = "";
-}
-
-async function restoreTodayData(){
-if(loadingScreen) loadingScreen.style.display = "flex";
-if(percent) percent.innerHTML = "0%";
-
-let p = 0;
-let timer = setInterval(() => {
-    if (p < 95 && percent) {
-        p += 5;
-        percent.innerHTML = p + "%";
-    }
-}, 40);
-
-try{
-const today = new Date().toLocaleDateString("en-GB");
-const user = usernameEl.innerText.trim();
-const url = APP_SCRIPT_URL + "?date=" + encodeURIComponent(today) + "&username=" + encodeURIComponent(user);
-const res = await fetch(url);
-const rows = await res.json();
-
-let users=[...new Set(rows.map(r=>r.username).filter(Boolean))];
-userList.innerHTML="";
-users.forEach(u=>{
-let o=document.createElement("option");
-o.value=u;
-userList.appendChild(o);
-});
-
-if(rows.length===0){
-alert("No data found.");
-return;
-}
-
-data = rows.map(r => ({
-...r,
-time: formatRestoredTime(r.time)
-}));
-localStorage.setItem("sobData",JSON.stringify(data));
-render();
-if(percent) percent.innerHTML = "100%";
-}
-catch(e){
-console.error(e);
-alert("Restore failed. Check the script response and username/date filters.");
-}
-finally{
-clearInterval(timer);
-setTimeout(() => {
-    if(loadingScreen) loadingScreen.style.display = "none";
-}, 300);
-}
 }
 
 function resetAllData(){
@@ -1384,7 +1456,7 @@ dataBody.innerHTML += `
 </td>
 
 <td class="deleteColumn">
-<button class="deleteBtn" onclick="deleteEntry(${i})">X</button>
+<button class="deleteBtn" onclick="deleteEntry(${i})">🗑️</button>
 </td>
 
 <td>${i+1}</td>
@@ -1394,7 +1466,7 @@ dataBody.innerHTML += `
 <br>
 <span style="font-size:9px;white-space:nowrap;">
 (${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
-(${d.adults}.A + ${d.children}.C)
+(${d.adults} A + ${d.children} C)
 </span>
 </td>
 
@@ -1462,6 +1534,7 @@ activityTotals.innerHTML =
 "<u>OEPL</u> → "+formatActivities(oeplActivities)+
 "<br>"+
 "<u>PAEPL</u> → "+formatActivities(paeplActivities);
+updateRestoreUI();
 }
 
 function printA4(){
@@ -1544,31 +1617,28 @@ font-size:10px;
 <span>${formatTime(d.time)}</span>
 </div>
 
-<table style="
-width:100%;
-border-collapse:collapse;
-">
-<tr>
-<td>TPU</td>
-<td>OEPL</td>
-<td>PAEPL</td>
-<td>TOTAL</td>
-</tr>
-
-<tr>
-<td>${d.tpu}</td>
-<td>${d.oepl}</td>
-<td>${d.paepl}</td>
-<td>${d.total}</td>
-</tr>
-</table>
+<div style="padding:0 0 2px 0;">
+<div style="display:flex;border:1px solid #000;">
+<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">TPU</div>
+<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">OEPL</div>
+<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">PAEPL</div>
+<div style="flex:1;padding:3px;text-align:center;font-size:10px;">TOTAL</div>
+</div>
+<div style="display:flex;border:1px solid #000;border-top:none;">
+<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">${d.tpu}</div>
+<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">${d.oepl}</div>
+<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">${d.paepl}</div>
+<div style="flex:1;padding:3px;text-align:center;font-size:10px;">${d.total}</div>
+</div>
+</div>
 
 <div style="
 padding:4px 6px;
 font-size:11px;
 line-height:15px;
 ">
-${d.breakup.replace(/OEPL →/g,'<span style="border-bottom:1px solid #000;">OEPL</span> →').replace(/PAEPL →/g,'<span style="border-bottom:1px solid #000;">PAEPL</span> →')}
+<div>OEPL: ${d.breakup.split("\n")[0].replace("OEPL →","").trim()}</div>
+<div>PAEPL: ${d.breakup.split("\n")[1] ? d.breakup.split("\n")[1].replace("PAEPL →","").trim() : ""}</div>
 </div>
 </div>
 `;
@@ -1614,13 +1684,6 @@ border:1px solid #000;
 text-align:center;
 padding:3px;
 font-size:11px;
-}
-.summary{
-margin-top:10px;
-}
-.summary table td{
-font-size:12px;
-padding:5px;
 }
 </style>
 </head>
@@ -1817,11 +1880,14 @@ calc();
 }
 }
 
+posText.addEventListener("input", updateRestoreUI);
+usernameEl.addEventListener("input", updateRestoreUI);
 setEditTimeOptions();
 restoreFormState();
 usernameEl.innerText = localStorage.getItem("username") || "";
 setDate();
 render();
+updateRestoreUI();
 </script>
 <div id="loadingScreen">
 
