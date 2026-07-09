@@ -263,16 +263,25 @@ white-space:nowrap;
 }
 
 .headerLine{
-display:inline-block;
+display:inline-flex;
+align-items:flex-end;
+justify-content:center;
+
+height:16px;
 min-width:60px;
 max-width:110px;
-width:auto;
-border-bottom:1px solid #000;
-font-weight:bold;
-outline:none;
-text-align:center;
+
 padding:0 4px;
-line-height:1.2;
+
+border-bottom:1.5px solid #000;
+
+font-weight:bold;
+
+vertical-align:bottom;
+
+line-height:16px;
+
+box-sizing:border-box;
 }
 
 #printArea .headerLine{
@@ -914,17 +923,17 @@ Reset Calculator
 <div class="header">
 
 <div class="header-left">
-<span class="headerText">POS# :</span>
+<b class="headerText">POS# :</b>
 <span class="headerLine"></span>
 </div>
 
 <div class="header-center">
-<span class="headerText">USERNAME.S :</span>
+<span class="headerText">USERNA<b>M</b>E.<b>S</b> :</span>
 <span id="username" class="headerLine"></span>
 </div>
 
 <div class="header-right">
-<span class="headerText">DATE :</span>
+<b class="headerText">DATE :</b>
 <span id="date"></span>
 </div>
 
@@ -1034,7 +1043,7 @@ Reset All
 </div>
 
 <div class="footer-left">
-26G09 | V4.3
+26G10 | V4.4
 </div>
 
 <script>
@@ -1636,15 +1645,20 @@ window.print();
 
 async function printAllA4(){
 
-const today=new Date().toLocaleDateString("en-GB");
+try{
 
-const res=await fetch(
-APP_SCRIPT_URL+
-"?date="+encodeURIComponent(today)+
+const originalData = [...data];
+const originalUser = usernameEl.innerText;
+
+const today = new Date().toLocaleDateString("en-GB");
+
+const res = await fetch(
+APP_SCRIPT_URL +
+"?date=" + encodeURIComponent(today) +
 "&all=true"
 );
 
-const rows=await res.json();
+const rows = await res.json();
 
 if(!rows.length){
 alert("No entries found.");
@@ -1655,42 +1669,59 @@ let grouped = {};
 
 rows.forEach(r=>{
 
-    let key = (r.displayName || "").trim().toLowerCase();
+const key = (r.displayName || "Unknown").trim().toLowerCase();
 
-    if(!grouped[key]){
-        grouped[key]={
-            name:r.displayName.trim(),
-            rows:[]
-        };
-    }
+if(!grouped[key]){
+grouped[key]={
+name:(r.displayName || "Unknown").trim(),
+rows:[]
+};
+}
 
-    grouped[key].rows.push(r);
+grouped[key].rows.push(r);
 
 });
 
-let html = "";
+let html="";
 
-Object.values(grouped).forEach(group=>{
+for(const group of Object.values(grouped)){
 
-    data = group.rows;
-    usernameEl.innerText = group.name;
+data = group.rows;
+usernameEl.innerText = group.name;
 
-    render();
+render();
 
 html += `
 <div class="a4Page">
 ${document.getElementById("printArea").innerHTML}
+<hr style="border:1px dashed #999;margin:6px 0;">
 </div>
 `;
 
-});
+}
 
-const win = window.open("");
+data = originalData;
+usernameEl.innerText = originalUser;
+render();
+
+const win = window.open("", "_blank");
+
+if(!win){
+
+alert("Popup blocked.\nPlease allow popups for this website.");
+
+return;
+
+}
+
+win.document.open();
 
 win.document.write(`
+<!DOCTYPE html>
 <html>
-
 <head>
+
+<meta charset="UTF-8">
 
 <title>Print All</title>
 
@@ -1698,43 +1729,28 @@ win.document.write(`
 
 <style>
 
+${document.querySelector("style").innerHTML}
+
 body{
 margin:0;
+padding:0;
 font-family:'Arimo',sans-serif;
 }
 
 .a4Page{
+margin:0 0 8px 0;
 padding:0;
-margin-bottom:12px;
 page-break-inside:avoid;
 break-inside:avoid;
 }
 
-.a4Page{
-margin-bottom:10mm;
-break-inside:avoid;
-page-break-inside:avoid;
-}
-
-.a4Page:last-child{
-margin-bottom:0;
-}
 .editColumn,
 .deleteColumn,
 .editBtn,
 .deleteBtn,
 #resetAllBtn{
-display:none !important;
+display:none!important;
 }
-
-.editColumn,
-.deleteColumn{
-width:0 !important;
-padding:0 !important;
-border:none !important;
-}
-
-${document.querySelector("style").innerHTML}
 
 </style>
 
@@ -1751,15 +1767,25 @@ ${html}
 
 win.document.close();
 
-setTimeout(()=>{
+win.onload = function(){
 
-    win.print();
+setTimeout(function(){
 
-    data = originalData;
-    usernameEl.innerText = originalUser;
-    render();
+win.focus();
 
-},500);
+win.print();
+
+},300);
+
+};
+
+}catch(err){
+
+console.error(err);
+
+alert("Unable to print all.");
+
+}
 
 }
 
