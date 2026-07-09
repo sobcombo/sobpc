@@ -1231,12 +1231,12 @@ if(!/^restore$/i.test(posVal)) return;
 
 let userKey = normalizeUsername(userVal);
 const today = new Date().toLocaleDateString("en-GB");
-const url =
-APP_SCRIPT_URL +
-"?date=" +
-encodeURIComponent(today) +
-"&deviceId=" +
-encodeURIComponent(deviceId);
+const url=
+APP_SCRIPT_URL+
+"?date="+
+encodeURIComponent(today)+
+"&displayName="+
+encodeURIComponent(username);
 const res = await fetch(url);
 const rows = await res.json();
 
