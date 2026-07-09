@@ -1230,16 +1230,9 @@ return `OEPL → ${line([{name:"Snow",price:150},{name:"Food",price:99},{name:"S
 return "-";
 }
 
-function updateRestoreUI(){
-let posVal = posText.innerText.trim();
-let userVal = usernameEl.innerText.trim();
-restoreTick.classList.toggle("hidden", !/^restore$/i.test(posVal));
-userTick.classList.toggle("hidden", userVal.length === 0);
-}
-
 async function restoreTodayData(){
 let posVal = posText.innerText.trim();
-let userVal = usernameEl.innerText.trim();
+let userVal = usernameInput.value.trim();
 
 if(!/^restore$/i.test(posVal)) return;
 
@@ -1266,12 +1259,12 @@ time: formatRestoredTime(r.time)
 
 localStorage.setItem("sobData",JSON.stringify(data));
 render();
-updateRestoreUI();
+
 }
 
 function saveEntry(){
 let raw = sobInput.value.trim();
-let username = usernameEl.innerText.trim();
+let username = usernameInput.value.trim();
 let usernameKey = normalizeUsername(username);
 
 if(!/^[1-9][0-9]{5}$/.test(raw)){
@@ -1609,7 +1602,7 @@ activityTotals.innerHTML =
 "<u>OEPL</u> → "+formatActivities(oeplActivities)+
 "<br>"+
 "<u>PAEPL</u> → "+formatActivities(paeplActivities);
-updateRestoreUI();
+
 }
 
 function printA4(){
@@ -1955,14 +1948,12 @@ calc();
 }
 }
 
-posText.addEventListener("input", updateRestoreUI);
-usernameEl.addEventListener("input", updateRestoreUI);
 setEditTimeOptions();
 restoreFormState();
-usernameEl.innerText = localStorage.getItem("username") || "";
+usernameInput.value = localStorage.getItem("username") || "";
 setDate();
 render();
-updateRestoreUI();
+
 </script>
 <div id="loadingScreen">
 
