@@ -722,7 +722,7 @@ Daily Report Generator
 <input
 id="usernameInput"
 type="text"
-placeholder="Please enter username here!"
+placeholder="Enter Username"
 autocomplete="off"
 >
 
@@ -912,27 +912,18 @@ Reset Calculator
 <div class="header">
 
 <div class="header-left">
-</div>
-
-<div class="header-center">
-</div>
-
-<div class="header-left">
 <span class="headerText">POS# :</span>
 <span class="headerLine"></span>
 </div>
 
 <div class="header-center">
 <span class="headerText">USERNAME.S :</span>
-<span class="headerLine">${usernameEl.innerText}</span>
+<span id="username" class="headerLine"></span>
 </div>
 
 <div class="header-right">
 <span class="headerText">DATE :</span>
-<span id="date">${new Date().toLocaleDateString('en-GB')}</span>
-</div>
-
-<span class="headerText">DATE :</span> <span id="date"></span>
+<span id="date"></span>
 </div>
 
 </div>
@@ -1068,11 +1059,11 @@ const paeplT = document.getElementById("paeplT");
 const activityTotals = document.getElementById("activityTotals");
 const loadingScreen = document.getElementById("loadingScreen");
 const percent = document.getElementById("percent");
-const userList = document.getElementById("userList");
+
 const usernameEl = document.getElementById("username");
-const posText = document.getElementById("posText");
-const restoreTick = document.getElementById("restoreTick");
-const userTick = document.getElementById("userTick");
+const posText = { innerText:"Restore" };
+
+
 const dateEl = document.getElementById("date");
 const editModal = document.getElementById("editModal");
 const editSob = document.getElementById("editSob");
@@ -1241,6 +1232,9 @@ const today = new Date().toLocaleDateString("en-GB");
 const url = APP_SCRIPT_URL + "?date=" + encodeURIComponent(today) + "&username=" + encodeURIComponent(userVal) + "&usernameKey=" + encodeURIComponent(userKey);
 const res = await fetch(url);
 const rows = await res.json();
+
+const originalData = [...data];
+const originalUser = usernameEl.innerText;
 
 let filtered = rows;
 if(userKey){
@@ -1652,12 +1646,9 @@ usernameEl.innerText = user;
 
     render();
 
-    usernameEl.innerText = user;
-render();
-
 html += `
 <div class="a4Page">
-${document.getElementById("a4").outerHTML}
+${document.getElementById("printArea").innerHTML}
 </div>
 `;
 
@@ -1716,7 +1707,13 @@ ${html}
 win.document.close();
 
 setTimeout(()=>{
+
     win.print();
+
+    data = originalData;
+    usernameEl.innerText = originalUser;
+    render();
+
 },500);
 
 }
