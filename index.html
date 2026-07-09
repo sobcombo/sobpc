@@ -683,6 +683,39 @@ table{
             0 0 35px #ff6f00;
     }
 }
+.userLoginBox{
+
+display:flex;
+justify-content:center;
+align-items:center;
+gap:8px;
+margin:12px auto;
+
+}
+
+.hiText{
+
+font-size:18px;
+font-weight:bold;
+
+}
+
+#usernameInput{
+
+width:305px;
+margin:0;
+background:#efefef;
+color:#444;
+
+}
+
+#loadBtn{
+
+display:none;
+background:#1976d2;
+color:white;
+
+}
 </style>
 
 </head>
@@ -707,6 +740,26 @@ Daily Report Generator
 <h2>SOB coMboS calculator</h2>
 
 <div class="container">
+
+<div class="userLoginBox">
+
+<span class="hiText">Hi,</span>
+
+<input
+id="usernameInput"
+type="text"
+placeholder="Please enter username here!"
+autocomplete="off"
+>
+
+<button
+id="loadBtn"
+onclick="restoreTodayData()"
+style="display:none;">
+Load
+</button>
+
+</div>
 
 <select id="combo" onchange="calc()">
 
@@ -882,21 +935,9 @@ Reset Calculator
 <div class="header">
 
 <div class="header-left">
-<span class="headerText">POS# :</span>
-<span id="posText" contenteditable="true" spellcheck="false" class="headerLine"></span>
-<button id="restoreTick" class="restoreTick hidden" onclick="restoreTodayData()">☑️</button>
 </div>
 
 <div class="header-center">
-<span class="headerText">USERNA<b>M</b>E.<b>S</b> :</span>
-<span
-id="username"
-contenteditable="true"
-spellcheck="false"
-class="headerLine">
-</span>
-<button id="userTick" class="restoreTick hidden" onclick="restoreTodayData()">☑️</button>
-<datalist id="userList"></datalist>
 </div>
 
 <div class="header-right">
@@ -1291,9 +1332,42 @@ hour12:true
 })
 })
 })
-.then(r=>r.json())
-.then(console.log)
-.catch(console.error);
+.then(r => r.json())
+.then(res => {
+
+    if(res.status === "duplicate"){
+
+        alert(
+            res.sob +
+            " is already saved by " +
+            res.username
+        );
+
+        // remove locally added entry
+        data.pop();
+        render();
+
+        return;
+    }
+
+    if(res.status !== "success"){
+
+        alert(res.message || "Unable to save.");
+        data.pop();
+        render();
+        return;
+    }
+
+})
+.catch(err=>{
+
+    data.pop();
+    render();
+
+    alert("Unable to connect to server.");
+    console.error(err);
+
+});
 
 localStorage.setItem("sobData",JSON.stringify(data));
 localStorage.setItem("sobDataBackup",JSON.stringify(data));
