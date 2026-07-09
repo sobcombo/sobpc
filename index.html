@@ -668,26 +668,28 @@ margin:12px auto;
 }
 
 .hiText{
-
-font-size:18px;
+font-size:12px;
 font-weight:bold;
-
 }
 
 #usernameInput{
 
-width:305px;
+width:140px;
+font-weight:bold;
+padding:7px 10px;
+font-size:12px;
 margin:0;
-background:#efefef;
-color:#444;
 
 }
 
 #loadBtn{
 display:inline-block;
-margin-left:8px;
 background:#1976d2;
 color:#fff;
+padding:7px 12px;
+font-size:12px;
+margin-left:4px;
+border-radius:100px;
 }
 
 </style>
@@ -1533,7 +1535,7 @@ dataBody.innerHTML += `
 <b>${d.sob}</b>
 <br>
 <span style="font-size:9px;white-space:nowrap;">
-(${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+(${((d.comboName||"")).match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
 (${d.adults} A + ${d.children} C)
 </span>
 </td>
@@ -1688,6 +1690,20 @@ page-break-inside:avoid;
 .a4Page:last-child{
 margin-bottom:0;
 }
+.editColumn,
+.deleteColumn,
+.editBtn,
+.deleteBtn,
+#resetAllBtn{
+display:none !important;
+}
+
+.editColumn,
+.deleteColumn{
+width:0 !important;
+padding:0 !important;
+border:none !important;
+}
 
 ${document.querySelector("style").innerHTML}
 
@@ -1790,7 +1806,7 @@ justify-content:space-between;
 padding:3px 6px;
 font-size:10px;
 ">
-<span>${d.comboName.match(/\d+\/(?:\d+|NA)/)?.[0] || ""}</span>
+<span>${((d.comboName||"")).match(/\d+\/(?:\d+|NA)/)?.[0] || ""}</span>
 <span>${d.adults} A + ${d.children} C</span>
 <span>${formatTime(d.time)}</span>
 </div>
