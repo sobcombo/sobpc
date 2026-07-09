@@ -1672,9 +1672,10 @@ font-family:'Arimo',sans-serif;
 }
 
 .a4Page{
-page-break-after:always;
-padding:8mm;
-box-sizing:border-box;
+padding:0;
+margin-bottom:12px;
+page-break-inside:avoid;
+break-inside:avoid;
 }
 
 ${document.querySelector("style").innerHTML}
