@@ -1251,13 +1251,7 @@ return;
 
 }
 
-data = rows.map(r=>({
-
-...r,
-
-time:formatRestoredTime(r.time)
-
-}));
+data = rows;
 
 if(rows[0].displayName){
 
@@ -1657,23 +1651,29 @@ alert("No entries found.");
 return;
 }
 
-let grouped={};
+let grouped = {};
 
 rows.forEach(r=>{
 
-if(!grouped[r.displayName])
-grouped[r.displayName]=[];
+    let key = (r.displayName || "").trim().toLowerCase();
 
-grouped[r.displayName].push(r);
+    if(!grouped[key]){
+        grouped[key]={
+            name:r.displayName.trim(),
+            rows:[]
+        };
+    }
+
+    grouped[key].rows.push(r);
 
 });
 
 let html = "";
 
-Object.keys(grouped).forEach(user=>{
+Object.values(grouped).forEach(group=>{
 
-    data = grouped[user];
-usernameEl.innerText = user;
+    data = group.rows;
+    usernameEl.innerText = group.name;
 
     render();
 
