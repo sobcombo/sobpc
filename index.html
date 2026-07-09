@@ -685,12 +685,12 @@ color:#444;
 }
 
 #loadBtn{
-
-display:none;
+display:inline-block;
+margin-left:8px;
 background:#1976d2;
-color:white;
-
+color:#fff;
 }
+
 </style>
 
 </head>
@@ -729,8 +729,7 @@ autocomplete="off"
 
 <button
 id="loadBtn"
-onclick="restoreTodayData()"
-style="display:none;">
+onclick="restoreTodayData()">
 Load
 </button>
 
@@ -1222,8 +1221,17 @@ return `OEPL → ${line([{name:"Snow",price:150},{name:"Food",price:99},{name:"S
 
 return "-";
 }
-
 async function restoreTodayData(){
+
+let username = usernameInput.value.trim();
+
+if(!username){
+alert("Enter Username first.");
+return;
+}
+
+posText.innerText = "Restore";
+
 let posVal = posText.innerText.trim();
 let userVal =
 usernameInput.value.trim();
@@ -1645,11 +1653,14 @@ usernameEl.innerText = user;
 
     render();
 
-    html += `
-        <div class="a4Page">
-            ${document.getElementById("a4").outerHTML}
-        </div>
-    `;
+    usernameEl.innerText = user;
+render();
+
+html += `
+<div class="a4Page">
+${document.getElementById("a4").outerHTML}
+</div>
+`;
 
 });
 
@@ -1676,6 +1687,16 @@ padding:0;
 margin-bottom:12px;
 page-break-inside:avoid;
 break-inside:avoid;
+}
+
+.a4Page{
+margin-bottom:10mm;
+break-inside:avoid;
+page-break-inside:avoid;
+}
+
+.a4Page:last-child{
+margin-bottom:0;
 }
 
 ${document.querySelector("style").innerHTML}
