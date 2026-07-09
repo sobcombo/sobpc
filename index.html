@@ -258,28 +258,6 @@ justify-content:center;
 justify-content:flex-end;
 }
 
-.restoreTick{
-display:inline-flex;
-align-items:center;
-justify-content:center;
-width:18px;
-height:18px;
-border:none;
-background:transparent;
-color:#1b5e20;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-padding:0;
-margin:0 0 0 4px;
-line-height:1;
-text-shadow:0 1px 0 rgba(255,255,255,.8);
-}
-
-.restoreTick.hidden{
-display:none;
-}
-
 .headerText{
 display:inline-block;
 white-space:nowrap;
@@ -567,9 +545,6 @@ display:none !important;
 display:none !important;
 }
 tfoot button{
-display:none !important;
-}
-.restoreTick{
 display:none !important;
 }
 #printArea{
@@ -922,6 +897,10 @@ Reset Calculator
 📄 Print A4
 </button>
 
+<button onclick="printAllA4()">
+📚 Print ALL
+</button>
+
 <button onclick="print80mm()">
 🧾 Print 80mm
 </button>
@@ -1232,8 +1211,8 @@ return "-";
 
 async function restoreTodayData(){
 let posVal = posText.innerText.trim();
-let userVal = usernameInput.value.trim();
-
+let userVal =
+usernameInput.value.trim();
 if(!/^restore$/i.test(posVal)) return;
 
 let userKey = normalizeUsername(userVal);
@@ -1264,7 +1243,13 @@ render();
 
 function saveEntry(){
 let raw = sobInput.value.trim();
-let username = usernameInput.value.trim();
+let username =
+usernameInput.value.trim();
+
+localStorage.setItem(
+"username",
+username
+);
 let usernameKey = normalizeUsername(username);
 
 if(!/^[1-9][0-9]{5}$/.test(raw)){
@@ -1608,6 +1593,179 @@ activityTotals.innerHTML =
 function printA4(){
 window.print();
 }
+
+async function printAllA4(){
+
+const today=new Date().toLocaleDateString("en-GB");
+
+const res=await fetch(
+APP_SCRIPT_URL+
+"?date="+encodeURIComponent(today)+
+"&all=true"
+);
+
+const rows=await res.json();
+
+if(!rows.length){
+alert("No entries found.");
+return;
+}
+
+let grouped={};
+
+rows.forEach(r=>{
+
+if(!grouped[r.username])
+grouped[r.username]=[];
+
+grouped[r.username].push(r);
+
+});
+
+let html="";
+
+Object.keys(grouped).forEach(user=>{
+
+html+=`
+<div style="
+border:2px solid #000;
+margin-bottom:12px;
+padding:8px;
+page-break-inside:avoid;
+">
+
+<h3 style="margin:0 0 8px 0;">
+${user}
+</h3>
+
+<table style="width:100%;border-collapse:collapse;font-size:10px;">
+
+<tr>
+
+<th>SR</th>
+<th>SOB ID</th>
+<th>TPU</th>
+<th>OEPL</th>
+<th>PAEPL</th>
+<th>TOTAL</th>
+
+</tr>
+`;
+
+let tpu=0;
+let oepl=0;
+let paepl=0;
+let total=0;
+
+grouped[user].forEach((d,i)=>{
+
+tpu+=d.tpu;
+oepl+=d.oepl;
+paepl+=d.paepl;
+total+=d.total;
+
+html+=`
+
+<tr>
+
+<td>${i+1}</td>
+
+<td>${d.sob}</td>
+
+<td>${d.tpu}</td>
+
+<td>${d.oepl}</td>
+
+<td>${d.paepl}</td>
+
+<td>${d.total}</td>
+
+</tr>
+
+`;
+
+});
+
+html+=`
+
+<tr>
+
+<td colspan="2"><b>Total</b></td>
+
+<td><b>${tpu}</b></td>
+
+<td><b>${oepl}</b></td>
+
+<td><b>${paepl}</b></td>
+
+<td><b>${total}</b></td>
+
+</tr>
+
+</table>
+
+</div>
+
+`;
+
+});
+
+const win=window.open("");
+
+win.document.write(`
+
+<html>
+
+<head>
+
+<title>Print All</title>
+
+<style>
+
+body{
+
+font-family:Arimo;
+
+padding:10px;
+
+}
+
+table,th,td{
+
+border:1px solid black;
+
+border-collapse:collapse;
+
+padding:4px;
+
+text-align:center;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+${html}
+
+</body>
+
+</html>
+
+`);
+
+win.document.close();
+
+setTimeout(()=>{
+
+win.print();
+
+},500);
+
+}
+
 function print80mm(){
 let tpuSum = 0;
 let oeplSum = 0;
