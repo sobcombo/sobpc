@@ -919,7 +919,21 @@ Reset Calculator
 <div class="header-center">
 </div>
 
+<div class="header-left">
+<span class="headerText">POS# :</span>
+<span class="headerLine"></span>
+</div>
+
+<div class="header-center">
+<span class="headerText">USERNAME.S :</span>
+<span class="headerLine">${usernameEl.innerText}</span>
+</div>
+
 <div class="header-right">
+<span class="headerText">DATE :</span>
+<span id="date">${new Date().toLocaleDateString('en-GB')}</span>
+</div>
+
 <span class="headerText">DATE :</span> <span id="date"></span>
 </div>
 
@@ -1622,125 +1636,48 @@ grouped[r.username].push(r);
 
 });
 
-let html="";
+let html = "";
 
 Object.keys(grouped).forEach(user=>{
 
-html+=`
-<div style="
-border:2px solid #000;
-margin-bottom:12px;
-padding:8px;
-page-break-inside:avoid;
-">
+    data = grouped[user];
+usernameEl.innerText = user;
 
-<h3 style="margin:0 0 8px 0;">
-${user}
-</h3>
+    render();
 
-<table style="width:100%;border-collapse:collapse;font-size:10px;">
-
-<tr>
-
-<th>SR</th>
-<th>SOB ID</th>
-<th>TPU</th>
-<th>OEPL</th>
-<th>PAEPL</th>
-<th>TOTAL</th>
-
-</tr>
-`;
-
-let tpu=0;
-let oepl=0;
-let paepl=0;
-let total=0;
-
-grouped[user].forEach((d,i)=>{
-
-tpu+=d.tpu;
-oepl+=d.oepl;
-paepl+=d.paepl;
-total+=d.total;
-
-html+=`
-
-<tr>
-
-<td>${i+1}</td>
-
-<td>${d.sob}</td>
-
-<td>${d.tpu}</td>
-
-<td>${d.oepl}</td>
-
-<td>${d.paepl}</td>
-
-<td>${d.total}</td>
-
-</tr>
-
-`;
+    html += `
+        <div class="a4Page">
+            ${document.getElementById("a4").outerHTML}
+        </div>
+    `;
 
 });
 
-html+=`
-
-<tr>
-
-<td colspan="2"><b>Total</b></td>
-
-<td><b>${tpu}</b></td>
-
-<td><b>${oepl}</b></td>
-
-<td><b>${paepl}</b></td>
-
-<td><b>${total}</b></td>
-
-</tr>
-
-</table>
-
-</div>
-
-`;
-
-});
-
-const win=window.open("");
+const win = window.open("");
 
 win.document.write(`
-
 <html>
 
 <head>
 
 <title>Print All</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
 
 body{
-
-font-family:Arimo;
-
-padding:10px;
-
+margin:0;
+font-family:'Arimo',sans-serif;
 }
 
-table,th,td{
-
-border:1px solid black;
-
-border-collapse:collapse;
-
-padding:4px;
-
-text-align:center;
-
+.a4Page{
+page-break-after:always;
+padding:8mm;
+box-sizing:border-box;
 }
+
+${document.querySelector("style").innerHTML}
 
 </style>
 
@@ -1753,15 +1690,12 @@ ${html}
 </body>
 
 </html>
-
 `);
 
 win.document.close();
 
 setTimeout(()=>{
-
-win.print();
-
+    win.print();
 },500);
 
 }
