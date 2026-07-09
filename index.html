@@ -1034,7 +1034,7 @@ Reset All
 </div>
 
 <div class="footer-left">
-26G04 | V4.2
+26G09 | V4.3
 </div>
 
 <script>
@@ -1231,27 +1231,40 @@ if(!/^restore$/i.test(posVal)) return;
 
 let userKey = normalizeUsername(userVal);
 const today = new Date().toLocaleDateString("en-GB");
-const url = APP_SCRIPT_URL + "?date=" + encodeURIComponent(today) + "&username=" + encodeURIComponent(userVal) + "&usernameKey=" + encodeURIComponent(userKey);
+const url =
+APP_SCRIPT_URL +
+"?date=" +
+encodeURIComponent(today) +
+"&deviceId=" +
+encodeURIComponent(deviceId);
 const res = await fetch(url);
 const rows = await res.json();
 
 const originalData = [...data];
 const originalUser = usernameEl.innerText;
 
-let filtered = rows;
-if(userKey){
-filtered = rows.filter(r => normalizeUsername(r.username || r.usernameKey || "") === userKey);
-}
+if(rows.length==0){
 
-if(filtered.length === 0 && userKey){
-alert("No data found for this username.");
+alert("No data found.");
+
 return;
+
 }
 
-data = (userKey ? filtered : rows).map(r => ({
+data = rows.map(r=>({
+
 ...r,
-time: formatRestoredTime(r.time)
+
+time:formatRestoredTime(r.time)
+
 }));
+
+if(rows[0].displayName){
+
+usernameInput.value =
+rows[0].displayName;
+
+}
 
 localStorage.setItem("sobData",JSON.stringify(data));
 render();
@@ -1289,6 +1302,8 @@ let comboName = combo.options[combo.selectedIndex].text;
 let breakup = getVendorBreakup(comboName,pax);
 
 data.push({
+    deviceId,
+displayName:username,
 sob,
 ...r,
 comboName,
@@ -1308,23 +1323,37 @@ headers:{
 "Content-Type":"text/plain"
 },
 body:JSON.stringify({
+
 date:new Date().toLocaleDateString("en-GB"),
-username:username,
-usernameKey:usernameKey,
+
+deviceId:deviceId,
+
+displayName:username,
+
 sob:sob,
+
 comboName:comboName,
+
 adults:+adults.value||0,
+
 children:+children.value||0,
+
 tpu:r.tpu,
+
 oepl:r.oepl,
+
 paepl:r.paepl,
+
 total:r.total,
+
 breakup:breakup,
+
 time:new Date().toLocaleTimeString([],{
 hour:"numeric",
 minute:"2-digit",
 hour12:true
 })
+
 })
 })
 .then(r => r.json())
@@ -1335,7 +1364,7 @@ hour12:true
         alert(
             res.sob +
             " is already saved by " +
-            res.username
+            res.displayName
         );
 
         // remove locally added entry
@@ -1632,10 +1661,10 @@ let grouped={};
 
 rows.forEach(r=>{
 
-if(!grouped[r.username])
-grouped[r.username]=[];
+if(!grouped[r.displayName])
+grouped[r.displayName]=[];
 
-grouped[r.username].push(r);
+grouped[r.displayName].push(r);
 
 });
 
@@ -2076,6 +2105,21 @@ calc();
 
 setEditTimeOptions();
 restoreFormState();
+
+let deviceId = localStorage.getItem("deviceId");
+
+if(!deviceId){
+
+    deviceId =
+    "DEV-" +
+    Date.now().toString(36) +
+    "-" +
+    Math.random().toString(36).substring(2,8).toUpperCase();
+
+    localStorage.setItem("deviceId",deviceId);
+
+}
+
 usernameInput.value = localStorage.getItem("username") || "";
 setDate();
 render();
