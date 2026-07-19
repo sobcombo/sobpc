@@ -1,663 +1,214 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-<title>SOB coMboS calculator</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link
-href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap"
-rel="stylesheet">
+<title>SOB coMboS calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-
 *{
-font-family:'Arimo',sans-serif;
-box-sizing:border-box;
+    box-sizing:border-box;
+    font-family:'Arimo',sans-serif;
 }
+
+:root{
+    --bg:#f7fbff;
+    --text:#000;
+    --card:#fff;
+    --input:#fff;
+    --table:#fff;
+    --border:#ddd;
+}
+
 body{
-
-text-align:center;
-margin:0;
-padding:0;
-
-background:
-radial-gradient(
-circle at top left,
-#ffffff,
-transparent 40%
-),
-radial-gradient(
-circle at bottom right,
-#dfefff,
-transparent 35%
-),
-linear-gradient(
-180deg,
-#f7fbff,
-#edf4fb
-);
-
+    margin:0;
+    padding:0;
+    text-align:center;
+    color:var(--text);
+    background:
+        radial-gradient(circle at top left,#fff,transparent 40%),
+        radial-gradient(circle at bottom right,#dfefff,transparent 35%),
+        linear-gradient(180deg,#f7fbff,#edf4fb);
 }
 
+body.dark{
+    --bg:#151515;
+    --text:#f2f2f2;
+    --card:#242424;
+    --input:#2f2f2f;
+    --table:#202020;
+    --border:#555;
+    background:#151515;
+    color:#f2f2f2;
+}
 
 .container{
-margin-top:20px;
+    margin-top:20px;
 }
+
 .top-buttons{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:10px 12px 0 12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 12px 0;
 }
 
 .switch-btn{
-
-background:linear-gradient(
-135deg,
-#1976d2,
-#0d47a1
-);
-
-box-shadow:
-4px 4px 0 #0b3a82,
-6px 8px 14px rgba(0,0,0,.18);
-
-transition:.15s;
-color:white;
-padding:6px 10px;
-border-radius:6px;
-text-decoration:none;
-font-size:12px;
-font-weight:bold;
-display:inline-block;
+    display:inline-block;
+    padding:6px 10px;
+    border-radius:6px;
+    color:#fff;
+    text-decoration:none;
+    font-size:12px;
+    font-weight:bold;
+    transition:.15s;
+    box-shadow:4px 4px 0 #0b3a82,6px 8px 14px #0003;
 }
 
 .switch-btn:hover{
-transform:translate(-1px,-1px);
-filter:brightness(1.08);
+    transform:translate(-1px,-1px);
+    filter:brightness(1.08);
 }
 
 .reverse-btn{
-
-background:linear-gradient(
-135deg,
-#00c853,
-#009624
-);
-
-box-shadow:
-3px 3px 0 #00701a,
-5px 6px 10px rgba(0,0,0,.18);
-
+    background:linear-gradient(135deg,#00c853,#009624);
+    box-shadow:3px 3px 0 #00701a,5px 6px 10px #0003;
 }
 
 .report-btn{
-
-background:linear-gradient(
-135deg,
-#8e24aa,
-#5e35b1
-);
-
-box-shadow:
-3px 3px 0 #4527a0,
-5px 6px 10px rgba(0,0,0,.18);
-
+    background:linear-gradient(135deg,#8e24aa,#5e35b1);
+    box-shadow:3px 3px 0 #4527a0,5px 6px 10px #0003;
 }
 
-.deleteBtn{
-padding:2px 6px;
-font-size:11px;
-line-height:1;
-margin:0;
-min-width:auto;
+.userLoginBox{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    margin:12px auto;
 }
 
-.a4{
-padding:8mm;
-box-sizing:border-box;
-overflow:hidden;
+.hiText{
+    font-size:12px;
+    font-weight:bold;
+    cursor:pointer;
 }
+
+#usernameInput{
+    width:100px;
+    margin:0;
+    padding:7px 10px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+#loadBtn{
+    margin:0 0 0 4px;
+    padding:5px 10px;
+    color:#fff;
+    font-size:12px;
+    border-radius:100px;
+    background:linear-gradient(135deg,#1976d2,#0d47a1);
+    box-shadow:4px 4px 0 #0b3a82,6px 8px 14px #0003;
+}
+
 input,
 select{
-padding:12px;
-padding-right:35px;
-margin:8px;
-width:90%;
-max-width:340px;
-
-font-size:16px;
-
-border:none;
-
-border-radius:14px;
-
-background:#fff;
-
-box-shadow:
-inset 2px 2px 5px rgba(0,0,0,.08),
-4px 4px 10px rgba(0,0,0,.12);
-
+    width:90%;
+    max-width:340px;
+    margin:8px;
+    padding:12px;
+    padding-right:35px;
+    border:0;
+    border-radius:14px;
+    font-size:16px;
+    background:var(--input);
+    color:var(--text);
+    box-shadow:
+        inset 2px 2px 5px #00000014,
+        4px 4px 10px #0000001f;
 }
 
 select{
-appearance:none;
--webkit-appearance:none;
-background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M1 3l5 5 5-5' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
-background-repeat:no-repeat;
-background-position:right 12px center;
-}
-
-.box{
-
-max-width:340px;
-margin:auto;
-
-background:white;
-
-padding:15px;
-
-border-radius:18px;
-
-box-shadow:
-8px 8px 20px rgba(0,0,0,.12);
-
-}
-
-.row{
-display:flex;
-justify-content:space-between;
-font-size:18px;
+    appearance:none;
+    -webkit-appearance:none;
+    text-align:left;
+    text-align-last:left;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M1 3l5 5 5-5' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 12px center;
 }
 
 button{
-padding:12px 18px;
-margin:6px;
-cursor:pointer;
-
-border:none;
-border-radius:28px;
-
-font-weight:bold;
-font-size:14px;
-
-background:linear-gradient(
-to bottom,
-#ffffff,
-#e8e8e8
-);
-
-box-shadow:
-4px 4px 0 #bdbdbd,
-6px 8px 14px rgba(0,0,0,.18);
-
-transition:all .15s ease;
+    margin:6px;
+    padding:12px 18px;
+    border:0;
+    border-radius:28px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:bold;
+    background:linear-gradient(to bottom,#fff,#e8e8e8);
+    box-shadow:4px 4px 0 #bdbdbd,6px 8px 14px #0003;
+    transition:all .15s ease;
 }
 
 button:hover{
-transform:
-translate(-1px,-1px);
-
-box-shadow:
-5px 5px 0 #bdbdbd,
-8px 10px 16px rgba(0,0,0,.22);
+    transform:translate(-1px,-1px);
+    box-shadow:5px 5px 0 #bdbdbd,8px 10px 16px #0004;
 }
 
 button:active{
-transform:translateY(3px);
-box-shadow:
-0 1px 0 #bdbdbd,
-0 2px 4px rgba(0,0,0,0.15);
+    transform:translateY(3px);
 }
 
-table{
-width:100%;
-margin:auto;
-border-collapse:collapse;
-font-size:12px;
-border:1px solid black;
+body.dark button:not(.saveBtn):not(.cancelBtn){
+    color:#fff;
+    background:linear-gradient(#444,#2c2c2c);
+    box-shadow:4px 4px 0 #111,6px 8px 14px #0007;
 }
 
-th,td{
-border:1px solid black;
-padding:2px 4px;
-text-align:center;
-vertical-align:middle;
-line-height:14px;
+.box{
+    max-width:340px;
+    margin:auto;
+    padding:15px;
+    border-radius:18px;
+    background:var(--card);
+    box-shadow:8px 8px 20px #0002;
+    transition:.2s;
 }
 
-.header{
-display:flex;
-justify-content:space-between;
-font-size:13px;
-margin-bottom:10px;
-align-items:center;
-gap:6px;
-flex-wrap:wrap;
-}
-
-.header-left,
-.header-center,
-.header-right{
-display:flex;
-align-items:center;
-gap:4px;
-min-width:0;
-flex:1 1 auto;
-}
-
-.header-center{
-justify-content:center;
-}
-
-.header-right{
-justify-content:flex-end;
-}
-
-.headerText{
-display:inline-block;
-white-space:nowrap;
-}
-
-.headerLine{
-display:inline-flex;
-align-items:flex-end;
-justify-content:center;
-
-height:16px;
-min-width:60px;
-max-width:110px;
-
-padding:0 4px;
-
-border-bottom:1.5px solid #000;
-
-font-weight:bold;
-
-vertical-align:bottom;
-
-line-height:16px;
-
-box-sizing:border-box;
-}
-
-#printArea .headerLine{
-min-width:50px;
-max-width:95px;
-}
-
-.activityRow{
-background:#f5f5f5;
-font-size:11px;
-font-weight:bold;
-}
-
-.activityCell{
-background:transparent;
-font-size:10px;
-font-weight:bold;
-text-align:left !important;
-padding:6px 6px 6px 12px;
-vertical-align:top;
-white-space:normal;
-}
-
-.activityCell pre{
-margin:0;
-font:inherit;
-white-space:pre-wrap;
-line-height:12px;
-}
-
-.activityTotalsCell {
-  background: #eaeaea;
-  font-size: 10px;
-  font-weight: bold;
-  text-align: left!important;
-  padding: 6px 6px 6px 12px;
-  vertical-align: top;
-}
-.editBtn,
-.deleteBtn{
-
-box-shadow:
-3px 3px 0 #9e9e9e,
-5px 6px 12px rgba(0,0,0,.25);
-
-}
-
-.editBtn:hover,
-.deleteBtn:hover{
-
-transform:translate(-1px,-1px);
-
-box-shadow:
-4px 4px 0 #9e9e9e,
-7px 8px 16px rgba(0,0,0,.30);
-
-}
-
-.editBtn{
-padding:2px 6px;
-font-size:11px;
-line-height:1;
-margin:0;
-min-width:auto;
-}
 .box:hover{
-
-transform:translateY(-2px);
-
-box-shadow:
-12px 12px 28px rgba(0,0,0,.15);
-
-transition:.2s;
-
-}
-.footer-left{
-position:fixed;
-bottom:5px;
-left:10px;
-font-size:12px;
+    transform:translateY(-2px);
+    box-shadow:12px 12px 28px #0003;
 }
 
-.footer-right{
-position:fixed;
-bottom:5px;
-right:10px;
-text-align:right;
-font-size:12px;
+.row{
+    display:flex;
+    justify-content:space-between;
+    font-size:18px;
 }
 
-#a4{
-padding:10mm;
-box-sizing:border-box;
-}
-#loadingScreen{
-
-display:none;
-
-position:fixed;
-
-left:0;
-
-top:0;
-
-width:100%;
-
-height:100%;
-
-backdrop-filter:blur(6px);
-
-background:rgba(255,255,255,.35);
-
-z-index:9999;
-
-justify-content:center;
-
-align-items:center;
-
-}
-
-.loaderBox{
-
-background:white;
-
-padding:30px;
-
-border-radius:15px;
-
-font-size:22px;
-
-font-weight:bold;
-
-box-shadow:0 0 20px rgba(0,0,0,.25);
-
-}
-
-.editCard{
-background:#ffffff;
-max-width:360px;
-width:95%;
-max-height:85vh;
-overflow-y:auto;
-border:1px solid rgba(255,255,255,.8);
-backdrop-filter:blur(8px);
-margin:10px auto;
-padding:14px;
-border-radius:20px;
-box-shadow:
-10px 14px 40px rgba(0,0,0,.25),
-4px 6px 15px rgba(0,0,0,.15);
-animation:popIn .2s ease;
-}
-
-.editTitle{
-font-size:20px;
-font-weight:bold;
-margin-bottom:15px;
-color:#1565c0;
-}
-
-.editField{
-width:100%;
-margin:8px 0;
-padding:12px;
-border-radius:12px;
-border:2px solid #e0e0e0;
-font-size:15px;
-transition:.2s;
-}
-
-.timeField{
-width:100%;
-min-width:0;
-margin:8px 0;
-box-sizing:border-box;
-}
-
-.editField:focus{
-outline:none;
-border-color:#1565c0;
-box-shadow:0 0 10px rgba(21,101,192,.25);
-}
-
-.editActions{
-display:flex;
-justify-content:center;
-gap:10px;
-margin-top:15px;
-position:sticky;
-bottom:0;
-background:white;
-padding-top:10px;
-}
-
-.saveBtn{
-background:linear-gradient(
-135deg,
-#1976d2,
-#0d47a1
-);
-color:white;
-box-shadow:
-4px 4px 0 #0b3a82,
-6px 8px 14px rgba(0,0,0,.25);
-}
-
-.cancelBtn{
-background:linear-gradient(
-135deg,
-#ff5252,
-#d50000
-);
-color:white;
-box-shadow:
-4px 4px 0 #9b0000,
-6px 8px 14px rgba(0,0,0,.25);
-}
-
-.saveBtn,
-.cancelBtn{
-height:46px;
-min-width:120px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:15px;
-font-weight:bold;
-}
-
-@keyframes popIn{
-from{
-transform:scale(.9);
-opacity:0;
-}
-to{
-transform:scale(1);
-opacity:1;
-}
-}
-
-@media print {
-
-@page{
-size:A4 portrait;
-margin:8mm;
-}
-
-html,body{
-margin:0;
-padding:0;
-width:100%;
-height:auto;
-background:white;
-font-family:'Arimo',sans-serif;
--webkit-print-color-adjust:exact;
-print-color-adjust:exact;
-overflow:visible;
-}
-
-.container,
-.footer-left,
-.footer-right,
-h2,
-.top-buttons,
-.deleteBtn{
-display:none !important;
-}
-.editColumn{
-display:none !important;
-}
-tfoot button{
-display:none !important;
-}
-#printArea{
-display:block !important;
-width:100%;
-margin:0;
-padding:0;
-overflow:visible;
-}
-
-#a4{
-width:100%;
-padding:0;
-margin:0;
-box-sizing:border-box;
-overflow:visible;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-font-size:10px;
-table-layout:auto;
-}
-
-th,td{
-border:1px solid black;
-padding:3px;
-white-space:nowrap;
-vertical-align:middle;
-}
-
-tr{
-page-break-inside:avoid;
-break-inside:avoid;
-}
-
-.activityCell{
-font-size:9px;
-line-height:11px;
-word-break:break-word;
-}
-
-.header{
-margin-bottom:8px;
-font-size:11px;
-gap:4px;
-flex-wrap:nowrap;
-}
-
-.header-left,
-.header-center,
-.header-right{
-gap:3px;
-}
-
-.headerLine{
-min-width:42px;
-max-width:85px;
-}
-
-.deleteColumn{
-display:none !important;
-}
-.activityTotalsCell,
-tfoot td{
-border:1px solid #000 !important;
-}
-
-}
-.table-wrapper{
-    width:100%;
-}
-
-@media screen and (max-width: 768px){
-
-.table-wrapper{
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-}
-
-table{
-    min-width:700px;
-}
-
-.deleteBtn{
-    font-size:10px;
-    padding:2px 4px;
-}
-
-}
-  .highlight-total{
+.highlight-total{
     display:inline-block;
     padding:4px 10px;
     border:3px solid #ffd700;
     border-radius:10px;
     background:#fff8dc;
+    color:#000;
     animation:goldGlow 1.5s infinite alternate;
+    transition:.25s;
+}
+
+body.dark .highlight-total{
+    border-color:#ffd700;
+    background:#302b00;
+    color:#fff;
 }
 
 @keyframes goldGlow{
     0%{
-        box-shadow:
-            0 0 5px #ffd700,
-            0 0 10px #ffd700;
+        box-shadow:0 0 5px #ffd700,0 0 10px #ffd700;
     }
     100%{
         box-shadow:
@@ -666,415 +217,806 @@ table{
             0 0 35px #ff6f00;
     }
 }
-.userLoginBox{
 
-display:flex;
-justify-content:center;
-align-items:center;
-gap:8px;
-margin:12px auto;
-
+.sobField{
+    display:flex;
+    align-items:center;
+    width:90%;
+    max-width:340px;
+    margin:auto;
+    overflow:hidden;
+    border-radius:14px;
+    background:var(--input);
+    box-shadow:inset 2px 2px 5px #00000014,4px 4px 10px #0000001f;
 }
 
-.hiText{
-font-size:12px;
-font-weight:bold;
+.sobField input{
+    flex:1;
+    width:auto;
+    margin:0;
+    padding:12px 14px;
+    border:0;
+    outline:0;
+    background:transparent;
+    box-shadow:none;
 }
 
-#usernameInput{
-
-width:140px;
-font-weight:bold;
-padding:7px 10px;
-font-size:12px;
-margin:0;
-
+#scanBtn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:46px;
+    height:46px;
+    margin:0;
+    padding:0;
+    border:0;
+    border-left:1px solid #ddd;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
 }
 
-#loadBtn{
-display:inline-block;
-background:#1976d2;
-color:#fff;
-padding:7px 12px;
-font-size:12px;
-margin-left:4px;
-border-radius:100px;
+#scanBtn:hover{
+    background:#f5f5f5;
 }
 
+#scanBtn svg{
+    width:22px;
+    height:22px;
+    fill:#222;
+}
+
+body.dark #scanBtn svg{
+    fill:#fff;
+}
+
+.table-wrapper{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+table{
+    width:100%;
+    min-width:700px;
+    border-collapse:collapse;
+    border:1px solid #000;
+    background:var(--table);
+    font-size:12px;
+}
+
+th,
+td{
+    padding:2px 4px;
+    border:1px solid #000;
+    text-align:center;
+    vertical-align:middle;
+    line-height:14px;
+}
+
+body.dark th,
+body.dark td{
+    border-color:#555;
+    color:#fff;
+}
+
+body.dark th{
+    background:#303030;
+}
+
+body.dark td{
+    background:#252525;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+    font-size:13px;
+}
+
+.header-left,
+.header-center,
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    min-width:0;
+    flex:1 1 auto;
+}
+
+.header-center{
+    justify-content:center;
+}
+
+.header-right{
+    justify-content:flex-end;
+}
+
+.headerText{
+    white-space:nowrap;
+}
+
+.headerLine{
+    display:inline-flex;
+    align-items:flex-end;
+    justify-content:center;
+    min-width:60px;
+    max-width:110px;
+    height:16px;
+    padding:0 4px;
+    border-bottom:1.5px solid #000;
+    font-weight:bold;
+    line-height:16px;
+}
+
+.activityCell{
+    padding:6px 6px 6px 12px;
+    background:transparent;
+    font-size:10px;
+    font-weight:bold;
+    text-align:left!important;
+    vertical-align:top;
+}
+
+.activityCell pre{
+    margin:0;
+    font:inherit;
+    line-height:12px;
+    white-space:pre-wrap;
+}
+
+.activityTotalsCell{
+    padding:6px 6px 6px 12px;
+    background:#eaeaea;
+    font-size:10px;
+    font-weight:bold;
+    text-align:left!important;
+    vertical-align:top;
+}
+
+body.dark .activityCell{
+    background:#2a2a2a;
+}
+
+body.dark .activityTotalsCell{
+    background:#333;
+}
+
+.editBtn,
+.deleteBtn{
+    min-width:auto;
+    margin:0;
+    padding:2px 6px;
+    font-size:11px;
+    line-height:1;
+    box-shadow:3px 3px 0 #9e9e9e,5px 6px 12px #0004;
+}
+
+.editBtn:hover,
+.deleteBtn:hover{
+    box-shadow:4px 4px 0 #9e9e9e,7px 8px 16px #0005;
+}
+
+.print-all-wrap{
+    position:relative;
+    display:inline-block;
+}
+
+.print-split{
+    display:inline-flex;
+    align-items:center;
+    overflow:hidden;
+    border-radius:28px;
+    vertical-align:middle;
+    box-shadow:4px 4px 0 #bdbdbd,6px 8px 14px #0003;
+}
+
+.print-split button{
+    margin:0;
+    border-radius:0;
+    padding:12px 18px;
+    background:linear-gradient(to bottom,#fff,#e8e8e8);
+    box-shadow:none;
+}
+
+.print-split button:hover{
+    transform:translateY(-1px);
+    box-shadow:none;
+}
+
+.print-print-btn{
+    border-radius:28px 0 0 28px!important;
+    border-right:1px solid #bdbdbd!important;
+}
+
+.print-all-btn{
+    min-width:75px;
+    padding-right:14px!important;
+    padding-left:12px!important;
+    border-radius:0 28px 28px 0!important;
+}
+
+body.dark .print-split button{
+    color:#fff;
+    background:linear-gradient(#444,#2c2c2c);
+}
+
+.print-dropdown{
+    display:none;
+    position:absolute;
+    top:100%;
+    right:0;
+    z-index:9999;
+    width:200px;
+    margin-top:6px;
+    padding:8px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--card);
+    box-shadow:0 8px 20px #0003;
+    text-align:left;
+}
+
+.print-dropdown.show{
+    display:block;
+}
+
+.print-user-list{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    max-height:220px;
+    overflow:auto;
+}
+
+.print-user-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    line-height:1.2;
+}
+
+.print-user-item input{
+    width:auto;
+    margin:0;
+    padding:0;
+    box-shadow:none;
+}
+
+.editModal,
+.loginBackdrop{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    align-items:center;
+    justify-content:center;
+    background:#0009;
+    backdrop-filter:blur(4px);
+}
+
+.editModal.show,
+.loginBackdrop.show{
+    display:flex;
+}
+
+.editCard,
+.loginCard{
+    width:95%;
+    max-width:360px;
+    max-height:85vh;
+    overflow-y:auto;
+    margin:10px auto;
+    padding:14px;
+    border:1px solid #ffffffcc;
+    border-radius:20px;
+    background:var(--card);
+    color:var(--text);
+    box-shadow:10px 14px 40px #0004,4px 6px 15px #0003;
+    animation:popIn .2s ease;
+}
+
+.editTitle{
+    margin-bottom:15px;
+    color:#1565c0;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.editField,
+.loginField{
+    width:100%;
+    margin:8px 0;
+    padding:12px;
+    border:2px solid #e0e0e0;
+    border-radius:12px;
+    font-size:15px;
+}
+
+.timeField{
+    width:100%;
+    min-width:0;
+}
+
+.editActions,
+.loginActions{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-top:15px;
+    padding-top:10px;
+    background:var(--card);
+}
+
+.saveBtn{
+    min-width:120px;
+    color:#fff;
+    background:linear-gradient(135deg,#00c853,#009624);
+    box-shadow:4px 4px 0 #00701a,6px 8px 14px #0004;
+}
+
+.cancelBtn{
+    min-width:120px;
+    color:#fff;
+    background:linear-gradient(135deg,#ff5252,#c62828);
+    box-shadow:4px 4px 0 #8e0000,6px 8px 14px #0004;
+}
+
+.footer-left{
+    position:fixed;
+    bottom:5px;
+    left:10px;
+    z-index:3;
+    font-size:12px;
+}
+
+#cloudStatus{
+    margin-left:5px;
+    font-size:15px;
+}
+
+.scannerOverlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    flex-direction:column;
+    background:#000e;
+}
+
+.scannerOverlay.show{
+    display:flex;
+}
+
+.scannerTopBar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    padding:12px;
+    background:#0006;
+}
+
+.scannerActionBtn{
+    margin:0;
+    padding:8px 14px;
+    color:#000;
+    background:#fff;
+    box-shadow:3px 3px 0 #999,5px 6px 12px #0003;
+}
+
+.scannerBox{
+    flex:1;
+    width:100%;
+    background:#111;
+}
+
+#reader{
+    width:100%;
+    height:100vh;
+}
+
+#reader video{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover;
+}
+
+@keyframes popIn{
+    from{transform:scale(.9);opacity:0}
+    to{transform:scale(1);opacity:1}
+}
+
+@media print{
+    @page{
+        size:A4 portrait;
+        margin:8mm;
+    }
+
+    html,
+    body{
+        width:100%;
+        height:auto;
+        margin:0;
+        padding:0;
+        overflow:visible;
+        color:#000!important;
+        background:#fff!important;
+        font-family:'Arimo',sans-serif;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .container,
+    .top-buttons,
+    .footer-left,
+    .editModal,
+    .loginBackdrop,
+    .scannerOverlay,
+    button,
+    .editColumn,
+    .deleteColumn{
+        display:none!important;
+    }
+
+    #printArea{
+        display:block!important;
+        width:100%;
+        margin:0;
+        padding:0;
+    }
+
+    #a4{
+        width:100%;
+        margin:0;
+        padding:0;
+    }
+
+    table{
+        width:100%;
+        min-width:0;
+        border-collapse:collapse;
+        table-layout:auto;
+        font-size:10px;
+        background:#fff!important;
+    }
+
+    th,
+    td{
+        padding:3px;
+        border:1px solid #000!important;
+        color:#000!important;
+        background:#fff!important;
+        white-space:nowrap;
+        word-break:break-word;
+    }
+
+    tr{
+        page-break-inside:avoid;
+        break-inside:avoid;
+    }
+
+    .activityCell{
+        font-size:9px;
+        line-height:11px;
+    }
+
+    .activityTotalsCell{
+    color:#000!important;
+    background:#eaeaea!important;
+}
+
+
+    .header{
+        flex-wrap:nowrap;
+        margin-bottom:8px;
+        font-size:11px;
+    }
+
+    .headerLine{
+        min-width:42px;
+        max-width:85px;
+    }
+}
+
+@media(max-width:768px){
+    table{
+        min-width:700px;
+    }
+}
 </style>
-
 </head>
 
 <body>
+
 <div class="top-buttons">
+    <a class="switch-btn reverse-btn" href="https://sobcombo.github.io/reverse/" target="_blank">
+        Reverse Combo Finder
+    </a>
 
-<a class="switch-btn reverse-btn"
-href="https://sobcombo.github.io/reverse/"
-target="_blank">
-Reverse Combo Finder
-</a>
-
-<a class="switch-btn report-btn"
-href="https://sobcombo.github.io/r/"
-target="_blank">
-Daily Report Generator
-</a>
-
+    <a class="switch-btn report-btn" href="https://sobcombo.github.io/r/" target="_blank">
+        Daily Report Generator
+    </a>
 </div>
-
-<h2>SOB coMboS calculator</h2>
 
 <div class="container">
 
 <div class="userLoginBox">
-
-<span class="hiText">Hi,</span>
-
-<input
-id="usernameInput"
-type="text"
-placeholder="Enter Username"
-autocomplete="off"
->
-
-<button
-id="loadBtn"
-onclick="restoreTodayData()">
-Load
-</button>
-
+    <span class="hiText" onclick="toggleTheme()">🌞 Hi,</span>
+    <input id="usernameInput" type="text" placeholder="Enter Username" autocomplete="off">
+    <button id="loadBtn" onclick="restoreTodayData()">Load</button>
 </div>
 
+<h2>SOB coMboS calculator</h2>
+
 <select id="combo" onchange="calc()">
-
-<option value="">Select Combo</option>
-
-<option value="170,80,70,150">
-390/300 TU Explorer Combo
-</option>
-
-<option value="170,80,0,227">
-397/307 Adventure Combo
-</option>
-
-<option value="170,80,28,200">
-398/308 ECO FUN Combo
-</option>
-
-<option value="170,80,255,0">
-425/335 Snow Adventure Combo
-</option>
-
-<option value="400,300,0,99">
-499/399 Aastha Combo
-</option>
-
-<option value="370,180,0,175">
-545/355 Shiv Ganesha Combo
-</option>
-
-<option value="550,375,0,50">
-600/425 Namah Combo
-</option>
-
-<option value="170,170,0,529,NA">
-699/NA Ultimate Play Combo
-</option>
-
-<option value="370,180,325,50">
-745/555 Viewing Fun Combo
-</option>
-
-<option value="550,375,249,170">
-969/794 Symbolic Combo
-</option>
-
-<option value="170,80,355,574">
-1099/1009 Delight Combo
-</option>
-
-<option value="370,180,355,574">
-1299/1109 Mini Blast Combo
-</option>
-
-<option value="550,375,250,599">
-1399/1224 All in Fun Combo
-</option>
-
-<option value="1350,775,0,150">
-1500/925 Divine Rush Combo
-</option>
-
-<option value="1400,1400,449,2350,NA">
-4199/NA Ultimate Mega Combo
-</option>
-
+    <option value="">Select Combo</option>
+    <option value="170,80,70,150">390/300 TU Explorer Combo</option>
+    <option value="170,80,0,227">397/307 Adventure Combo</option>
+    <option value="170,80,28,200">398/308 ECO FUN Combo</option>
+    <option value="170,80,255,0">425/335 Snow Adventure Combo</option>
+    <option value="400,300,0,99">499/399 Aastha Combo</option>
+    <option value="370,180,0,175">545/355 Shiv Ganesha Combo</option>
+    <option value="550,375,0,50">600/425 Namah Combo</option>
+    <option value="170,170,0,529,NA">699/NA Ultimate Play Combo</option>
+    <option value="370,180,325,50">745/555 Viewing Fun Combo</option>
+    <option value="550,375,249,170">969/794 Symbolic Combo</option>
+    <option value="170,80,355,574">1099/1009 Delight Combo</option>
+    <option value="370,180,355,574">1299/1109 Mini Blast Combo</option>
+    <option value="550,375,250,599">1399/1224 All in Fun Combo</option>
+    <option value="1350,775,0,150">1500/925 Divine Rush Combo</option>
+    <option value="1400,1400,449,2350,NA">4199/NA Ultimate Mega Combo</option>
 </select>
 
 <br>
 
-<input
-type="tel"
-inputmode="numeric"
-id="adults"
-min="0"
-max="100"
-maxlength="3"
-placeholder="No. of Adults"
-oninput="
-this.value=this.value.replace(/[^0-9]/g,'');
-if(this.value.length>3)this.value=this.value.slice(0,3);
-if(this.value>100)this.value=100;
-calc();
-"
->
+<input id="adults" type="tel" inputmode="numeric" maxlength="3"
+       placeholder="No. of Adults" oninput="limitPax(this);calc()">
 
 <br>
 
-<input
-type="tel"
-inputmode="numeric"
-id="children"
-min="0"
-max="100"
-maxlength="3"
-placeholder="No. of Children"
-oninput="
-this.value=this.value.replace(/[^0-9]/g,'');
-if(this.value.length>3)this.value=this.value.slice(0,3);
-if(this.value>100)this.value=100;
-calc();
-"
->
+<input id="children" type="tel" inputmode="numeric" maxlength="3"
+       placeholder="No. of Children" oninput="limitPax(this);calc()">
 
-<p id="warning" style="color:red;"></p>
+<p id="warning" style="color:red"></p>
 
 <div class="box">
+    <div class="row">
+        <span>TPU</span>
+        <span>₹ <span id="tpu">0</span></span>
+    </div>
 
-<div class="row">
-<span>TPU</span>
-<span>₹ <span id="tpu">0</span></span>
-</div>
+    <div class="row">
+        <span>OEPL</span>
+        <span>₹ <span id="oepl">0</span></span>
+    </div>
 
-<div class="row">
-<span>OEPL</span>
-<span>₹ <span id="oepl">0</span></span>
-</div>
+    <div class="row">
+        <span>PAEPL</span>
+        <span>₹ <span id="paepl">0</span></span>
+    </div>
 
-<div class="row">
-<span>PAEPL</span>
-<span>₹ <span id="paepl">0</span></span>
-</div>
+    <hr>
 
-<hr>
-
-<div class="row">
-<b style="font-size:14px;">TOTAL</b>
-<span id="totalBox" class="highlight-total">
-    ₹ <span id="total">0</span>
-  </span>
-</div>
-
+    <div class="row">
+        <b style="font-size:14px">TOTAL</b>
+        <span id="totalBox" class="highlight-total">
+            ₹ <span id="total">0</span>
+        </span>
+    </div>
 </div>
 
 <br>
 
-<input
-type="tel"
-id="sobInput"
-maxlength="6"
-placeholder="Enter 6-digit SOB ID"
->
+<div class="sobField">
+    <input id="sobInput" type="tel" inputmode="numeric" maxlength="6"
+           placeholder="Enter 6-digit SOB ID" autocomplete="off">
+
+    <button id="scanBtn" type="button" onclick="startScanner()" aria-label="Scan QR code">
+        <svg viewBox="0 0 24 24">
+            <path d="M9 4L7.5 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.5L15 4H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10zm0 2.2a2.8 2.8 0 1 0 0 5.6a2.8 2.8 0 0 0 0-5.6z"/>
+        </svg>
+    </button>
+</div>
 
 <br>
 
-<button
-onclick="saveEntry()"
-style="background:#1976d2;color:white;">
-Save SOB
+<button onclick="saveEntry()" style="background:linear-gradient(135deg,#1976d2,#0d47a1);color:#fff">
+    Save SOB
 </button>
 
-<button
-onclick="resetForm()"
-style="background:#f57c00;color:white;">
-Reset Calculator
+<button onclick="resetForm()" style="background:linear-gradient(135deg,#ff9800,#ef6c00);color:#fff">
+    Reset Calculator
 </button>
 
 <br>
 
-<button onclick="printA4()">
-📄 Print A4
-</button>
+<button onclick="printA4()">📄 Print My A4</button>
 
-<button onclick="printAllA4()">
-📚 Print ALL
-</button>
+<div class="print-all-wrap">
+    <div class="print-split">
+        <button class="print-print-btn" onclick="printSelectedUsers()">Print</button>
+        <button class="print-all-btn" id="allPrintBtn" onclick="togglePrintMenu(event)">
+            ALL ▼
+        </button>
+    </div>
 
-<button onclick="print80mm()">
-🧾 Print 80mm
-</button>
+    <div id="printMenu" class="print-dropdown">
+        <div id="printUserList" class="print-user-list"></div>
+    </div>
+</div>
+
+<button onclick="print80mm()">🧾 Print 80mm</button>
 
 </div>
 
 <div id="printArea">
-
 <div id="a4">
 
 <div class="header">
+    <div class="header-left">
+        <b class="headerText">POS# :</b>
+        <span class="headerLine"></span>
+    </div>
 
-<div class="header-left">
-<b class="headerText">POS# :</b>
-<span class="headerLine"></span>
-</div>
+    <div class="header-center">
+        <span class="headerText">USERNA<b>M</b>E.<b>S</b> :</span>
+        <span id="username" class="headerLine"></span>
+    </div>
 
-<div class="header-center">
-<span class="headerText">USERNA<b>M</b>E.<b>S</b> :</span>
-<span id="username" class="headerLine"></span>
-</div>
-
-<div class="header-right">
-<b class="headerText">DATE :</b>
-<span id="date"></span>
-</div>
-
+    <div class="header-right">
+        <b class="headerText">DATE :</b>
+        <span id="date"></span>
+    </div>
 </div>
 
 <div class="table-wrapper">
 <table>
-
 <thead>
-
 <tr>
-
-<th class="editColumn" style="width:40px;">EDIT</th>
-<th class="deleteColumn" style="width:40px;">DEL</th>
-<th>SR</th>
-<th>SOB ID</th>
-<th>TPU</th>
-<th>OEPL</th>
-<th>PAEPL</th>
-<th>TOTAL</th>
-<th>ACTIVITIES' AMOUNTS</th>
-<th>TIME</th>
-
+    <th class="editColumn" style="width:40px">EDIT</th>
+    <th class="deleteColumn" style="width:40px">DEL</th>
+    <th>SR</th>
+    <th>SOB ID</th>
+    <th>TPU</th>
+    <th>OEPL</th>
+    <th>PAEPL</th>
+    <th>TOTAL</th>
+    <th>ACTIVITIES' AMOUNTS</th>
+    <th>TIME</th>
 </tr>
-
 </thead>
 
 <tbody id="dataBody"></tbody>
 
 <tfoot>
-
 <tr>
-
-<td class="editColumn"></td>
-<td class="deleteColumn"></td>
-
-<td colspan="2">
-<b style="font-size:11px;">TOTAL</b>
-</td>
-
-<td id="tpuT"><b>0</b></td>
-<td id="oeplT"><b>0</b></td>
-<td id="paeplT"><b>0</b></td>
-<td id="grandT"><b>0</b></td>
-
-<td id="activityTotals" class="activityTotalsCell"></td>
-<td style="text-align:center;">
-
-<button
-id="resetAllBtn"
-onclick="resetAllData()"
-style="font-size:10px;padding:4px 6px;margin:2px;background:#d32f2f;color:white;">
-Reset All
-</button>
-
-</td>
-
+    <td class="editColumn"></td>
+    <td class="deleteColumn"></td>
+    <td colspan="2"><b>TOTAL</b></td>
+    <td id="tpuT"><b>0</b></td>
+    <td id="oeplT"><b>0</b></td>
+    <td id="paeplT"><b>0</b></td>
+    <td id="grandT"><b>0</b></td>
+    <td id="activityTotals" class="activityTotalsCell"></td>
+    <td>
+        <button onclick="resetAllData()" style="font-size:10px;padding:4px 6px;background:#d32f2f;color:#fff">
+            Reset All
+        </button>
+    </td>
 </tr>
-
 </tfoot>
-
 </table>
 </div>
-</div>
 
 </div>
+</div>
 
-<div id="editModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;">
+<div id="editModal" class="editModal">
 <div class="editCard">
-<div class="editTitle">✏️ Edit SOB Entry</div>
-<div style="text-align:left;font-size:13px;font-weight:bold;">SOB ID</div>
-<input id="editSob" class="editField" type="tel" maxlength="6" inputmode="numeric" placeholder="SOB ID" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value.length>6)this.value=this.value.slice(0,6);">
-<div style="display:flex;gap:8px;">
-<div style="flex:1;">
-<div style="text-align:left;font-size:13px;font-weight:bold;">Adults</div>
-<input id="editAdults" class="editField" type="number" min="0" max="100" placeholder="Adults" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value>100)this.value=100;">
-</div>
-<div style="flex:1;">
-<div style="text-align:left;font-size:13px;font-weight:bold;">Children</div>
-<input id="editChildren" class="editField" type="number" min="0" max="100" placeholder="Children" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value>100)this.value=100;">
-</div>
-</div>
-<div style="text-align:left;font-size:13px;font-weight:bold;">Combo Type</div>
-<select id="editCombo" class="editField"></select>
-<div style="display:flex;gap:8px;">
-<div style="flex:1;min-width:0;">
-<div style="text-align:left;font-size:13px;font-weight:bold;">Hour</div>
-<select id="editHour" class="editField timeField"></select>
-</div>
-<div style="flex:1;min-width:0;">
-<div style="text-align:left;font-size:13px;font-weight:bold;">Minute</div>
-<select id="editMinute" class="editField timeField"></select>
-</div>
-<div style="flex:1;min-width:0;">
-<div style="text-align:left;font-size:13px;font-weight:bold;">AM/PM</div>
-<select id="editAmPm" class="editField timeField">
-<option>AM</option>
-<option>PM</option>
-</select>
-</div>
-</div>
-<div class="editActions">
-<button class="saveBtn" onclick="saveEdit()">Save</button>
-<button class="cancelBtn" onclick="closeEditModal()">Cancel</button>
-</div>
+
+    <div class="editTitle">✏️ Edit SOB Entry</div>
+
+    <div style="text-align:left;font-size:13px;font-weight:bold">SOB ID</div>
+    <input id="editSob" class="editField" type="tel" maxlength="6" inputmode="numeric">
+
+    <div style="display:flex;gap:8px">
+        <div style="flex:1">
+            <div style="text-align:left;font-size:13px;font-weight:bold">Adults</div>
+            <input id="editAdults" class="editField" type="number" min="0" max="100">
+        </div>
+
+        <div style="flex:1">
+            <div style="text-align:left;font-size:13px;font-weight:bold">Children</div>
+            <input id="editChildren" class="editField" type="number" min="0" max="100">
+        </div>
+    </div>
+
+    <div style="text-align:left;font-size:13px;font-weight:bold">Combo Type</div>
+    <select id="editCombo" class="editField"></select>
+
+    <div style="display:flex;gap:8px">
+        <select id="editHour" class="editField timeField"></select>
+        <select id="editMinute" class="editField timeField"></select>
+        <select id="editAmPm" class="editField timeField">
+            <option>AM</option>
+            <option>PM</option>
+        </select>
+    </div>
+
+    <div class="editActions">
+        <button class="saveBtn" onclick="saveEdit()">Save</button>
+        <button class="cancelBtn" onclick="closeEditModal()">Cancel</button>
+    </div>
+
 </div>
 </div>
 
 <div class="footer-left">
-26G10 | V4.4
+    26G19 | V4.7 <span id="cloudStatus" title="Cloud status">☁️✅</span>
+</div>
+
+<div id="scannerOverlay" class="scannerOverlay">
+    <div class="scannerTopBar">
+        <button onclick="uploadQrImage()" class="scannerActionBtn">Upload</button>
+        <button onclick="closeScanner()" class="scannerActionBtn">✕ Close</button>
+    </div>
+
+    <div class="scannerBox">
+        <div id="reader"></div>
+        <input id="uploadQrInput" type="file" accept="image/*"
+               capture="environment" style="display:none"
+               onchange="handleQrUpload(event)">
+    </div>
 </div>
 
 <script>
 const APP_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbxNOHZDh4gvEfHsEmSFMOvsFM_FVDE_6L4exdjmvlojTBUI2hkdfqYoam8LH6IW4BW-jA/exec";
-let data = JSON.parse(localStorage.getItem("sobData")) || [];
+
+let data = JSON.parse(localStorage.getItem("sobData") || "[]");
 let editingIndex = -1;
+let qrScanner = null;
+
+let deviceId = localStorage.getItem("deviceId");
+
+if(!deviceId){
+    deviceId =
+        "DEV-" +
+        Date.now().toString(36) +
+        "-" +
+        Math.random().toString(36).substring(2,8).toUpperCase();
+
+    localStorage.setItem("deviceId",deviceId);
+}
 
 const combo = document.getElementById("combo");
 const adults = document.getElementById("adults");
 const children = document.getElementById("children");
 const sobInput = document.getElementById("sobInput");
 const warning = document.getElementById("warning");
+
 const tpuEl = document.getElementById("tpu");
 const oeplEl = document.getElementById("oepl");
 const paeplEl = document.getElementById("paepl");
 const totalEl = document.getElementById("total");
+
 const dataBody = document.getElementById("dataBody");
 const grandT = document.getElementById("grandT");
 const tpuT = document.getElementById("tpuT");
 const oeplT = document.getElementById("oeplT");
 const paeplT = document.getElementById("paeplT");
 const activityTotals = document.getElementById("activityTotals");
-const loadingScreen = document.getElementById("loadingScreen");
-const percent = document.getElementById("percent");
 
+const usernameInput = document.getElementById("usernameInput");
 const usernameEl = document.getElementById("username");
-const posText = { innerText:"Restore" };
-
-
 const dateEl = document.getElementById("date");
+
 const editModal = document.getElementById("editModal");
 const editSob = document.getElementById("editSob");
 const editAdults = document.getElementById("editAdults");
@@ -1084,1085 +1026,1412 @@ const editHour = document.getElementById("editHour");
 const editMinute = document.getElementById("editMinute");
 const editAmPm = document.getElementById("editAmPm");
 
-const todayKey = new Date().toLocaleDateString('en-GB');
-const savedDate = localStorage.getItem("sobDate");
+const scannerOverlay = document.getElementById("scannerOverlay");
+const uploadQrInput = document.getElementById("uploadQrInput");
+const printMenu = document.getElementById("printMenu");
+const printUserList = document.getElementById("printUserList");
+const cloudStatus = document.getElementById("cloudStatus");
 
-if(savedDate !== todayKey){
-data = [];
-localStorage.removeItem("sobData");
-localStorage.setItem("sobDate",todayKey);
+function todayString(){
+    return new Intl.DateTimeFormat("en-GB",{
+        timeZone:"Asia/Kolkata",
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric"
+    }).format(new Date());
 }
 
-function pad2(n){
-return String(n).padStart(2,"0");
+function timeString(){
+    return new Intl.DateTimeFormat("en-US",{
+        timeZone:"Asia/Kolkata",
+        hour:"2-digit",
+        minute:"2-digit",
+        hour12:true
+    }).format(new Date());
 }
 
-function normalizeUsername(name){
-return (name || "").trim().toLowerCase();
+function pad2(value){
+    return String(value).padStart(2,"0");
 }
 
-function formatRestoredTime(t){
-let d = new Date(t);
-if(isNaN(d)) return t || "";
-let h = d.getHours();
-let m = pad2(d.getMinutes());
-let ampm = h >= 12 ? "PM" : "AM";
-h = h % 12 || 12;
-return `${h}:${m} ${ampm}`;
+function limitPax(input){
+    input.value = input.value.replace(/[^0-9]/g,"").slice(0,3);
+    if(+input.value > 100) input.value = "100";
 }
 
-function setEditTimeOptions(){
-editHour.innerHTML = "";
-for(let i=1;i<=12;i++){
-editHour.innerHTML += `<option value="${i}">${i}</option>`;
-}
-editMinute.innerHTML = "";
-for(let i=0;i<60;i++){
-let mm = pad2(i);
-editMinute.innerHTML += `<option value="${mm}">${mm}</option>`;
-}
+function saveLocalData(){
+    localStorage.setItem("sobData",JSON.stringify(data));
+    localStorage.setItem("sobDataBackup",JSON.stringify(data));
 }
 
-function calc(){
-let v = combo.value;
-
-if(!v){
-    tpuEl.innerText = 0;
-    oeplEl.innerText = 0;
-    paeplEl.innerText = 0;
-    totalEl.innerText = 0;
-    warning.innerText = "";
-    return;
+function setCloudStatus(status){
+    if(status === "offline"){
+        cloudStatus.textContent = "☁️❌";
+        cloudStatus.title = "Network unavailable. Data saved offline.";
+    }else if(status === "syncing"){
+        cloudStatus.textContent = "☁️🔄";
+        cloudStatus.title = "Syncing with Google Sheets...";
+    }else{
+        cloudStatus.textContent = "☁️✅";
+        cloudStatus.title = "Data successfully added to Google Sheets.";
+    }
 }
 
-let p = v.split(",");
+function postToCloud(payload){
+    setCloudStatus("syncing");
 
-let ta = +p[0];
-let tc = +p[1];
-let o = +p[2];
-let pi = +p[3];
-
-let na = p[4] === "NA";
-
-let a = Math.max(0,+adults.value||0);
-let c = Math.max(0,+children.value||0);
-
-warning.innerText = (na && c>0) ? "⚠ Children not allowed" : "";
-
-let tpu = (a*ta) + (c*tc);
-let oepl = (a+c)*o;
-let paepl = (a+c)*pi;
-let total = tpu + oepl + paepl;
-
-tpuEl.innerText = tpu;
-oeplEl.innerText = oepl;
-paeplEl.innerText = paepl;
-totalEl.innerText = total;
-saveFormState();
-return { tpu, oepl, paepl, total };
+    return fetch(APP_SCRIPT_URL,{
+        method:"POST",
+        headers:{"Content-Type":"text/plain"},
+        body:JSON.stringify(payload)
+    }).then(response => response.json());
 }
 
 function saveFormState(){
-localStorage.setItem("lastCombo", combo.value);
-localStorage.setItem("lastAdults", adults.value);
-localStorage.setItem("lastChildren", children.value);
+    localStorage.setItem("lastCombo",combo.value);
+    localStorage.setItem("lastAdults",adults.value);
+    localStorage.setItem("lastChildren",children.value);
+}
+
+function calc(){
+    if(!combo.value){
+        tpuEl.textContent = "0";
+        oeplEl.textContent = "0";
+        paeplEl.textContent = "0";
+        totalEl.textContent = "0";
+        warning.textContent = "";
+        return null;
+    }
+
+    const parts = combo.value.split(",");
+    const adultsCount = Math.max(0,+adults.value || 0);
+    const childrenCount = Math.max(0,+children.value || 0);
+
+    const tpu = adultsCount * (+parts[0]) + childrenCount * (+parts[1]);
+    const oepl = (adultsCount + childrenCount) * (+parts[2]);
+    const paepl = (adultsCount + childrenCount) * (+parts[3]);
+    const total = tpu + oepl + paepl;
+
+    tpuEl.textContent = tpu;
+    oeplEl.textContent = oepl;
+    paeplEl.textContent = paepl;
+    totalEl.textContent = total;
+
+    warning.textContent =
+        parts[4] === "NA" && childrenCount > 0
+        ? "⚠ Children not allowed"
+        : "";
+
+    saveFormState();
+
+    return {tpu,oepl,paepl,total};
 }
 
 function getVendorBreakup(comboName,pax){
-function line(items){
-return items.map(i => `${i.name}: ${i.price * pax}`).join(" | ");
-}
+    function line(items){
+        return items.map(item => `${item.name}: ${item.price * pax}`).join(" | ");
+    }
 
-if(comboName.includes("Snow Adventure")){
-return `OEPL → ${line([{name:"Snow",price:255}])}`;
-}
-else if(comboName.includes("Adventure Combo")){
-return `PAEPL → ${line([{name:"Gamezone",price:227}])}`;
-}
-else if(comboName.includes("TU Explorer")){
-return `OEPL → ${line([{name:"Wax",price:70}])}\nPAEPL → ${line([{name:"Eyelusion",price:70},{name:"WOG",price:80}])}`;
-}
-else if(comboName.includes("ECO FUN")){
-return `OEPL → ${line([{name:"Wax",price:28}])}\nPAEPL → ${line([{name:"Mayalok",price:200}])}`;
-}
-else if(comboName.includes("Aastha")){
-return `PAEPL → ${line([{name:"Gamezone",price:99}])}`;
-}
-else if(comboName.includes("Shiv Ganesha")){
-return `PAEPL → ${line([{name:"Eyelusion",price:50},{name:"Gamezone",price:50},{name:"WOG",price:75}])}`;
-}
-else if(comboName.includes("Namah")){
-return `PAEPL → ${line([{name:"Gamezone",price:50}])}`;
-}
-else if(comboName.includes("Ultimate Play")){
-return `PAEPL → ${line([{name:"Gamezone",price:529}])}`;
-}
-else if(comboName.includes("Viewing Fun")){
-return `OEPL → ${line([{name:"Snow",price:225},{name:"Food",price:100}])}\nPAEPL → ${line([{name:"Gamezone",price:50}])}`;
-}
-else if(comboName.includes("Symbolic")){
-return `OEPL → ${line([{name:"Snow",price:200},{name:"Wax",price:49}])}\nPAEPL → ${line([{name:"Gamezone",price:100},{name:"WOG",price:70}])}`;
-}
-else if(comboName.includes("Delight")){
-return `OEPL → ${line([{name:"Snow",price:200},{name:"Food",price:45},{name:"Souvenir",price:60},{name:"Wax",price:50}])}\nPAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:200},{name:"Gamezone",price:249},{name:"WOG",price:75}])}`;
-}
-else if(comboName.includes("Mini Blast")){
-return `OEPL → ${line([{name:"Snow",price:200},{name:"Food",price:45},{name:"Souvenir",price:60},{name:"Wax",price:50}])}\nPAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:200},{name:"Gamezone",price:249},{name:"WOG",price:75}])}`;
-}
-else if(comboName.includes("All in Fun")){
-return `OEPL → ${line([{name:"Snow",price:200},{name:"Wax",price:50}])}\nPAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:200},{name:"Gamezone",price:279},{name:"WOG",price:70}])}`;
-}
-else if(comboName.includes("Divine Rush")){
-return `PAEPL → ${line([{name:"Gamezone",price:100},{name:"WOG",price:50}])}`;
-}
-else if(comboName.includes("Ultimate Mega")){
-return `OEPL → ${line([{name:"Snow",price:150},{name:"Food",price:99},{name:"Souvenir",price:100},{name:"Wax",price:100}])}\nPAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:150},{name:"Gamezone",price:2100},{name:"WOG",price:50}])}`;
-}
+    if(comboName.includes("Snow Adventure"))
+        return `OEPL → ${line([{name:"Snow",price:255}])}`;
 
-return "-";
-}
-async function restoreTodayData(){
+    if(comboName.includes("Adventure Combo"))
+        return `PAEPL → ${line([{name:"Gamezone",price:227}])}`;
 
-let username = usernameInput.value.trim();
+    if(comboName.includes("TU Explorer"))
+        return `OEPL → ${line([{name:"Wax",price:70}])}
+PAEPL → ${line([{name:"Eyelusion",price:70},{name:"WOG",price:80}])}`;
 
-if(!username){
-alert("Enter Username first.");
-return;
-}
+    if(comboName.includes("ECO FUN"))
+        return `OEPL → ${line([{name:"Wax",price:28}])}
+PAEPL → ${line([{name:"Mayalok",price:200}])}`;
 
-posText.innerText = "Restore";
+    if(comboName.includes("Aastha"))
+        return `PAEPL → ${line([{name:"Gamezone",price:99}])}`;
 
-let posVal = posText.innerText.trim();
-let userVal =
-usernameInput.value.trim();
-if(!/^restore$/i.test(posVal)) return;
+    if(comboName.includes("Shiv Ganesha"))
+        return `PAEPL → ${line([{name:"Eyelusion",price:50},{name:"Gamezone",price:50},{name:"WOG",price:75}])}`;
 
-let userKey = normalizeUsername(userVal);
-const today = new Date().toLocaleDateString("en-GB");
-const url=
-APP_SCRIPT_URL+
-"?date="+
-encodeURIComponent(today)+
-"&displayName="+
-encodeURIComponent(username);
-const res = await fetch(url);
-const rows = await res.json();
+    if(comboName.includes("Namah"))
+        return `PAEPL → ${line([{name:"Gamezone",price:50}])}`;
 
-const originalData = [...data];
-const originalUser = usernameEl.innerText;
+    if(comboName.includes("Ultimate Play"))
+        return `PAEPL → ${line([{name:"Gamezone",price:529}])}`;
 
-if(rows.length==0){
+    if(comboName.includes("Viewing Fun"))
+        return `OEPL → ${line([{name:"Snow",price:225},{name:"Food",price:100}])}
+PAEPL → ${line([{name:"Gamezone",price:50}])}`;
 
-alert("No data found.");
+    if(comboName.includes("Symbolic"))
+        return `OEPL → ${line([{name:"Snow",price:200},{name:"Wax",price:49}])}
+PAEPL → ${line([{name:"Gamezone",price:100},{name:"WOG",price:70}])}`;
 
-return;
+    if(comboName.includes("Delight") || comboName.includes("Mini Blast"))
+        return `OEPL → ${line([{name:"Snow",price:200},{name:"Food",price:45},{name:"Souvenir",price:60},{name:"Wax",price:50}])}
+PAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:200},{name:"Gamezone",price:249},{name:"WOG",price:75}])}`;
 
-}
+    if(comboName.includes("All in Fun"))
+        return `OEPL → ${line([{name:"Snow",price:200},{name:"Wax",price:50}])}
+PAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:200},{name:"Gamezone",price:279},{name:"WOG",price:70}])}`;
 
-data = rows;
+    if(comboName.includes("Divine Rush"))
+        return `PAEPL → ${line([{name:"Gamezone",price:100},{name:"WOG",price:50}])}`;
 
-if(rows[0].displayName){
+    if(comboName.includes("Ultimate Mega"))
+        return `OEPL → ${line([{name:"Snow",price:150},{name:"Food",price:99},{name:"Souvenir",price:100},{name:"Wax",price:100}])}
+PAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:150},{name:"Gamezone",price:2100},{name:"WOG",price:50}])}`;
 
-usernameInput.value =
-rows[0].displayName;
-
-}
-
-localStorage.setItem("sobData",JSON.stringify(data));
-render();
-
+    return "-";
 }
 
 function saveEntry(){
-let raw = sobInput.value.trim();
-let username =
-usernameInput.value.trim();
+    let raw = sobInput.value.trim();
+    const username = usernameInput.value.trim();
 
-localStorage.setItem(
-"username",
-username
-);
-let usernameKey = normalizeUsername(username);
+    const match = raw.match(/SOB0*([0-9]{6})/i);
 
-if(!/^[1-9][0-9]{5}$/.test(raw)){
-alert("Enter valid 6-digit SOB ID");
-return;
-}
+    if(match){
+        raw = match[1];
+        sobInput.value = raw;
+    }
 
-let sob = "SOB000" + raw;
-
-if(data.some(d => d.sob === sob)){
-alert("This SOB ID already exists");
-return;
-}
-
-let r = calc();
-if(!r) return;
-
-let pax = (+adults.value || 0) + (+children.value || 0);
-let comboName = combo.options[combo.selectedIndex].text;
-let breakup = getVendorBreakup(comboName,pax);
-
-data.push({
-    deviceId,
-displayName:username,
-sob,
-...r,
-comboName,
-adults:(+adults.value || 0),
-children:(+children.value || 0),
-breakup,
-time:new Date().toLocaleTimeString([],{
-hour:"numeric",
-minute:"2-digit",
-hour12:true
-})
-});
-
-fetch(APP_SCRIPT_URL,{
-method:"POST",
-headers:{
-"Content-Type":"text/plain"
-},
-body:JSON.stringify({
-
-date:new Date().toLocaleDateString("en-GB"),
-
-deviceId:deviceId,
-
-displayName:username,
-
-sob:sob,
-
-comboName:comboName,
-
-adults:+adults.value||0,
-
-children:+children.value||0,
-
-tpu:r.tpu,
-
-oepl:r.oepl,
-
-paepl:r.paepl,
-
-total:r.total,
-
-breakup:breakup,
-
-time:new Date().toLocaleTimeString([],{
-hour:"numeric",
-minute:"2-digit",
-hour12:true
-})
-
-})
-})
-.then(r => r.json())
-.then(res => {
-
-    if(res.status === "duplicate"){
-
-        alert(
-            res.sob +
-            " is already saved by " +
-            res.displayName
-        );
-
-        // remove locally added entry
-        data.pop();
-        render();
-
+    if(!/^[0-9]{6}$/.test(raw)){
+        alert("Enter valid 6-digit SOB ID");
         return;
     }
 
-    if(res.status !== "success"){
-
-        alert(res.message || "Unable to save.");
-        data.pop();
-        render();
+    if(!combo.value){
+        alert("Select a combo");
         return;
     }
 
-})
-.catch(err=>{
+    const sob = "SOB000" + raw;
 
-    data.pop();
+    if(data.some(item => item.sob === sob)){
+        alert("This SOB ID already exists");
+        return;
+    }
+
+    const result = calc();
+    const comboName = combo.options[combo.selectedIndex].text;
+    const adultsCount = +adults.value || 0;
+    const childrenCount = +children.value || 0;
+
+    const entry = {
+        entryId:crypto.randomUUID(),
+        deviceId,
+        displayName:username,
+        sob,
+        ...result,
+        comboName,
+        adults:adultsCount,
+        children:childrenCount,
+        breakup:getVendorBreakup(comboName,adultsCount + childrenCount),
+        time:timeString()
+    };
+
+    data.push(entry);
+    saveLocalData();
     render();
 
-    alert("Unable to connect to server.");
-    console.error(err);
+    sobInput.value = "";
+    localStorage.setItem("username",username);
 
-});
+    postToCloud({
+        date:todayString(),
+        ...entry
+    }).then(response => {
+        if(response.status === "success"){
+            setCloudStatus("success");
+        }else if(response.status === "duplicate"){
+            data = data.filter(item => item.entryId !== entry.entryId);
+            saveLocalData();
+            render();
+            setCloudStatus("success");
+            alert(response.message || "Duplicate SOB ID");
+        }else{
+            setCloudStatus("offline");
+        }
+    }).catch(error => {
+        console.error(error);
+        setCloudStatus("offline");
+        alert("Network unavailable. Data was saved offline.");
+    });
+}
 
-localStorage.setItem("sobData",JSON.stringify(data));
-localStorage.setItem("sobDataBackup",JSON.stringify(data));
-localStorage.setItem("username",username);
-localStorage.setItem("usernameKey",usernameKey);
-render();
-sobInput.value = "";
+async function restoreTodayData(){
+    const username = usernameInput.value.trim();
+
+    if(!username){
+        alert("Enter Username first.");
+        return;
+    }
+
+    try{
+        setCloudStatus("syncing");
+
+        const response = await fetch(
+            APP_SCRIPT_URL +
+            "?date=" + encodeURIComponent(todayString()) +
+            "&displayName=" + encodeURIComponent(username)
+        );
+
+        const rows = await response.json();
+
+        if(rows.status === "error"){
+            alert(rows.message);
+            return;
+        }
+
+        if(!Array.isArray(rows) || !rows.length){
+            alert("No data found.");
+            setCloudStatus("success");
+            return;
+        }
+
+        data = rows;
+        saveLocalData();
+        render();
+        setCloudStatus("success");
+    }catch(error){
+        console.error(error);
+        setCloudStatus("offline");
+        alert("Network unavailable. Local data is still available.");
+    }
 }
 
 function resetForm(){
-combo.selectedIndex = 0;
-adults.value = "";
-children.value = "";
-sobInput.value = "";
-localStorage.removeItem("lastCombo");
-localStorage.removeItem("lastAdults");
-localStorage.removeItem("lastChildren");
-tpuEl.innerText = 0;
-oeplEl.innerText = 0;
-paeplEl.innerText = 0;
-totalEl.innerText = 0;
-warning.innerText = "";
+    combo.selectedIndex = 0;
+    adults.value = "";
+    children.value = "";
+    sobInput.value = "";
+
+    localStorage.removeItem("lastCombo");
+    localStorage.removeItem("lastAdults");
+    localStorage.removeItem("lastChildren");
+
+    tpuEl.textContent = "0";
+    oeplEl.textContent = "0";
+    paeplEl.textContent = "0";
+    totalEl.textContent = "0";
+    warning.textContent = "";
 }
 
-function resetAllData(){
-if(!confirm("Delete all saved SOB IDs?")) return;
-localStorage.setItem("sobDataBackup",JSON.stringify(data));
-data = [];
-localStorage.removeItem("sobData");
-render();
+async function deleteEntry(index){
+    if(!confirm("Delete this SOB ID?")) return;
+
+    const row = data[index];
+
+    try{
+        const response = await postToCloud({
+            action:"DELETE",
+            date:todayString(),
+            entryId:row.entryId,
+            deviceId
+        });
+
+        if(response.status !== "deleted"){
+            alert(response.message || "Delete failed.");
+            return;
+        }
+
+        data.splice(index,1);
+        saveLocalData();
+        render();
+        setCloudStatus("success");
+    }catch(error){
+        setCloudStatus("offline");
+        alert("Network unavailable. Delete was not completed.");
+    }
 }
 
-function deleteEntry(index){
-if(!confirm("Delete this SOB ID?")) return;
-data.splice(index,1);
-localStorage.setItem("sobData",JSON.stringify(data));
-localStorage.setItem("sobDataBackup",JSON.stringify(data));
-render();
+async function resetAllData(){
+    if(!confirm("Reset all today's SOB IDs?")) return;
+
+    try{
+        for(const row of data){
+            await postToCloud({
+                action:"RESET",
+                date:todayString(),
+                entryId:row.entryId,
+                deviceId
+            });
+        }
+
+        data = [];
+        saveLocalData();
+        render();
+        setCloudStatus("success");
+    }catch(error){
+        setCloudStatus("offline");
+        alert("Network unavailable. Reset was not completed.");
+    }
+}
+
+function setEditTimeOptions(){
+    editHour.innerHTML = "";
+    editMinute.innerHTML = "";
+
+    for(let hour = 1; hour <= 12; hour++){
+        editHour.innerHTML += `<option value="${hour}">${hour}</option>`;
+    }
+
+    for(let minute = 0; minute < 60; minute++){
+        const value = pad2(minute);
+        editMinute.innerHTML += `<option value="${value}">${value}</option>`;
+    }
 }
 
 function openEditModal(index){
-editingIndex = index;
-let d = data[index];
+    editingIndex = index;
 
-editSob.value = d.sob.replace("SOB000","");
-editAdults.value = d.adults;
-editChildren.value = d.children;
+    const row = data[index];
 
-editCombo.innerHTML = "";
-Array.from(combo.options).slice(1).forEach(opt=>{
-let o = document.createElement("option");
-o.value = opt.value;
-o.textContent = opt.text;
-if(opt.text === d.comboName) o.selected = true;
-editCombo.appendChild(o);
-});
+    editSob.value = row.sob.replace("SOB000","");
+    editAdults.value = row.adults;
+    editChildren.value = row.children;
 
-setEditTimeOptions();
+    editCombo.innerHTML = "";
 
-let tm = (d.time || "").match(/(\d{1,2}):(\d{2})\s?(AM|PM)/i);
-if(tm){
-editHour.value = String(parseInt(tm[1]));
-editMinute.value = tm[2];
-editAmPm.value = tm[3].toUpperCase();
-} else {
-let now = new Date();
-let h = now.getHours();
-let ampm = h >= 12 ? "PM" : "AM";
-h = h % 12 || 12;
-editHour.value = String(h);
-editMinute.value = pad2(now.getMinutes());
-editAmPm.value = ampm;
-}
+    Array.from(combo.options).slice(1).forEach(option => {
+        const editOption = document.createElement("option");
+        editOption.value = option.value;
+        editOption.textContent = option.text;
+        editOption.selected = option.text === row.comboName;
+        editCombo.appendChild(editOption);
+    });
 
-editModal.style.display = "block";
+    setEditTimeOptions();
+
+    const timeMatch = String(row.time || "")
+        .match(/(\d{1,2}):(\d{2})\s?(AM|PM)/i);
+
+    if(timeMatch){
+        editHour.value = String(parseInt(timeMatch[1]));
+        editMinute.value = timeMatch[2];
+        editAmPm.value = timeMatch[3].toUpperCase();
+    }
+
+    editModal.classList.add("show");
 }
 
 function closeEditModal(){
-editModal.style.display = "none";
-editingIndex = -1;
+    editModal.classList.remove("show");
+    editingIndex = -1;
 }
 
-function saveEdit(){
-if(editingIndex < 0) return;
+async function saveEdit(){
+    if(editingIndex < 0) return;
 
-let raw = editSob.value.trim();
-if(!/^[0-9]{6}$/.test(raw)){
-alert("Enter valid 6-digit SOB ID");
-return;
-}
+    const raw = editSob.value.trim();
 
-let sob = "SOB000" + raw;
-if(data.some((d,i) => i !== editingIndex && d.sob === sob)){
-alert("This SOB ID already exists");
-return;
-}
+    if(!/^[0-9]{6}$/.test(raw)){
+        alert("Enter valid 6-digit SOB ID");
+        return;
+    }
 
-let comboValue = editCombo.value;
-let comboText = editCombo.options[editCombo.selectedIndex]?.text || "";
-let tempCombo = combo.value;
-let tempAdults = adults.value;
-let tempChildren = children.value;
+    const sob = "SOB000" + raw;
 
-combo.value = comboValue;
-adults.value = editAdults.value;
-children.value = editChildren.value;
-let r = calc();
+    if(data.some((row,index) => index !== editingIndex && row.sob === sob)){
+        alert("This SOB ID already exists");
+        return;
+    }
 
-combo.value = tempCombo;
-adults.value = tempAdults;
-children.value = tempChildren;
-calc();
+    const comboValue = editCombo.value;
+    const comboName = editCombo.options[editCombo.selectedIndex].text;
+    const adultsCount = +editAdults.value || 0;
+    const childrenCount = +editChildren.value || 0;
+    const values = comboValue.split(",");
 
-if(!r) return;
+    const result = {
+        tpu:adultsCount * (+values[0]) + childrenCount * (+values[1]),
+        oepl:(adultsCount + childrenCount) * (+values[2]),
+        paepl:(adultsCount + childrenCount) * (+values[3])
+    };
 
-let pax = (+editAdults.value || 0) + (+editChildren.value || 0);
-let breakup = getVendorBreakup(comboText, pax);
+    result.total = result.tpu + result.oepl + result.paepl;
 
-data[editingIndex] = {
-...data[editingIndex],
-sob,
-comboName: comboText,
-adults: (+editAdults.value || 0),
-children: (+editChildren.value || 0),
-tpu: r.tpu,
-oepl: r.oepl,
-paepl: r.paepl,
-total: r.total,
-breakup,
-time: `${editHour.value}:${editMinute.value} ${editAmPm.value}`
-};
+    const updatedRow = {
+        ...data[editingIndex],
+        sob,
+        comboName,
+        adults:adultsCount,
+        children:childrenCount,
+        ...result,
+        breakup:getVendorBreakup(comboName,adultsCount + childrenCount),
+        time:`${editHour.value}:${editMinute.value} ${editAmPm.value}`
+    };
 
-localStorage.setItem("sobData",JSON.stringify(data));
-render();
-closeEditModal();
+    data[editingIndex] = updatedRow;
+    saveLocalData();
+    render();
+    closeEditModal();
+
+    try{
+        const response = await postToCloud({
+            action:"UPDATE",
+            date:todayString(),
+            ...updatedRow,
+            deviceId
+        });
+
+        setCloudStatus(response.status === "success" ? "success" : "offline");
+    }catch(error){
+        setCloudStatus("offline");
+    }
 }
 
 function editEntry(index){
-openEditModal(index);
+    openEditModal(index);
 }
 
-function formatTime(t){
-return t;
+function formatTime(value){
+    if(!value) return "";
+
+    const match = String(value).match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+
+    if(match){
+        return `${match[1].padStart(2,"0")}:${match[2]} ${match[3].toUpperCase()}`;
+    }
+
+    const date = new Date(value);
+
+    if(!isNaN(date)){
+        return new Intl.DateTimeFormat("en-US",{
+            timeZone:"Asia/Kolkata",
+            hour:"2-digit",
+            minute:"2-digit",
+            hour12:true
+        }).format(date);
+    }
+
+    return String(value);
+}
+
+function parseActivities(rows){
+    const oeplActivities = {};
+    const paeplActivities = {};
+
+    rows.forEach(row => {
+        String(row.breakup || "").split("\n").forEach(line => {
+            const target = line.startsWith("OEPL")
+                ? oeplActivities
+                : line.startsWith("PAEPL")
+                    ? paeplActivities
+                    : null;
+
+            if(!target) return;
+
+            line.replace(/^(OEPL|PAEPL) →/,"")
+                .split("|")
+                .forEach(activity => {
+                    const parts = activity.split(":");
+                    if(parts.length < 2) return;
+
+                    const name = parts[0].trim();
+                    const amount = parseInt(parts[1]) || 0;
+
+                    target[name] = (target[name] || 0) + amount;
+                });
+        });
+    });
+
+    return {oeplActivities,paeplActivities};
+}
+
+function formatActivities(activities){
+    return Object.entries(activities)
+        .map(([name,value]) => `${name}: ${value}`)
+        .join(" | ");
 }
 
 function render(){
-dataBody.innerHTML = "";
+    dataBody.innerHTML = "";
 
-let totalAll = 0;
-let tpuSum = 0;
-let oeplSum = 0;
-let paeplSum = 0;
-let oeplActivities = {};
-let paeplActivities = {};
+    let tpuSum = 0;
+    let oeplSum = 0;
+    let paeplSum = 0;
+    let totalSum = 0;
 
-data.forEach((d,i)=>{
-dataBody.innerHTML += `
-<tr>
-<td class="editColumn">
-<button class="editBtn" onclick="editEntry(${i})">✏️</button>
-</td>
+    data.forEach((row,index) => {
+        dataBody.innerHTML += `
+        <tr>
+            <td class="editColumn">
+                <button class="editBtn" onclick="editEntry(${index})">✏️</button>
+            </td>
 
-<td class="deleteColumn">
-<button class="deleteBtn" onclick="deleteEntry(${i})">🗑️</button>
-</td>
+            <td class="deleteColumn">
+                <button class="deleteBtn" onclick="deleteEntry(${index})">🗑️</button>
+            </td>
 
-<td>${i+1}</td>
+            <td>${index + 1}</td>
 
-<td>
-<b>${d.sob}</b>
-<br>
-<span style="font-size:9px;white-space:nowrap;">
-(${((d.comboName||"")).match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
-(${d.adults} A + ${d.children} C)
-</span>
-</td>
+            <td>
+                <b>${row.sob}</b><br>
+                <span style="font-size:9px;white-space:nowrap">
+                    (${(row.comboName || "").match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+                    (${row.adults} A + ${row.children} C)
+                </span>
+            </td>
 
-<td>${d.tpu}</td>
-<td>${d.oepl}</td>
-<td>${d.paepl}</td>
-<td>${d.total}</td>
+            <td>${row.tpu}</td>
+            <td>${row.oepl}</td>
+            <td>${row.paepl}</td>
+            <td>${row.total}</td>
 
-<td class="activityCell">
-<pre>${d.breakup}</pre>
-</td>
+            <td class="activityCell">
+                <pre>${row.breakup || "-"}</pre>
+            </td>
 
-<td style="font-size:10px;">
-${formatTime(d.time)}
-</td>
-</tr>
-`;
+            <td style="font-size:10px">${formatTime(row.time)}</td>
+        </tr>`;
 
-tpuSum += d.tpu;
-oeplSum += d.oepl;
-paeplSum += d.paepl;
-totalAll += d.total;
+        tpuSum += +row.tpu || 0;
+        oeplSum += +row.oepl || 0;
+        paeplSum += +row.paepl || 0;
+        totalSum += +row.total || 0;
+    });
 
-let tempDiv = document.createElement("div");
-tempDiv.innerHTML = d.breakup;
-let text = tempDiv.innerText.split("\n");
+    const activities = parseActivities(data);
 
-text.forEach(line => {
-line = line.trim();
+    tpuT.innerHTML = `<b>${tpuSum}</b>`;
+    oeplT.innerHTML = `<b>${oeplSum}</b>`;
+    paeplT.innerHTML = `<b>${paeplSum}</b>`;
+    grandT.innerHTML = `<b>${totalSum}</b>`;
 
-if(line.startsWith("OEPL")){
-let activities = line.replace("OEPL →","").split("|");
-activities.forEach(a=>{
-let parts = a.split(":");
-if(parts.length < 2) return;
-let name = parts[0].trim();
-let value = parseInt(parts[1]) || 0;
-oeplActivities[name] = (oeplActivities[name] || 0) + value;
-});
-}
-
-if(line.startsWith("PAEPL")){
-let activities = line.replace("PAEPL →","").split("|");
-activities.forEach(a=>{
-let parts = a.split(":");
-if(parts.length < 2) return;
-let name = parts[0].trim();
-let value = parseInt(parts[1]) || 0;
-paeplActivities[name] = (paeplActivities[name] || 0) + value;
-});
-}
-});
-});
-
-function formatActivities(obj){
-return Object.entries(obj).map(([k,v]) => `${k}: ${v}`).join(" | ");
-}
-
-grandT.innerHTML = "<b>" + totalAll + "</b>";
-tpuT.innerHTML = "<b>" + tpuSum + "</b>";
-oeplT.innerHTML = "<b>" + oeplSum + "</b>";
-paeplT.innerHTML = "<b>" + paeplSum + "</b>";
-
-activityTotals.innerHTML =
-"<u>OEPL</u> → "+formatActivities(oeplActivities)+
-"<br>"+
-"<u>PAEPL</u> → "+formatActivities(paeplActivities);
-
+    activityTotals.innerHTML =
+        `<u>OEPL</u> → ${formatActivities(activities.oeplActivities)}<br>` +
+        `<u>PAEPL</u> → ${formatActivities(activities.paeplActivities)}`;
 }
 
 function printA4(){
-window.print();
+    const username = usernameInput.value.trim();
+
+    if(username){
+        usernameEl.textContent = username;
+        localStorage.setItem("username",username);
+    }
+
+    window.print();
 }
 
-async function printAllA4(){
+function getSelectedPrintUsers(){
+    const allCheckbox = document.getElementById("printAllUsers");
+    const checkboxes = [
+        ...printUserList.querySelectorAll(".print-user-check")
+    ];
 
-try{
+    // If the menu has not been opened, Print means Print ALL.
+    if(!allCheckbox && checkboxes.length === 0){
+        return null;
+    }
 
-const originalData = [...data];
-const originalUser = usernameEl.innerText;
+    // "All" selected means no filtering.
+    if(allCheckbox && allCheckbox.checked){
+        return null;
+    }
 
-const today = new Date().toLocaleDateString("en-GB");
-
-const res = await fetch(
-APP_SCRIPT_URL +
-"?date=" + encodeURIComponent(today) +
-"&all=true"
-);
-
-const rows = await res.json();
-
-if(!rows.length){
-alert("No entries found.");
-return;
+    return checkboxes
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => checkbox.value);
 }
 
-let grouped = {};
+async function fetchUsersFromAppsScript(){
+    try{
+        const response = await fetch(
+            APP_SCRIPT_URL +
+            "?date=" + encodeURIComponent(todayString()) +
+            "&all=true"
+        );
 
-rows.forEach(r=>{
+        const rows = await response.json();
 
-const key = (r.displayName || "Unknown").trim().toLowerCase();
+        if(!Array.isArray(rows)) return [];
 
-if(!grouped[key]){
-grouped[key]={
-name:(r.displayName || "Unknown").trim(),
-rows:[]
-};
+        return [...new Set(
+            rows
+                .map(row => (row.displayName || "").trim())
+                .filter(Boolean)
+        )].sort((a,b) => a.localeCompare(b));
+    }catch(error){
+        console.error(error);
+        return [];
+    }
 }
 
-grouped[key].rows.push(r);
+function updatePrintButtonLabel(){
+    const selected = getSelectedPrintUsers();
+    const button = document.getElementById("allPrintBtn");
 
-});
-
-let html="";
-
-for(const group of Object.values(grouped)){
-
-data = group.rows;
-usernameEl.innerText = group.name;
-
-render();
-
-html += `
-<div class="a4Page">
-${document.getElementById("printArea").innerHTML}
-<hr style="border:1px dashed #999;margin:6px 0;">
-</div>
-`;
-
+    button.innerHTML =
+        selected && selected.length
+        ? `${selected.length} ▼`
+        : "ALL ▼";
 }
 
-data = originalData;
-usernameEl.innerText = originalUser;
-render();
+function buildPrintMenu(users){
+    if(!users.length){
+        printUserList.innerHTML = `<div style="font-size:12px">No users found.</div>`;
+        return;
+    }
 
-const win = window.open("", "_blank");
+    printUserList.innerHTML = `
+        <label class="print-user-item">
+            <input type="checkbox" id="printAllUsers" checked>
+            <span><b>All</b></span>
+        </label>
 
-if(!win){
+        <div style="border-top:1px solid var(--border);margin:6px 0"></div>
 
-alert("Popup blocked.\nPlease allow popups for this website.");
+        ${users.map(user => `
+            <label class="print-user-item">
+                <input type="checkbox" class="print-user-check" value="${user}" checked>
+                <span>${user}</span>
+            </label>
+        `).join("")}
+    `;
 
-return;
+    const allCheckbox = document.getElementById("printAllUsers");
+    const checkboxes = [...printUserList.querySelectorAll(".print-user-check")];
 
+    allCheckbox.addEventListener("change",() => {
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = allCheckbox.checked;
+        });
+        updatePrintButtonLabel();
+    });
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change",() => {
+            allCheckbox.checked = checkboxes.every(item => item.checked);
+            updatePrintButtonLabel();
+        });
+    });
+
+    updatePrintButtonLabel();
 }
 
-win.document.open();
+async function togglePrintMenu(event){
+    event.stopPropagation();
+
+    if(printMenu.classList.contains("show")){
+        printMenu.classList.remove("show");
+        return;
+    }
+
+    const users = await fetchUsersFromAppsScript();
+    buildPrintMenu(users);
+    printMenu.classList.add("show");
+}
+
+async function printSelectedUsers(){
+    const selectedUsers = getSelectedPrintUsers();
+
+    printMenu.classList.remove("show");
+
+    // The menu was opened and every user was unchecked.
+    if(Array.isArray(selectedUsers) && selectedUsers.length === 0){
+        alert("Please select at least one user.");
+        return;
+    }
+
+    // null means ALL users.
+    await printAllA4(selectedUsers);
+}
+
+function buildPrintablePage(rows,userName){
+    let tpuSum = 0;
+    let oeplSum = 0;
+    let paeplSum = 0;
+    let totalSum = 0;
+    let htmlRows = "";
+
+    rows.forEach((row,index) => {
+        htmlRows += `
+        <tr>
+            <td>${index + 1}</td>
+            <td>
+                <b>${row.sob || ""}</b><br>
+                <span style="font-size:9px;white-space:nowrap">
+                    (${(row.comboName || "").match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+                    (${row.adults || 0} A + ${row.children || 0} C)
+                </span>
+            </td>
+            <td>${row.tpu || 0}</td>
+<td>${row.oepl || 0}</td>
+<td>${row.paepl || 0}</td>
+<td>${row.total || 0}</td>
+<td class="activityCell">
+    <pre>${row.breakup || "-"}</pre>
+</td>
+<td>${formatTime(row.time)}</td>
+
+
+        </tr>`;
+
+        tpuSum += +row.tpu || 0;
+        oeplSum += +row.oepl || 0;
+        paeplSum += +row.paepl || 0;
+        totalSum += +row.total || 0;
+    });
+
+    const activities = parseActivities(rows);
+
+    return `
+    <div class="a4Page">
+        <div class="a4">
+            <div class="header">
+                <div class="header-left">
+                    <b>POS# :</b>
+                    <span class="headerLine"></span>
+                </div>
+
+                <div class="header-center">
+                    <span>USERNA<b>M</b>E.<b>S</b> :</span>
+                    <span class="headerLine"><b>${userName || ""}</b></span>
+                </div>
+
+                <div class="header-right">
+                    <b>DATE :</b>
+                    <b>${todayString()}</b>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>SR</th>
+                        <th>SOB ID</th>
+                        <th>TPU</th>
+                        <th>OEPL</th>
+                        <th>PAEPL</th>
+                        <th>TOTAL</th>
+                        <th>ACTIVITIES' AMOUNTS</th>
+                        <th>TIME</th>
+                    </tr>
+                </thead>
+
+                <tbody>${htmlRows}</tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="2"><b>TOTAL</b></td>
+                        <td><b>${tpuSum}</b></td>
+                        <td><b>${oeplSum}</b></td>
+                        <td><b>${paeplSum}</b></td>
+                        <td><b>${totalSum}</b></td>
+                        <td class="activityTotalsCell">
+                            <u>OEPL</u> → ${formatActivities(activities.oeplActivities)}<br>
+                            <u>PAEPL</u> → ${formatActivities(activities.paeplActivities)}
+                        </td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <hr style="border:1px dashed #999;margin:12px 0">
+    </div>`;
+}
+
+async function printAllA4(selectedUsers = null){
+    try{
+        const response = await fetch(
+            APP_SCRIPT_URL +
+            "?date=" + encodeURIComponent(todayString()) +
+            "&all=true"
+        );
+
+        const rows = await response.json();
+
+        if(rows.status === "error"){
+            alert(rows.message);
+            return;
+        }
+
+        if(!Array.isArray(rows) || !rows.length){
+            alert("No entries found.");
+            return;
+        }
+
+        let filteredRows = rows;
+
+        if(Array.isArray(selectedUsers)){
+            const allowed = new Set(
+                selectedUsers.map(value => value.trim().toLowerCase())
+            );
+
+            filteredRows = rows.filter(row =>
+                allowed.has((row.displayName || "Unknown").trim().toLowerCase())
+            );
+        }
+
+        if(!filteredRows.length){
+            alert("No selected users to print.");
+            return;
+        }
+
+        const grouped = {};
+
+        filteredRows.forEach(row => {
+            const name = (row.displayName || "Unknown").trim();
+
+            if(!grouped[name]){
+                grouped[name] = [];
+            }
+
+            grouped[name].push(row);
+        });
+
+        let html = "";
+
+        Object.entries(grouped).forEach(([name,rowsForUser]) => {
+            html += buildPrintablePage(rowsForUser,name);
+        });
+
+        const win = window.open("","_blank");
+
+        if(!win){
+            alert("Popup blocked. Please allow popups for this website.");
+            return;
+        }
+
+        win.document.open();
+
+const sharedPrintCss = [...document.querySelectorAll("style")]
+    .map(style => style.textContent)
+    .join("\n");
 
 win.document.write(`
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <title>Print All</title>
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
 
-<meta charset="UTF-8">
+    <style>
+        ${sharedPrintCss}
 
-<title>Print All</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-
-${document.querySelector("style").innerHTML}
-
-body{
-margin:0;
-padding:0;
-font-family:'Arimo',sans-serif;
+        .a4Page{
+    width:100%;
+    margin:0;
+    padding:0;
+    page-break-inside:auto;
+    break-inside:auto;
 }
 
-.a4Page{
-margin:0 0 8px 0;
-padding:0;
-page-break-inside:avoid;
-break-inside:avoid;
+@media print{
+    html,
+    body{
+        color:#000!important;
+        background:#fff!important;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .a4Page{
+        page-break-before:auto;
+        page-break-after:auto;
+        page-break-inside:auto;
+        break-before:auto;
+        break-after:auto;
+        break-inside:auto;
+    }
+
+    th,
+td{
+    color:#000!important;
+    background:#fff!important;
 }
 
-.editColumn,
-.deleteColumn,
-.editBtn,
-.deleteBtn,
-#resetAllBtn{
-display:none!important;
+.activityTotalsCell{
+    color:#000!important;
+    background:#eaeaea!important;
 }
 
-</style>
+th,
+tfoot td{
+    font-weight:bold;
+}
 
+}
+
+    </style>
 </head>
 
-<body>
-
-${html}
-
-</body>
-
+<body>${html}</body>
 </html>
 `);
 
 win.document.close();
 
-win.onload = function(){
 
-setTimeout(function(){
-
-win.focus();
-
-win.print();
-
-},300);
-
-};
-
-}catch(err){
-
-console.error(err);
-
-alert("Unable to print all.");
-
-}
-
-}
-
-function print80mm(){
-let tpuSum = 0;
-let oeplSum = 0;
-let paeplSum = 0;
-let grandSum = 0;
-
-let oeplActivities = {};
-let paeplActivities = {};
-let entriesHtml = "";
-
-data.forEach((d,i)=>{
-tpuSum += d.tpu;
-oeplSum += d.oepl;
-paeplSum += d.paepl;
-grandSum += d.total;
-let tempDiv = document.createElement("div");
-tempDiv.innerHTML = d.breakup;
-let lines = tempDiv.innerText.split("\n");
-
-lines.forEach(line=>{
-line = line.trim();
-
-if(line.startsWith("OEPL")){
-let acts = line.replace("OEPL →","").split("|");
-acts.forEach(a=>{
-let p = a.split(":");
-if(p.length < 2) return;
-let name = p[0].trim();
-let value = parseInt(p[1]) || 0;
-oeplActivities[name] = (oeplActivities[name] || 0) + value;
-});
-}
-
-if(line.startsWith("PAEPL")){
-let acts = line.replace("PAEPL →","").split("|");
-acts.forEach(a=>{
-let p = a.split(":");
-if(p.length < 2) return;
-let name = p[0].trim();
-let value = parseInt(p[1]) || 0;
-paeplActivities[name] = (paeplActivities[name] || 0) + value;
-});
-}
-});
-
-entriesHtml += `
-<div class="entry">
-<div style="
-position:relative;
-text-align:center;
-font-size:16px;
-padding:4px 0;
-border-bottom:1px solid #000;
-">
-<span style="
-position:absolute;
-left:5px;
-font-size:12px;
-top:50%;
-transform:translateY(-50%);
-">
-${i+1})
-</span>
-${d.sob}
-</div>
-
-<div style="
-display:flex;
-justify-content:space-between;
-padding:3px 6px;
-font-size:10px;
-">
-<span>${((d.comboName||"")).match(/\d+\/(?:\d+|NA)/)?.[0] || ""}</span>
-<span>${d.adults} A + ${d.children} C</span>
-<span>${formatTime(d.time)}</span>
-</div>
-
-<div style="padding:0 0 2px 0;">
-<div style="display:flex;border:1px solid #000;">
-<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">TPU</div>
-<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">OEPL</div>
-<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">PAEPL</div>
-<div style="flex:1;padding:3px;text-align:center;font-size:10px;">TOTAL</div>
-</div>
-<div style="display:flex;border:1px solid #000;border-top:none;">
-<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">${d.tpu}</div>
-<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">${d.oepl}</div>
-<div style="flex:1;border-right:1px solid #000;padding:3px;text-align:center;font-size:10px;">${d.paepl}</div>
-<div style="flex:1;padding:3px;text-align:center;font-size:10px;">${d.total}</div>
-</div>
-</div>
-
-<div style="
-padding:4px 6px;
-font-size:11px;
-line-height:15px;
-">
-<div>OEPL: ${d.breakup.split("\n")[0].replace("OEPL →","").trim()}</div>
-<div>PAEPL: ${d.breakup.split("\n")[1] ? d.breakup.split("\n")[1].replace("PAEPL →","").trim() : ""}</div>
-</div>
-</div>
-`;
-});
-
-let receipt = `
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
-<title>80MM Print</title>
-<style>
-@page{
-size:80mm auto;
-margin:3mm;
-}
-body{
-width:74mm;
-margin:auto;
-font-family:'Arimo',sans-serif;
-font-size:12px;
-font-weight:bold;
-}
-.header{
-text-align:center;
-margin-bottom:10px;
-}
-.line{
-border-top:2px double #000;
-margin:6px 0;
-}
-.entry{
-border:1px solid #000;
-margin-bottom:8px;
-}
-table{
-width:100%;
-border-collapse:collapse;
-}
-td{
-border:1px solid #000;
-text-align:center;
-padding:3px;
-font-size:11px;
-}
-</style>
-</head>
-<body>
-<div class="header">
-<div style="
-display:flex;
-justify-content:space-between;
-font-size:12px;
-margin-bottom:2px;
-">
-<span>
-DATE : ${new Date().toLocaleDateString('en-GB')}
-</span>
-<span>
-POS# : _______
-</span>
-</div>
-
-<div style="
-text-align:left;
-font-size:12px;
-font-weight:normal;
-">
-USERNA<b>M</b>E.S :
-<span
-id="username"
-contenteditable="true"
-style="
-display:inline-block;
-min-width:130px;
-border-bottom:1px solid black;
-font-weight:bold;
-outline:none;
-text-align:center;
-">
-</span>
-</div>
-</div>
-
-<div class="line"></div>
-
-${entriesHtml}
-<div style="
-border:1px solid #000;
-margin-top:8px;
-">
-<div style="
-text-align:center;
-font-size:12px;
-font-weight:bold;
-padding:4px;
-border-bottom:1px solid #000;
-background:#f5f5f5;
-">
-GRAND TOTAL
-</div>
-
-<table>
-<tr>
-<td>TPU</td>
-<td>OEPL</td>
-<td>PAEPL</td>
-<td>TOTAL</td>
-</tr>
-
-<tr>
-<td>${tpuSum}</td>
-<td>${oeplSum}</td>
-<td>${paeplSum}</td>
-<td>${grandSum}</td>
-</tr>
-</table>
-
-</div>
-<div style="
-border:1px solid #000;
-margin-top:8px;
-">
-<div style="
-text-align:center;
-font-weight:bold;
-padding:4px;
-border-bottom:1px solid #000;
-">
-OEPL Activities Total
-</div>
-
-<table style="
-width:100%;
-border-collapse:collapse;
-">
-${Object.entries(oeplActivities).map(([k,v])=>`
-<tr>
-<td style="
-border:1px solid #000;
-padding:4px;
-text-align:left;
-font-size:10px;
-">
-${fullActivityName(k)}
-</td>
-<td style="
-border:1px solid #000;
-padding:4px;
-text-align:right;
-width:25%;
-">
-₹${v}
-</td>
-</tr>
-`).join("")}
-</table>
-</div>
-
-<div style="
-border:1px solid #000;
-margin-top:8px;
-">
-<div style="
-text-align:center;
-font-weight:bold;
-padding:4px;
-border-bottom:1px solid #000;
-">
-PAEPL Activities Total
-</div>
-
-<table style="
-width:100%;
-border-collapse:collapse;
-">
-${Object.entries(paeplActivities).map(([k,v])=>`
-<tr>
-<td style="
-border:1px solid #000;
-padding:4px;
-text-align:left;
-font-size:10px;
-">
-${fullActivityName(k)}
-</td>
-<td style="
-border:1px solid #000;
-padding:4px;
-text-align:right;
-width:25%;
-">
-₹${v}
-</td>
-</tr>
-`).join("")}
-</table>
-</div>
-</body>
-</html>
-`;
-
-let win = window.open("","_blank");
-win.document.write(receipt);
-win.document.close();
-win.focus();
-setTimeout(()=>{
-win.print();
-},500);
+        setTimeout(() => {
+            win.focus();
+            win.print();
+        },400);
+    }catch(error){
+        console.error(error);
+        alert("Unable to print all.");
+    }
 }
 
 function fullActivityName(name){
-const names = {
-"Snow":"Snow Park (Shrinathji Ent)",
-"Food":"Food Court (Shrinathji Foods)",
-"Wax":"Wax Museum (Victory Fun Park)",
-"Souvenir":"Souvenir (Mayan Assts)",
-"Gamezone":"Gamezone (Saachi)",
-"Eyelusion":"Eyelusion (Rinz)",
-"Mayalok":"Mayalok (Divine)",
-"WOG":"World of Ganesha (Mahadev)"
-};
-return names[name] || name;
+    const names = {
+        Snow:"Snow Park (Shrinathji Ent)",
+        Food:"Food Court (Shrinathji Foods)",
+        Wax:"Wax Museum (Victory Fun Park)",
+        Souvenir:"Souvenir (Mayan Assts)",
+        Gamezone:"Gamezone (Saachi)",
+        Eyelusion:"Eyelusion (Rinz)",
+        Mayalok:"Mayalok (Divine)",
+        WOG:"World of Ganesha (Mahadev)"
+    };
+
+    return names[name] || name;
+}
+function getReceiptActivityLines(breakup){
+    const activityMap = {
+        OEPL:"",
+        PAEPL:""
+    };
+
+    String(breakup || "").split("\n").forEach(line => {
+        line = line.trim();
+
+        if(line.startsWith("OEPL")){
+            activityMap.OEPL = line
+                .replace(/^OEPL\s*→/,"")
+                .trim();
+        }
+
+        if(line.startsWith("PAEPL")){
+            activityMap.PAEPL = line
+                .replace(/^PAEPL\s*→/,"")
+                .trim();
+        }
+    });
+
+    let html = "";
+
+    if(activityMap.OEPL){
+        html += `<div>OEPL: ${activityMap.OEPL}</div>`;
+    }
+
+    if(activityMap.PAEPL){
+        html += `<div>PAEPL: ${activityMap.PAEPL}</div>`;
+    }
+
+    return html;
 }
 
+function print80mm(){
+    let tpuSum = 0;
+    let oeplSum = 0;
+    let paeplSum = 0;
+    let grandSum = 0;
+
+    const oeplActivities = {};
+    const paeplActivities = {};
+    let entriesHtml = "";
+
+    data.forEach((row,index) => {
+        tpuSum += +row.tpu || 0;
+        oeplSum += +row.oepl || 0;
+        paeplSum += +row.paepl || 0;
+        grandSum += +row.total || 0;
+
+        const lines = String(row.breakup || "").split("\n");
+
+        lines.forEach(line => {
+            line = line.trim();
+
+            const target = line.startsWith("OEPL")
+                ? oeplActivities
+                : line.startsWith("PAEPL")
+                    ? paeplActivities
+                    : null;
+
+            if(!target) return;
+
+            line.replace(/^(OEPL|PAEPL) →/,"")
+                .split("|")
+                .forEach(activity => {
+                    const parts = activity.split(":");
+                    if(parts.length < 2) return;
+
+                    const name = parts[0].trim();
+                    const value = parseInt(parts[1]) || 0;
+
+                    target[name] = (target[name] || 0) + value;
+                });
+        });
+
+        
+
+        entriesHtml += `
+        <div class="entry">
+            <div class="entry-title">
+                <span>${index + 1})</span>
+                ${row.sob}
+            </div>
+
+            <div class="entry-meta">
+                <span>${(row.comboName || "").match(/\d+\/(?:\d+|NA)/)?.[0] || ""}</span>
+                <span>${row.adults} A + ${row.children} C</span>
+                <span>${formatTime(row.time)}</span>
+            </div>
+
+            <div class="amount-grid">
+                <div>TPU</div>
+                <div>OEPL</div>
+                <div>PAEPL</div>
+                <div>TOTAL</div>
+
+                <div>${row.tpu}</div>
+                <div>${row.oepl}</div>
+                <div>${row.paepl}</div>
+                <div>${row.total}</div>
+            </div>
+
+            <div class="breakup">
+    ${getReceiptActivityLines(row.breakup)}
+</div>
+
+        </div>`;
+    });
+
+    const activityRows = activities =>
+        Object.entries(activities)
+            .map(([name,value]) => `
+                <tr>
+                    <td>${fullActivityName(name)}</td>
+                    <td>₹${value}</td>
+                </tr>`)
+            .join("");
+
+    const receipt = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+
+        <title>80MM Print</title>
+
+        <style>
+            @page{
+                size:80mm auto;
+                margin:3mm;
+            }
+
+            *{
+                box-sizing:border-box;
+                font-family:'Arimo',Arial,sans-serif;
+            }
+
+            body{
+                width:74mm;
+                margin:auto;
+                color:#000;
+                background:#fff;
+                font-size:12px;
+                font-weight:bold;
+            }
+
+            .header{
+                margin-bottom:10px;
+                text-align:center;
+            }
+
+            .line{
+                margin:6px 0;
+                border-top:2px double #000;
+            }
+
+            .entry{
+                margin-bottom:8px;
+                border:1px solid #000;
+            }
+
+            .entry-title{
+                position:relative;
+                padding:4px 0;
+                border-bottom:1px solid #000;
+                text-align:center;
+                font-size:16px;
+            }
+
+            .entry-title span{
+                position:absolute;
+                top:50%;
+                left:5px;
+                transform:translateY(-50%);
+                font-size:12px;
+            }
+
+            .entry-meta{
+                display:flex;
+                justify-content:space-between;
+                padding:3px 6px;
+                font-size:10px;
+            }
+
+            .amount-grid{
+                display:grid;
+                grid-template-columns:repeat(4,1fr);
+                border:1px solid #000;
+            }
+
+            .amount-grid div{
+                    padding:3px;
+                    border-right:.5px solid #000;
+                    border-bottom:.5px solid #000;
+                    text-align:center;
+                    font-size:10px;
+            }
+
+
+            .amount-grid div:nth-child(4n){
+                border-right:0;
+            }
+
+            .breakup{
+                padding:4px 6px;
+                font-size:11px;
+                line-height:15px;
+            }
+
+            .summary-box{
+                margin-top:8px;
+                border:1px solid #000;
+            }
+
+            .summary-title{
+                padding:4px;
+                border-bottom:1px solid #000;
+                text-align:center;
+                font-weight:bold;
+            }
+
+            table{
+                width:100%;
+                border-collapse:collapse;
+            }
+
+            td{
+                padding:4px;
+                border:.5px solid #000;
+                font-size:10px;
+            }
+
+
+            td:last-child{
+                width:25%;
+                text-align:right;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="header">
+            <div style="display:flex;justify-content:space-between;font-size:12px">
+                <span>DATE : ${new Date().toLocaleDateString("en-GB")}</span>
+                <span>POS# : _______</span>
+            </div>
+
+            <div style="text-align:left;font-size:12px;font-weight:normal">
+                USERNA<b>M</b>E.S :
+                <span style="display:inline-block;min-width:130px;border-bottom:1px solid #000;text-align:center;font-weight:bold">
+                    ${usernameInput.value}
+                </span>
+            </div>
+        </div>
+
+        <div class="line"></div>
+
+        ${entriesHtml}
+
+        <div class="summary-box">
+            <div class="summary-title">GRAND TOTAL</div>
+            <table>
+                <tr>
+                    <td>TPU</td>
+                    <td>OEPL</td>
+                    <td>PAEPL</td>
+                    <td>TOTAL</td>
+                </tr>
+                <tr>
+                    <td>${tpuSum}</td>
+                    <td>${oeplSum}</td>
+                    <td>${paeplSum}</td>
+                    <td>${grandSum}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="summary-box">
+            <div class="summary-title">OEPL Activities Total</div>
+            <table>${activityRows(oeplActivities)}</table>
+        </div>
+
+        <div class="summary-box">
+            <div class="summary-title">PAEPL Activities Total</div>
+            <table>${activityRows(paeplActivities)}</table>
+        </div>
+    </body>
+    </html>`;
+
+    const win = window.open("","_blank");
+
+    if(!win){
+        alert("Popup blocked. Please allow popups.");
+        return;
+    }
+
+    win.document.write(receipt);
+    win.document.close();
+
+    setTimeout(() => {
+        win.focus();
+        win.print();
+    },500);
+}
+
+function toggleTheme(){
+    const dark = document.body.classList.toggle("dark");
+
+    localStorage.setItem("theme",dark ? "dark" : "light");
+    document.querySelector(".hiText").textContent = dark ? "🌙 Hi," : "🌞 Hi,";
+}
+
+function startScanner(){
+    scannerOverlay.classList.add("show");
+
+    if(qrScanner){
+        qrScanner.stop()
+            .catch(() => {})
+            .finally(() => {
+                qrScanner = null;
+                initScanner();
+            });
+    }else{
+        initScanner();
+    }
+}
+
+function initScanner(){
+    if(typeof Html5Qrcode === "undefined"){
+        alert("QR scanner library is still loading. Please try again.");
+        closeScanner();
+        return;
+    }
+
+    qrScanner = new Html5Qrcode("reader");
+
+    qrScanner.start(
+        {facingMode:"environment"},
+        {
+            fps:15,
+            qrbox:(width,height) => ({
+                width:Math.min(width,height) * .8,
+                height:Math.min(width,height) * .8
+            })
+        },
+        onScanSuccess,
+        () => {}
+    ).catch(error => {
+        console.error(error);
+        alert("Camera could not start.");
+        closeScanner();
+    });
+}
+
+function closeScanner(){
+    if(qrScanner){
+        qrScanner.stop()
+            .catch(() => {})
+            .finally(() => {
+                qrScanner = null;
+                scannerOverlay.classList.remove("show");
+            });
+    }else{
+        scannerOverlay.classList.remove("show");
+    }
+}
+
+function uploadQrImage(){
+    uploadQrInput.click();
+}
+
+async function handleQrUpload(event){
+    const file = event.target.files && event.target.files[0];
+
+    if(!file) return;
+
+    try{
+        const result = await Html5Qrcode.scanFile(file,true);
+        onScanSuccess(result);
+    }catch(error){
+        alert("No QR code found in image.");
+    }
+
+    event.target.value = "";
+}
+
+function onScanSuccess(decodedText){
+    const match = String(decodedText).match(/(?:SOB0*)?([0-9]{6})/i);
+
+    closeScanner();
+
+    if(match){
+        sobInput.value = match[1];
+        setTimeout(saveEntry,200);
+    }
+}
+
+document.addEventListener("click",event => {
+    if(!event.target.closest(".print-all-wrap")){
+        printMenu.classList.remove("show");
+    }
+});
+
+window.addEventListener("offline",() => setCloudStatus("offline"));
+window.addEventListener("online",() => setCloudStatus("syncing"));
+
 function setDate(){
-const today = new Date().toLocaleDateString('en-GB');
-dateEl.innerText = today;
+    dateEl.textContent = todayString();
 }
 
 function restoreFormState(){
-combo.value = localStorage.getItem("lastCombo") || "";
-adults.value = localStorage.getItem("lastAdults") || "";
-children.value = localStorage.getItem("lastChildren") || "";
+    combo.value = localStorage.getItem("lastCombo") || "";
+    adults.value = localStorage.getItem("lastAdults") || "";
+    children.value = localStorage.getItem("lastChildren") || "";
 
-if(combo.value){
-calc();
-}
+    if(combo.value){
+        calc();
+    }
 }
 
 setEditTimeOptions();
 restoreFormState();
 
-let deviceId = localStorage.getItem("deviceId");
+const savedUsername = localStorage.getItem("username") || "";
 
-if(!deviceId){
+usernameInput.value = savedUsername;
+usernameEl.textContent = savedUsername;
 
-    deviceId =
-    "DEV-" +
-    Date.now().toString(36) +
-    "-" +
-    Math.random().toString(36).substring(2,8).toUpperCase();
-
-    localStorage.setItem("deviceId",deviceId);
-
+if(localStorage.getItem("theme") === "dark"){
+    document.body.classList.add("dark");
+    document.querySelector(".hiText").textContent = "🌙 Hi,";
 }
 
-usernameInput.value = localStorage.getItem("username") || "";
 setDate();
 render();
-
+setCloudStatus(navigator.onLine ? "success" : "offline");
 </script>
-<div id="loadingScreen">
 
-<div class="loaderBox">
-
-Loading...
-
-<br><br>
-
-<div id="percent">0%</div>
-
-</div>
-
-</div>
+<script src="https://unpkg.com/html5-qrcode"></script>
 </body>
-
 </html>
