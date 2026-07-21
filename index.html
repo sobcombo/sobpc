@@ -13,7 +13,6 @@
 }
 
 :root{
-    --bg:#f7fbff;
     --text:#000;
     --card:#fff;
     --input:#fff;
@@ -23,7 +22,6 @@
 
 body{
     margin:0;
-    padding:0;
     text-align:center;
     color:var(--text);
     background:
@@ -33,14 +31,12 @@ body{
 }
 
 body.dark{
-    --bg:#151515;
     --text:#f2f2f2;
     --card:#242424;
     --input:#2f2f2f;
     --table:#202020;
     --border:#555;
     background:#151515;
-    color:#f2f2f2;
 }
 
 .container{
@@ -62,13 +58,7 @@ body.dark{
     text-decoration:none;
     font-size:12px;
     font-weight:bold;
-    transition:.15s;
     box-shadow:4px 4px 0 #0b3a82,6px 8px 14px #0003;
-}
-
-.switch-btn:hover{
-    transform:translate(-1px,-1px);
-    filter:brightness(1.08);
 }
 
 .reverse-btn{
@@ -125,9 +115,7 @@ select{
     font-size:16px;
     background:var(--input);
     color:var(--text);
-    box-shadow:
-        inset 2px 2px 5px #00000014,
-        4px 4px 10px #0000001f;
+    box-shadow:inset 2px 2px 5px #00000014,4px 4px 10px #0000001f;
 }
 
 select{
@@ -175,12 +163,6 @@ body.dark button:not(.saveBtn):not(.cancelBtn){
     border-radius:18px;
     background:var(--card);
     box-shadow:8px 8px 20px #0002;
-    transition:.2s;
-}
-
-.box:hover{
-    transform:translateY(-2px);
-    box-shadow:12px 12px 28px #0003;
 }
 
 .row{
@@ -197,25 +179,16 @@ body.dark button:not(.saveBtn):not(.cancelBtn){
     background:#fff8dc;
     color:#000;
     animation:goldGlow 1.5s infinite alternate;
-    transition:.25s;
 }
 
 body.dark .highlight-total{
-    border-color:#ffd700;
     background:#302b00;
     color:#fff;
 }
 
 @keyframes goldGlow{
-    0%{
-        box-shadow:0 0 5px #ffd700,0 0 10px #ffd700;
-    }
-    100%{
-        box-shadow:
-            0 0 15px #ffea00,
-            0 0 25px #ffb300,
-            0 0 35px #ff6f00;
-    }
+    from{box-shadow:0 0 5px #ffd700,0 0 10px #ffd700}
+    to{box-shadow:0 0 15px #ffea00,0 0 25px #ffb300,0 0 35px #ff6f00}
 }
 
 .sobField{
@@ -235,7 +208,6 @@ body.dark .highlight-total{
     width:auto;
     margin:0;
     padding:12px 14px;
-    border:0;
     outline:0;
     background:transparent;
     box-shadow:none;
@@ -249,15 +221,10 @@ body.dark .highlight-total{
     height:46px;
     margin:0;
     padding:0;
-    border:0;
     border-left:1px solid #ddd;
     border-radius:0;
     background:transparent;
     box-shadow:none;
-}
-
-#scanBtn:hover{
-    background:#f5f5f5;
 }
 
 #scanBtn svg{
@@ -309,13 +276,14 @@ body.dark td{
 }
 
 .header{
-    display:flex;
-    justify-content:space-between;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
     align-items:center;
+    width:100%;
     gap:6px;
-    flex-wrap:wrap;
     margin-bottom:10px;
     font-size:13px;
+    overflow:visible;
 }
 
 .header-left,
@@ -325,32 +293,44 @@ body.dark td{
     align-items:center;
     gap:4px;
     min-width:0;
-    flex:1 1 auto;
+}
+
+.header-left{
+    justify-content:flex-start;
 }
 
 .header-center{
     justify-content:center;
+    white-space:nowrap;
 }
 
 .header-right{
     justify-content:flex-end;
+    white-space:nowrap;
 }
 
 .headerText{
     white-space:nowrap;
+    font-weight:bold;
 }
 
 .headerLine{
     display:inline-flex;
     align-items:flex-end;
     justify-content:center;
-    min-width:60px;
-    max-width:110px;
+    width:max-content;
+    min-width:120px;
+    max-width:none;
     height:16px;
-    padding:0 4px;
+    padding:0 6px;
     border-bottom:1.5px solid #000;
+    white-space:nowrap;
     font-weight:bold;
     line-height:16px;
+}
+
+.header-right span{
+    font-weight:normal;
 }
 
 .activityCell{
@@ -396,11 +376,6 @@ body.dark .activityTotalsCell{
     box-shadow:3px 3px 0 #9e9e9e,5px 6px 12px #0004;
 }
 
-.editBtn:hover,
-.deleteBtn:hover{
-    box-shadow:4px 4px 0 #9e9e9e,7px 8px 16px #0005;
-}
-
 .print-all-wrap{
     position:relative;
     display:inline-block;
@@ -420,11 +395,6 @@ body.dark .activityTotalsCell{
     border-radius:0;
     padding:12px 18px;
     background:linear-gradient(to bottom,#fff,#e8e8e8);
-    box-shadow:none;
-}
-
-.print-split button:hover{
-    transform:translateY(-1px);
     box-shadow:none;
 }
 
@@ -488,8 +458,7 @@ body.dark .print-split button{
     box-shadow:none;
 }
 
-.editModal,
-.loginBackdrop{
+.editModal{
     display:none;
     position:fixed;
     inset:0;
@@ -500,25 +469,21 @@ body.dark .print-split button{
     backdrop-filter:blur(4px);
 }
 
-.editModal.show,
-.loginBackdrop.show{
+.editModal.show{
     display:flex;
 }
 
-.editCard,
-.loginCard{
+.editCard{
     width:95%;
     max-width:360px;
     max-height:85vh;
     overflow-y:auto;
-    margin:10px auto;
     padding:14px;
     border:1px solid #ffffffcc;
     border-radius:20px;
     background:var(--card);
     color:var(--text);
-    box-shadow:10px 14px 40px #0004,4px 6px 15px #0003;
-    animation:popIn .2s ease;
+    box-shadow:10px 14px 40px #0004;
 }
 
 .editTitle{
@@ -528,8 +493,7 @@ body.dark .print-split button{
     font-weight:bold;
 }
 
-.editField,
-.loginField{
+.editField{
     width:100%;
     margin:8px 0;
     padding:12px;
@@ -543,28 +507,23 @@ body.dark .print-split button{
     min-width:0;
 }
 
-.editActions,
-.loginActions{
+.editActions{
     display:flex;
     justify-content:center;
     gap:10px;
     margin-top:15px;
-    padding-top:10px;
-    background:var(--card);
 }
 
 .saveBtn{
     min-width:120px;
     color:#fff;
     background:linear-gradient(135deg,#00c853,#009624);
-    box-shadow:4px 4px 0 #00701a,6px 8px 14px #0004;
 }
 
 .cancelBtn{
     min-width:120px;
     color:#fff;
     background:linear-gradient(135deg,#ff5252,#c62828);
-    box-shadow:4px 4px 0 #8e0000,6px 8px 14px #0004;
 }
 
 .footer-left{
@@ -656,7 +615,6 @@ body.dark .print-split button{
     .top-buttons,
     .footer-left,
     .editModal,
-    .loginBackdrop,
     .scannerOverlay,
     button,
     .editColumn,
@@ -671,16 +629,9 @@ body.dark .print-split button{
         padding:0;
     }
 
-    #a4{
-        width:100%;
-        margin:0;
-        padding:0;
-    }
-
     table{
         width:100%;
         min-width:0;
-        border-collapse:collapse;
         table-layout:auto;
         font-size:10px;
         background:#fff!important;
@@ -693,12 +644,6 @@ body.dark .print-split button{
         color:#000!important;
         background:#fff!important;
         white-space:nowrap;
-        word-break:break-word;
-    }
-
-    tr{
-        page-break-inside:avoid;
-        break-inside:avoid;
     }
 
     .activityCell{
@@ -707,20 +652,45 @@ body.dark .print-split button{
     }
 
     .activityTotalsCell{
-    color:#000!important;
-    background:#eaeaea!important;
-}
-
+        color:#000!important;
+        background:#eaeaea!important;
+    }
 
     .header{
-        flex-wrap:nowrap;
+        display:grid!important;
+        grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;
+        width:100%!important;
         margin-bottom:8px;
         font-size:11px;
+        overflow:visible!important;
+    }
+
+    .header-left{
+        display:flex!important;
+    }
+
+    .header-center{
+        display:flex!important;
+        justify-content:center!important;
+        white-space:nowrap!important;
+    }
+
+    .header-right{
+        display:flex!important;
+        justify-content:flex-end!important;
+        white-space:nowrap!important;
     }
 
     .headerLine{
-        min-width:42px;
-        max-width:85px;
+        width:max-content!important;
+        min-width:100px!important;
+        max-width:none!important;
+        white-space:nowrap!important;
+        overflow:visible!important;
+    }
+
+    .header-right span{
+        font-weight:normal!important;
     }
 }
 
@@ -729,6 +699,107 @@ body.dark .print-split button{
         min-width:700px;
     }
 }
+/* Dark mode corrections */
+body.dark .print-split{
+    box-shadow:4px 4px 0 #111,6px 8px 14px #0007;
+}
+
+body.dark .print-split button{
+    color:#fff;
+    background:linear-gradient(#444,#2c2c2c);
+    border-color:#666!important;
+}
+
+body.dark .print-dropdown{
+    border-color:#666;
+    background:#242424;
+    color:#fff;
+    box-shadow:0 8px 20px #0009;
+}
+
+body.dark .print-user-item{
+    color:#fff;
+}
+
+body.dark .editCard{
+    border-color:#666;
+    background:#242424;
+    color:#fff;
+    box-shadow:10px 14px 40px #0009;
+}
+
+body.dark .editField{
+    border-color:#666;
+    background:#2f2f2f;
+    color:#fff;
+}
+
+body.dark .editField option{
+    background:#2f2f2f;
+    color:#fff;
+}
+
+body.dark .table-wrapper{
+    scrollbar-color:#777 #222;
+}
+
+body.dark .table-wrapper::-webkit-scrollbar{
+    height:10px;
+}
+
+body.dark .table-wrapper::-webkit-scrollbar-track{
+    background:#222;
+}
+
+body.dark .table-wrapper::-webkit-scrollbar-thumb{
+    background:#777;
+    border-radius:10px;
+}
+
+body.dark .print-dropdown,
+body.dark .editCard{
+    scrollbar-color:#777 #222;
+}
+
+body.dark .print-dropdown::-webkit-scrollbar,
+body.dark .editCard::-webkit-scrollbar{
+    width:9px;
+}
+
+body.dark .print-dropdown::-webkit-scrollbar-track,
+body.dark .editCard::-webkit-scrollbar-track{
+    background:#222;
+}
+
+body.dark .print-dropdown::-webkit-scrollbar-thumb,
+body.dark .editCard::-webkit-scrollbar-thumb{
+    background:#777;
+    border-radius:10px;
+}
+@media print{
+    html,
+    body,
+    #printArea,
+    #a4,
+    .table-wrapper{
+        width:100%!important;
+        max-width:none!important;
+        height:auto!important;
+        overflow:visible!important;
+    }
+
+    .table-wrapper{
+        display:block!important;
+        overflow-x:visible!important;
+        overflow-y:visible!important;
+    }
+
+    #printArea table{
+        width:100%!important;
+        min-width:0!important;
+    }
+}
+
 </style>
 </head>
 
@@ -859,10 +930,7 @@ body.dark .print-split button{
 <div id="a4">
 
 <div class="header">
-    <div class="header-left">
-        <b class="headerText">POS# :</b>
-        <span class="headerLine"></span>
-    </div>
+    <div class="header-left"></div>
 
     <div class="header-center">
         <span class="headerText">USERNA<b>M</b>E.<b>S</b> :</span>
@@ -928,12 +996,22 @@ body.dark .print-split button{
     <div style="display:flex;gap:8px">
         <div style="flex:1">
             <div style="text-align:left;font-size:13px;font-weight:bold">Adults</div>
-            <input id="editAdults" class="editField" type="number" min="0" max="100">
+            <input id="editAdults"
+       class="editField"
+       type="number"
+       min="0"
+       max="100"
+       oninput="limitPax(this)">
         </div>
 
         <div style="flex:1">
             <div style="text-align:left;font-size:13px;font-weight:bold">Children</div>
-            <input id="editChildren" class="editField" type="number" min="0" max="100">
+            <input id="editChildren"
+       class="editField"
+       type="number"
+       min="0"
+       max="100"
+       oninput="limitPax(this)">
         </div>
     </div>
 
@@ -970,11 +1048,12 @@ body.dark .print-split button{
     <div class="scannerBox">
         <div id="reader"></div>
         <input id="uploadQrInput" type="file" accept="image/*"
-       style="display:none"
-       onchange="handleQrUpload(event)">
-
+               style="display:none"
+               onchange="handleQrUpload(event)">
     </div>
 </div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
 
 <script>
 const APP_SCRIPT_URL =
@@ -983,7 +1062,7 @@ const APP_SCRIPT_URL =
 let data = JSON.parse(localStorage.getItem("sobData") || "[]");
 let editingIndex = -1;
 let qrScanner = null;
-
+let scanLocked = false;
 let deviceId = localStorage.getItem("deviceId");
 
 if(!deviceId){
@@ -1057,13 +1136,86 @@ function pad2(value){
 
 function limitPax(input){
     input.value = input.value.replace(/[^0-9]/g,"").slice(0,3);
-    if(+input.value > 100) input.value = "100";
+
+    if(+input.value > 100){
+        input.value = "100";
+    }
+}
+
+function getUsername(){
+    return usernameInput.value.trim();
+}
+
+function getUserDataKey(username = getUsername()){
+    const user = username.trim().toLowerCase();
+
+    return `sobData:${todayString()}:${user || "unknown"}`;
 }
 
 function saveLocalData(){
-    localStorage.setItem("sobData",JSON.stringify(data));
-    localStorage.setItem("sobDataBackup",JSON.stringify(data));
+    const serialized = JSON.stringify(data);
+
+    localStorage.setItem("sobData",serialized);
+    localStorage.setItem("sobDataBackup",serialized);
+
+    if(getUsername()){
+        localStorage.setItem(
+            getUserDataKey(),
+            serialized
+        );
+    }
 }
+
+function loadUserLocalData(){
+    const username = getUsername();
+
+    if(!username){
+        data = [];
+        return;
+    }
+
+    const userKey = getUserDataKey(username);
+    const userData = localStorage.getItem(userKey);
+
+    if(userData){
+        try{
+            data = JSON.parse(userData) || [];
+            return;
+        }catch(error){
+            console.warn("Invalid user data:",error);
+        }
+    }
+
+    /*
+     * One-time migration from the old shared storage key.
+     * This preserves existing data for the currently saved user.
+     */
+    const oldData = localStorage.getItem("sobData");
+
+    if(oldData){
+        try{
+            const parsed = JSON.parse(oldData);
+
+            const matchingRows = Array.isArray(parsed)
+                ? parsed.filter(row =>
+                    String(row.displayName || "")
+                        .trim()
+                        .toLowerCase() ===
+                    username.toLowerCase()
+                )
+                : [];
+
+            data = matchingRows;
+            saveLocalData();
+            return;
+        }catch(error){
+            console.warn("Unable to migrate old local data:",error);
+        }
+    }
+
+    data = [];
+}
+
 
 function setCloudStatus(status){
     if(status === "offline"){
@@ -1074,7 +1226,7 @@ function setCloudStatus(status){
         cloudStatus.title = "Syncing with Google Sheets...";
     }else{
         cloudStatus.textContent = "☁️✅";
-        cloudStatus.title = "Data successfully added to Google Sheets.";
+        cloudStatus.title = "Data successfully synced.";
     }
 }
 
@@ -1094,6 +1246,30 @@ function saveFormState(){
     localStorage.setItem("lastChildren",children.value);
 }
 
+function normalizeSob(value){
+    const text = String(value || "")
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g,"");
+
+    let match = text.match(/SOB0*([0-9]{6})(?![0-9])/);
+
+    if(!match && /^[0-9]{6}$/.test(text)){
+        match = [text,text];
+    }
+
+    if(!match){
+        return "";
+    }
+
+    const number = Number(match[1]);
+
+    if(number < 100000 || number > 999999){
+        return "";
+    }
+
+    return String(number).padStart(6,"0");
+}
+
 function calc(){
     if(!combo.value){
         tpuEl.textContent = "0";
@@ -1108,9 +1284,16 @@ function calc(){
     const adultsCount = Math.max(0,+adults.value || 0);
     const childrenCount = Math.max(0,+children.value || 0);
 
-    const tpu = adultsCount * (+parts[0]) + childrenCount * (+parts[1]);
-    const oepl = (adultsCount + childrenCount) * (+parts[2]);
-    const paepl = (adultsCount + childrenCount) * (+parts[3]);
+    const tpu =
+        adultsCount * (+parts[0]) +
+        childrenCount * (+parts[1]);
+
+    const oepl =
+        (adultsCount + childrenCount) * (+parts[2]);
+
+    const paepl =
+        (adultsCount + childrenCount) * (+parts[3]);
+
     const total = tpu + oepl + paepl;
 
     tpuEl.textContent = tpu;
@@ -1130,96 +1313,177 @@ function calc(){
 
 function getVendorBreakup(comboName,pax){
     function line(items){
-        return items.map(item => `${item.name}: ${item.price * pax}`).join(" | ");
+        return items
+            .map(item => `${item.name}: ${item.price * pax}`)
+            .join(" | ");
     }
 
-    if(comboName.includes("Snow Adventure"))
+    if(comboName.includes("Snow Adventure")){
         return `OEPL → ${line([{name:"Snow",price:255}])}`;
+    }
 
-    if(comboName.includes("Adventure Combo"))
+    if(comboName.includes("Adventure Combo")){
         return `PAEPL → ${line([{name:"Gamezone",price:227}])}`;
+    }
 
-    if(comboName.includes("TU Explorer"))
+    if(comboName.includes("TU Explorer")){
         return `OEPL → ${line([{name:"Wax",price:70}])}
-PAEPL → ${line([{name:"Eyelusion",price:70},{name:"WOG",price:80}])}`;
+PAEPL → ${line([
+    {name:"Eyelusion",price:70},
+    {name:"WOG",price:80}
+])}`;
+    }
 
-    if(comboName.includes("ECO FUN"))
+    if(comboName.includes("ECO FUN")){
         return `OEPL → ${line([{name:"Wax",price:28}])}
 PAEPL → ${line([{name:"Mayalok",price:200}])}`;
+    }
 
-    if(comboName.includes("Aastha"))
+    if(comboName.includes("Aastha")){
         return `PAEPL → ${line([{name:"Gamezone",price:99}])}`;
+    }
 
-    if(comboName.includes("Shiv Ganesha"))
-        return `PAEPL → ${line([{name:"Eyelusion",price:50},{name:"Gamezone",price:50},{name:"WOG",price:75}])}`;
+    if(comboName.includes("Shiv Ganesha")){
+        return `PAEPL → ${line([
+    {name:"Eyelusion",price:50},
+    {name:"Gamezone",price:50},
+    {name:"WOG",price:75}
+])}`;
+    }
 
-    if(comboName.includes("Namah"))
+    if(comboName.includes("Namah")){
         return `PAEPL → ${line([{name:"Gamezone",price:50}])}`;
+    }
 
-    if(comboName.includes("Ultimate Play"))
+    if(comboName.includes("Ultimate Play")){
         return `PAEPL → ${line([{name:"Gamezone",price:529}])}`;
+    }
 
-    if(comboName.includes("Viewing Fun"))
-        return `OEPL → ${line([{name:"Snow",price:225},{name:"Food",price:100}])}
+    if(comboName.includes("Viewing Fun")){
+        return `OEPL → ${line([
+    {name:"Snow",price:225},
+    {name:"Food",price:100}
+])}
 PAEPL → ${line([{name:"Gamezone",price:50}])}`;
+    }
 
-    if(comboName.includes("Symbolic"))
-        return `OEPL → ${line([{name:"Snow",price:200},{name:"Wax",price:49}])}
-PAEPL → ${line([{name:"Gamezone",price:100},{name:"WOG",price:70}])}`;
+    if(comboName.includes("Symbolic")){
+        return `OEPL → ${line([
+    {name:"Snow",price:200},
+    {name:"Wax",price:49}
+])}
+PAEPL → ${line([
+    {name:"Gamezone",price:100},
+    {name:"WOG",price:70}
+])}`;
+    }
 
-    if(comboName.includes("Delight") || comboName.includes("Mini Blast"))
-        return `OEPL → ${line([{name:"Snow",price:200},{name:"Food",price:45},{name:"Souvenir",price:60},{name:"Wax",price:50}])}
-PAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:200},{name:"Gamezone",price:249},{name:"WOG",price:75}])}`;
+    if(
+        comboName.includes("Delight") ||
+        comboName.includes("Mini Blast")
+    ){
+        return `OEPL → ${line([
+    {name:"Snow",price:200},
+    {name:"Food",price:45},
+    {name:"Souvenir",price:60},
+    {name:"Wax",price:50}
+])}
+PAEPL → ${line([
+    {name:"Eyelusion",price:50},
+    {name:"Mayalok",price:200},
+    {name:"Gamezone",price:249},
+    {name:"WOG",price:75}
+])}`;
+    }
 
-    if(comboName.includes("All in Fun"))
-        return `OEPL → ${line([{name:"Snow",price:200},{name:"Wax",price:50}])}
-PAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:200},{name:"Gamezone",price:279},{name:"WOG",price:70}])}`;
+    if(comboName.includes("All in Fun")){
+        return `OEPL → ${line([
+    {name:"Snow",price:200},
+    {name:"Wax",price:50}
+])}
+PAEPL → ${line([
+    {name:"Eyelusion",price:50},
+    {name:"Mayalok",price:200},
+    {name:"Gamezone",price:279},
+    {name:"WOG",price:70}
+])}`;
+    }
 
-    if(comboName.includes("Divine Rush"))
-        return `PAEPL → ${line([{name:"Gamezone",price:100},{name:"WOG",price:50}])}`;
+    if(comboName.includes("Divine Rush")){
+        return `PAEPL → ${line([
+    {name:"Gamezone",price:100},
+    {name:"WOG",price:50}
+])}`;
+    }
 
-    if(comboName.includes("Ultimate Mega"))
-        return `OEPL → ${line([{name:"Snow",price:150},{name:"Food",price:99},{name:"Souvenir",price:100},{name:"Wax",price:100}])}
-PAEPL → ${line([{name:"Eyelusion",price:50},{name:"Mayalok",price:150},{name:"Gamezone",price:2100},{name:"WOG",price:50}])}`;
+    if(comboName.includes("Ultimate Mega")){
+        return `OEPL → ${line([
+    {name:"Snow",price:150},
+    {name:"Food",price:99},
+    {name:"Souvenir",price:100},
+    {name:"Wax",price:100}
+])}
+PAEPL → ${line([
+    {name:"Eyelusion",price:50},
+    {name:"Mayalok",price:150},
+    {name:"Gamezone",price:2100},
+    {name:"WOG",price:50}
+])}`;
+    }
 
     return "-";
 }
 
 function saveEntry(){
-    let raw = sobInput.value.trim();
+    const raw = sobInput.value.trim();
+    const sobNumber = normalizeSob(raw);
     const username = usernameInput.value.trim();
 
-    const match = raw.match(/SOB0*([0-9]{6})/i);
-
-    if(match){
-        raw = match[1];
-        sobInput.value = raw;
+    if(!username){
+        alert("Enter Username first.");
+        return;
     }
 
-    if(!/^[0-9]{6}$/.test(raw)){
-        alert("Enter valid 6-digit SOB ID");
+    if(!sobNumber){
+        alert("Enter valid 6-digit SOB ID.");
         return;
     }
 
     if(!combo.value){
-        alert("Select a combo");
-        return;
-    }
+    alert("Select a combo.");
+    return;
+}
 
-    const sob = "SOB000" + raw;
+const adultsCount = Math.min(100,Math.max(0,+adults.value || 0));
+const childrenCount = Math.min(100,Math.max(0,+children.value || 0));
 
-    if(data.some(item => item.sob === sob)){
-        alert("This SOB ID already exists");
-        return;
-    }
+adults.value = adultsCount || "";
+children.value = childrenCount || "";
+
+if(adultsCount < 1 && childrenCount < 1){
+    alert("Enter at least 1 adult or 1 child.");
+    return;
+}
+
 
     const result = calc();
+
+    if(!result){
+        return;
+    }
+
     const comboName = combo.options[combo.selectedIndex].text;
-    const adultsCount = +adults.value || 0;
-    const childrenCount = +children.value || 0;
+    const sob = "SOB000" + sobNumber;
+
+    if(data.some(item => item.sob === sob)){
+        alert("This SOB ID already exists.");
+        return;
+    }
 
     const entry = {
-        entryId:crypto.randomUUID(),
+        entryId:crypto.randomUUID
+            ? crypto.randomUUID()
+            : "ENTRY-" + Date.now(),
         deviceId,
         displayName:username,
         sob,
@@ -1227,7 +1491,10 @@ function saveEntry(){
         comboName,
         adults:adultsCount,
         children:childrenCount,
-        breakup:getVendorBreakup(comboName,adultsCount + childrenCount),
+        breakup:getVendorBreakup(
+            comboName,
+            adultsCount + childrenCount
+        ),
         time:timeString()
     };
 
@@ -1245,18 +1512,21 @@ function saveEntry(){
         if(response.status === "success"){
             setCloudStatus("success");
         }else if(response.status === "duplicate"){
-            data = data.filter(item => item.entryId !== entry.entryId);
+            data = data.filter(
+                item => item.entryId !== entry.entryId
+            );
+
             saveLocalData();
             render();
             setCloudStatus("success");
-            alert(response.message || "Duplicate SOB ID");
+            alert(response.message || "Duplicate SOB ID.");
         }else{
             setCloudStatus("offline");
         }
     }).catch(error => {
         console.error(error);
         setCloudStatus("offline");
-        alert("Network unavailable. Data was saved offline.");
+        alert("Network unavailable. Data was saved locally.");
     });
 }
 
@@ -1267,6 +1537,15 @@ async function restoreTodayData(){
         alert("Enter Username first.");
         return;
     }
+
+    localStorage.setItem("username",username);
+    usernameEl.textContent = username;
+
+    /*
+     * Show this user's local data immediately while cloud data loads.
+     */
+    loadUserLocalData();
+    render();
 
     try{
         setCloudStatus("syncing");
@@ -1281,12 +1560,17 @@ async function restoreTodayData(){
 
         if(rows.status === "error"){
             alert(rows.message);
+            setCloudStatus("offline");
             return;
         }
 
         if(!Array.isArray(rows) || !rows.length){
-            alert("No data found.");
             setCloudStatus("success");
+
+            if(!data.length){
+                alert("No data found.");
+            }
+
             return;
         }
 
@@ -1294,12 +1578,20 @@ async function restoreTodayData(){
         saveLocalData();
         render();
         setCloudStatus("success");
+
     }catch(error){
         console.error(error);
         setCloudStatus("offline");
-        alert("Network unavailable. Local data is still available.");
+
+        if(!data.length){
+            alert(
+                "Network unavailable. " +
+                "No local data was found for this user."
+            );
+        }
     }
 }
+
 
 function resetForm(){
     combo.selectedIndex = 0;
@@ -1319,7 +1611,9 @@ function resetForm(){
 }
 
 async function deleteEntry(index){
-    if(!confirm("Delete this SOB ID?")) return;
+    if(!confirm("Delete this SOB ID?")){
+        return;
+    }
 
     const row = data[index];
 
@@ -1347,25 +1641,49 @@ async function deleteEntry(index){
 }
 
 async function resetAllData(){
-    if(!confirm("Reset all today's SOB IDs?")) return;
+    const username = usernameInput.value.trim();
+
+    if(!username){
+        alert("Enter Username first.");
+        return;
+    }
+
+    if(!confirm("Reset all today's SOB IDs for " + username + "?")){
+        return;
+    }
 
     try{
-        for(const row of data){
-            await postToCloud({
-                action:"RESET",
-                date:todayString(),
-                entryId:row.entryId,
-                deviceId
-            });
+        const response = await postToCloud({
+            action:"RESET",
+            date:todayString(),
+            displayName:username,
+            deviceId
+        });
+
+        if(response.status !== "success"){
+            throw new Error(
+                response.message || "Reset failed."
+            );
         }
 
         data = [];
         saveLocalData();
         render();
         setCloudStatus("success");
+
     }catch(error){
+        console.error("Reset failed:",error);
+
+        // Clear local data even if the network request fails.
+        data = [];
+        saveLocalData();
+        render();
         setCloudStatus("offline");
-        alert("Network unavailable. Reset was not completed.");
+
+        alert(
+            "Local data was reset, but Google Sheets could not be updated. " +
+            "Please check the Apps Script deployment and internet connection."
+        );
     }
 }
 
@@ -1374,12 +1692,15 @@ function setEditTimeOptions(){
     editMinute.innerHTML = "";
 
     for(let hour = 1; hour <= 12; hour++){
-        editHour.innerHTML += `<option value="${hour}">${hour}</option>`;
+        editHour.innerHTML +=
+            `<option value="${hour}">${hour}</option>`;
     }
 
     for(let minute = 0; minute < 60; minute++){
         const value = pad2(minute);
-        editMinute.innerHTML += `<option value="${value}">${value}</option>`;
+
+        editMinute.innerHTML +=
+            `<option value="${value}">${value}</option>`;
     }
 }
 
@@ -1394,13 +1715,19 @@ function openEditModal(index){
 
     editCombo.innerHTML = "";
 
-    Array.from(combo.options).slice(1).forEach(option => {
-        const editOption = document.createElement("option");
-        editOption.value = option.value;
-        editOption.textContent = option.text;
-        editOption.selected = option.text === row.comboName;
-        editCombo.appendChild(editOption);
-    });
+    Array.from(combo.options)
+        .slice(1)
+        .forEach(option => {
+            const editOption =
+                document.createElement("option");
+
+            editOption.value = option.value;
+            editOption.textContent = option.text;
+            editOption.selected =
+                option.text === row.comboName;
+
+            editCombo.appendChild(editOption);
+        });
 
     setEditTimeOptions();
 
@@ -1422,35 +1749,64 @@ function closeEditModal(){
 }
 
 async function saveEdit(){
-    if(editingIndex < 0) return;
+    if(editingIndex < 0){
+        return;
+    }
+        limitPax(editAdults);
+        limitPax(editChildren);
+
+        const adultsCount = Math.min(100,Math.max(0,+editAdults.value || 0));
+        const childrenCount = Math.min(100,Math.max(0,+editChildren.value || 0));
+
+        editAdults.value = adultsCount || "";
+        editChildren.value = childrenCount || "";
+
+        if(adultsCount < 1 && childrenCount < 1){
+            alert("Enter at least 1 adult or 1 child.");
+            return;
+        }
 
     const raw = editSob.value.trim();
 
-    if(!/^[0-9]{6}$/.test(raw)){
-        alert("Enter valid 6-digit SOB ID");
-        return;
-    }
+    const sobNumber = normalizeSob(raw);
 
-    const sob = "SOB000" + raw;
+if(!sobNumber){
+    alert("Enter valid 6-digit SOB ID!");
+    return;
+}
 
-    if(data.some((row,index) => index !== editingIndex && row.sob === sob)){
-        alert("This SOB ID already exists");
+const sob = "SOB000" + sobNumber;
+
+    if(data.some((row,index) =>
+        index !== editingIndex && row.sob === sob
+    )){
+        alert("This SOB ID already exists.");
         return;
     }
 
     const comboValue = editCombo.value;
-    const comboName = editCombo.options[editCombo.selectedIndex].text;
-    const adultsCount = +editAdults.value || 0;
-    const childrenCount = +editChildren.value || 0;
+    const comboName = editCombo.options[
+        editCombo.selectedIndex
+    ].text;
+
     const values = comboValue.split(",");
 
     const result = {
-        tpu:adultsCount * (+values[0]) + childrenCount * (+values[1]),
-        oepl:(adultsCount + childrenCount) * (+values[2]),
-        paepl:(adultsCount + childrenCount) * (+values[3])
+        tpu:
+            adultsCount * (+values[0]) +
+            childrenCount * (+values[1]),
+
+        oepl:
+            (adultsCount + childrenCount) * (+values[2]),
+
+        paepl:
+            (adultsCount + childrenCount) * (+values[3])
     };
 
-    result.total = result.tpu + result.oepl + result.paepl;
+    result.total =
+        result.tpu +
+        result.oepl +
+        result.paepl;
 
     const updatedRow = {
         ...data[editingIndex],
@@ -1459,8 +1815,13 @@ async function saveEdit(){
         adults:adultsCount,
         children:childrenCount,
         ...result,
-        breakup:getVendorBreakup(comboName,adultsCount + childrenCount),
-        time:`${editHour.value}:${editMinute.value} ${editAmPm.value}`
+        breakup:getVendorBreakup(
+            comboName,
+            adultsCount + childrenCount
+        ),
+        time:
+            `${editHour.value}:${editMinute.value} ` +
+            editAmPm.value
     };
 
     data[editingIndex] = updatedRow;
@@ -1476,7 +1837,11 @@ async function saveEdit(){
             deviceId
         });
 
-        setCloudStatus(response.status === "success" ? "success" : "offline");
+        setCloudStatus(
+            response.status === "success"
+                ? "success"
+                : "offline"
+        );
     }catch(error){
         setCloudStatus("offline");
     }
@@ -1487,12 +1852,16 @@ function editEntry(index){
 }
 
 function formatTime(value){
-    if(!value) return "";
+    if(!value){
+        return "";
+    }
 
-    const match = String(value).match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    const match = String(value)
+        .match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
 
     if(match){
-        return `${match[1].padStart(2,"0")}:${match[2]} ${match[3].toUpperCase()}`;
+        return `${match[1].padStart(2,"0")}:` +
+            `${match[2]} ${match[3].toUpperCase()}`;
     }
 
     const date = new Date(value);
@@ -1514,27 +1883,35 @@ function parseActivities(rows){
     const paeplActivities = {};
 
     rows.forEach(row => {
-        String(row.breakup || "").split("\n").forEach(line => {
-            const target = line.startsWith("OEPL")
-                ? oeplActivities
-                : line.startsWith("PAEPL")
-                    ? paeplActivities
-                    : null;
+        String(row.breakup || "")
+            .split("\n")
+            .forEach(line => {
+                const target = line.startsWith("OEPL")
+                    ? oeplActivities
+                    : line.startsWith("PAEPL")
+                        ? paeplActivities
+                        : null;
 
-            if(!target) return;
+                if(!target){
+                    return;
+                }
 
-            line.replace(/^(OEPL|PAEPL) →/,"")
-                .split("|")
-                .forEach(activity => {
-                    const parts = activity.split(":");
-                    if(parts.length < 2) return;
+                line.replace(/^(OEPL|PAEPL)\s*→/,"")
+                    .split("|")
+                    .forEach(activity => {
+                        const parts = activity.split(":");
 
-                    const name = parts[0].trim();
-                    const amount = parseInt(parts[1]) || 0;
+                        if(parts.length < 2){
+                            return;
+                        }
 
-                    target[name] = (target[name] || 0) + amount;
-                });
-        });
+                        const name = parts[0].trim();
+                        const amount = parseInt(parts[1]) || 0;
+
+                        target[name] =
+                            (target[name] || 0) + amount;
+                    });
+            });
     });
 
     return {oeplActivities,paeplActivities};
@@ -1558,11 +1935,13 @@ function render(){
         dataBody.innerHTML += `
         <tr>
             <td class="editColumn">
-                <button class="editBtn" onclick="editEntry(${index})">✏️</button>
+                <button class="editBtn"
+                    onclick="editEntry(${index})">✏️</button>
             </td>
 
             <td class="deleteColumn">
-                <button class="deleteBtn" onclick="deleteEntry(${index})">🗑️</button>
+                <button class="deleteBtn"
+                    onclick="deleteEntry(${index})">🗑️</button>
             </td>
 
             <td>${index + 1}</td>
@@ -1570,7 +1949,8 @@ function render(){
             <td>
                 <b>${row.sob}</b><br>
                 <span style="font-size:9px;white-space:nowrap">
-                    (${(row.comboName || "").match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+                    (${(row.comboName || "")
+                        .match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
                     (${row.adults} A + ${row.children} C)
                 </span>
             </td>
@@ -1584,7 +1964,9 @@ function render(){
                 <pre>${row.breakup || "-"}</pre>
             </td>
 
-            <td style="font-size:10px">${formatTime(row.time)}</td>
+            <td style="font-size:10px">
+                ${formatTime(row.time)}
+            </td>
         </tr>`;
 
         tpuSum += +row.tpu || 0;
@@ -1596,13 +1978,15 @@ function render(){
     const activities = parseActivities(data);
 
     tpuT.innerHTML = `<b>${tpuSum}</b>`;
-    oeplT.innerHTML = `<b>${oeplSum}</b>`;
-    paeplT.innerHTML = `<b>${paeplSum}</b>`;
+    oeplT.innerHTML = `<b><u>${oeplSum}</u></b>`;
+    paeplT.innerHTML = `<b><u>${paeplSum}</u></b>`;
     grandT.innerHTML = `<b>${totalSum}</b>`;
 
     activityTotals.innerHTML =
-        `<u>OEPL</u> → ${formatActivities(activities.oeplActivities)}<br>` +
-        `<u>PAEPL</u> → ${formatActivities(activities.paeplActivities)}`;
+        `<u>OEPL</u> → ` +
+        `${formatActivities(activities.oeplActivities)}<br>` +
+        `<u>PAEPL</u> → ` +
+        `${formatActivities(activities.paeplActivities)}`;
 }
 
 function printA4(){
@@ -1617,17 +2001,19 @@ function printA4(){
 }
 
 function getSelectedPrintUsers(){
-    const allCheckbox = document.getElementById("printAllUsers");
+    const allCheckbox =
+        document.getElementById("printAllUsers");
+
     const checkboxes = [
         ...printUserList.querySelectorAll(".print-user-check")
     ];
 
-    // If the menu has not been opened, Print means Print ALL.
+    // Menu was never opened: print all users.
     if(!allCheckbox && checkboxes.length === 0){
         return null;
     }
 
-    // "All" selected means no filtering.
+    // ALL is selected: do not filter users.
     if(allCheckbox && allCheckbox.checked){
         return null;
     }
@@ -1637,7 +2023,12 @@ function getSelectedPrintUsers(){
         .map(checkbox => checkbox.value);
 }
 
+
 async function fetchUsersFromAppsScript(){
+    const localUsers = data
+        .map(row => String(row.displayName || "").trim())
+        .filter(Boolean);
+
     try{
         const response = await fetch(
             APP_SCRIPT_URL +
@@ -1645,34 +2036,44 @@ async function fetchUsersFromAppsScript(){
             "&all=true"
         );
 
-        const rows = await response.json();
+        const cloudRows = await response.json();
 
-        if(!Array.isArray(rows)) return [];
-
-        return [...new Set(
-            rows
-                .map(row => (row.displayName || "").trim())
+        const cloudUsers = Array.isArray(cloudRows)
+            ? cloudRows
+                .map(row =>
+                    String(row.displayName || "").trim()
+                )
                 .filter(Boolean)
-        )].sort((a,b) => a.localeCompare(b));
+            : [];
+
+        return [...new Set([
+            ...localUsers,
+            ...cloudUsers
+        ])].sort((a,b) => a.localeCompare(b));
+
     }catch(error){
-        console.error(error);
-        return [];
+        console.error("Unable to fetch print users:",error);
+
+        return [...new Set(localUsers)]
+            .sort((a,b) => a.localeCompare(b));
     }
 }
+
 
 function updatePrintButtonLabel(){
     const selected = getSelectedPrintUsers();
     const button = document.getElementById("allPrintBtn");
 
-    button.innerHTML =
+    button.textContent =
         selected && selected.length
-        ? `${selected.length} ▼`
-        : "ALL ▼";
+            ? `${selected.length} ▼`
+            : "ALL ▼";
 }
 
 function buildPrintMenu(users){
     if(!users.length){
-        printUserList.innerHTML = `<div style="font-size:12px">No users found.</div>`;
+        printUserList.innerHTML =
+            `<div style="font-size:12px">No users found.</div>`;
         return;
     }
 
@@ -1686,25 +2087,35 @@ function buildPrintMenu(users){
 
         ${users.map(user => `
             <label class="print-user-item">
-                <input type="checkbox" class="print-user-check" value="${user}" checked>
+                <input type="checkbox"
+                       class="print-user-check"
+                       value="${user}"
+                       checked>
                 <span>${user}</span>
             </label>
         `).join("")}
     `;
 
-    const allCheckbox = document.getElementById("printAllUsers");
-    const checkboxes = [...printUserList.querySelectorAll(".print-user-check")];
+    const allCheckbox =
+        document.getElementById("printAllUsers");
+
+    const checkboxes = [
+        ...printUserList.querySelectorAll(".print-user-check")
+    ];
 
     allCheckbox.addEventListener("change",() => {
         checkboxes.forEach(checkbox => {
             checkbox.checked = allCheckbox.checked;
         });
+
         updatePrintButtonLabel();
     });
 
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("change",() => {
-            allCheckbox.checked = checkboxes.every(item => item.checked);
+            allCheckbox.checked =
+                checkboxes.every(item => item.checked);
+
             updatePrintButtonLabel();
         });
     });
@@ -1721,6 +2132,7 @@ async function togglePrintMenu(event){
     }
 
     const users = await fetchUsersFromAppsScript();
+
     buildPrintMenu(users);
     printMenu.classList.add("show");
 }
@@ -1730,8 +2142,10 @@ async function printSelectedUsers(){
 
     printMenu.classList.remove("show");
 
-    // The menu was opened and every user was unchecked.
-    if(Array.isArray(selectedUsers) && selectedUsers.length === 0){
+    if(
+        Array.isArray(selectedUsers) &&
+        selectedUsers.length === 0
+    ){
         alert("Please select at least one user.");
         return;
     }
@@ -1739,6 +2153,7 @@ async function printSelectedUsers(){
     // null means ALL users.
     await printAllA4(selectedUsers);
 }
+
 
 function buildPrintablePage(rows,userName){
     let tpuSum = 0;
@@ -1754,20 +2169,19 @@ function buildPrintablePage(rows,userName){
             <td>
                 <b>${row.sob || ""}</b><br>
                 <span style="font-size:9px;white-space:nowrap">
-                    (${(row.comboName || "").match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
+                    (${(row.comboName || "")
+                        .match(/\d+\/(?:\d+|NA)/)?.[0] || ""})
                     (${row.adults || 0} A + ${row.children || 0} C)
                 </span>
             </td>
             <td>${row.tpu || 0}</td>
-<td>${row.oepl || 0}</td>
-<td>${row.paepl || 0}</td>
-<td>${row.total || 0}</td>
-<td class="activityCell">
-    <pre>${row.breakup || "-"}</pre>
-</td>
-<td>${formatTime(row.time)}</td>
-
-
+            <td>${row.oepl || 0}</td>
+            <td>${row.paepl || 0}</td>
+            <td>${row.total || 0}</td>
+            <td class="activityCell">
+                <pre>${row.breakup || "-"}</pre>
+            </td>
+            <td>${formatTime(row.time)}</td>
         </tr>`;
 
         tpuSum += +row.tpu || 0;
@@ -1780,60 +2194,95 @@ function buildPrintablePage(rows,userName){
 
     return `
     <div class="a4Page">
-        <div class="a4">
-            <div class="header">
-                <div class="header-left">
-                    <b>POS# :</b>
-                    <span class="headerLine"></span>
-                </div>
+        <div class="header">
+            <div class="header-left"></div>
 
-                <div class="header-center">
-                    <span>USERNA<b>M</b>E.<b>S</b> :</span>
-                    <span class="headerLine"><b>${userName || ""}</b></span>
-                </div>
-
-                <div class="header-right">
-                    <b>DATE :</b>
-                    <b>${todayString()}</b>
-                </div>
+            <div class="header-center">
+                <span>USERNAME.S :</span>
+                <span class="headerLine">
+                    <b>${userName || ""}</b>
+                </span>
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>SR</th>
-                        <th>SOB ID</th>
-                        <th>TPU</th>
-                        <th>OEPL</th>
-                        <th>PAEPL</th>
-                        <th>TOTAL</th>
-                        <th>ACTIVITIES' AMOUNTS</th>
-                        <th>TIME</th>
-                    </tr>
-                </thead>
-
-                <tbody>${htmlRows}</tbody>
-
-                <tfoot>
-                    <tr>
-                        <td colspan="2"><b>TOTAL</b></td>
-                        <td><b>${tpuSum}</b></td>
-                        <td><b>${oeplSum}</b></td>
-                        <td><b>${paeplSum}</b></td>
-                        <td><b>${totalSum}</b></td>
-                        <td class="activityTotalsCell">
-                            <u>OEPL</u> → ${formatActivities(activities.oeplActivities)}<br>
-                            <u>PAEPL</u> → ${formatActivities(activities.paeplActivities)}
-                        </td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
+            <div class="header-right">
+                <b>DATE :</b>
+                <span>${todayString()}</span>
+            </div>
         </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>SR</th>
+                    <th>SOB ID</th>
+                    <th>TPU</th>
+                    <th>OEPL</th>
+                    <th>PAEPL</th>
+                    <th>TOTAL</th>
+                    <th>ACTIVITIES' AMOUNTS</th>
+                    <th>TIME</th>
+                </tr>
+            </thead>
+
+            <tbody>${htmlRows}</tbody>
+
+            <tfoot>
+                <tr>
+                    <td colspan="2"><b>TOTAL</b></td>
+                    <td><b>${tpuSum}</b></td>
+                    <td><b><u>${oeplSum}</u></b></td>
+                    <td><b><u>${paeplSum}</u></b></td>
+                    <td><b>${totalSum}</b></td>
+                    <td class="activityTotalsCell">
+                        <u>OEPL</u> →
+                        ${formatActivities(activities.oeplActivities)}
+                        <br>
+                        <u>PAEPL</u> →
+                        ${formatActivities(activities.paeplActivities)}
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+<hr class="user-tear-line">
 
         <hr style="border:1px dashed #999;margin:12px 0">
     </div>`;
 }
+
+function mergePrintRows(cloudRows){
+    const rows = Array.isArray(cloudRows)
+        ? [...cloudRows]
+        : [];
+
+    const existingKeys = new Set(
+        rows.map(row =>
+            String(
+                row.entryId ||
+                `${row.displayName}|${row.sob}`
+            ).trim()
+        )
+    );
+
+    /*
+     * Add locally saved rows that have not reached Google Sheets yet.
+     * This prevents unsynced local entries from disappearing from Print All.
+     */
+    data.forEach(localRow => {
+        const key = String(
+            localRow.entryId ||
+            `${localRow.displayName}|${localRow.sob}`
+        ).trim();
+
+        if(!existingKeys.has(key)){
+            rows.push(localRow);
+            existingKeys.add(key);
+        }
+    });
+
+    return rows;
+}
+
 
 async function printAllA4(selectedUsers = null){
     try{
@@ -1843,12 +2292,14 @@ async function printAllA4(selectedUsers = null){
             "&all=true"
         );
 
-        const rows = await response.json();
+        const cloudRows = await response.json();
 
-        if(rows.status === "error"){
-            alert(rows.message);
-            return;
-        }
+if(cloudRows.status === "error"){
+    alert(cloudRows.message);
+    return;
+}
+
+const rows = mergePrintRows(cloudRows);
 
         if(!Array.isArray(rows) || !rows.length){
             alert("No entries found.");
@@ -1859,11 +2310,17 @@ async function printAllA4(selectedUsers = null){
 
         if(Array.isArray(selectedUsers)){
             const allowed = new Set(
-                selectedUsers.map(value => value.trim().toLowerCase())
+                selectedUsers.map(user =>
+                    user.trim().toLowerCase()
+                )
             );
 
             filteredRows = rows.filter(row =>
-                allowed.has((row.displayName || "Unknown").trim().toLowerCase())
+                allowed.has(
+                    String(row.displayName || "Unknown")
+                        .trim()
+                        .toLowerCase()
+                )
             );
         }
 
@@ -1875,7 +2332,8 @@ async function printAllA4(selectedUsers = null){
         const grouped = {};
 
         filteredRows.forEach(row => {
-            const name = (row.displayName || "Unknown").trim();
+            const name =
+                String(row.displayName || "Unknown").trim();
 
             if(!grouped[name]){
                 grouped[name] = [];
@@ -1884,66 +2342,140 @@ async function printAllA4(selectedUsers = null){
             grouped[name].push(row);
         });
 
-        let html = "";
+        const html = Object.entries(grouped)
+            .map(([name,userRows]) =>
+                buildPrintablePage(userRows,name)
+            )
+            .join("");
 
-        Object.entries(grouped).forEach(([name,rowsForUser]) => {
-            html += buildPrintablePage(rowsForUser,name);
-        });
-
-        const win = window.open("","_blank");
+        const win = window.open("", "_blank");
 
         if(!win){
-            alert("Popup blocked. Please allow popups for this website.");
+            alert("Popup blocked. Please allow popups.");
             return;
         }
 
+        const sharedCss = [...document.querySelectorAll("style")]
+            .map(style => style.textContent)
+            .join("\n");
+
         win.document.open();
 
-const sharedPrintCss = [...document.querySelectorAll("style")]
-    .map(style => style.textContent)
-    .join("\n");
-
-win.document.write(`
+        win.document.write(`
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Print All</title>
-    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Print All</title>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
 
-    <style>
-        ${sharedPrintCss}
+<style>
+${sharedCss}
 
-        .a4Page{
-    width:100%;
-    margin:0;
-    padding:0;
-    page-break-inside:auto;
-    break-inside:auto;
+html,
+body{
+    margin:0!important;
+    padding:0!important;
+    width:100%!important;
+    background:#fff!important;
+    color:#000!important;
+    font-family:'Arimo',sans-serif!important;
+    overflow:visible!important;
+}
+.user-tear-line{
+    display:block!important;
+    margin:10px 0!important;
+    border:0!important;
+    border-top:1px dashed #777!important;
+    height:0!important;
 }
 
-@media print{
-    html,
-    body{
-        color:#000!important;
-        background:#fff!important;
-        -webkit-print-color-adjust:exact;
-        print-color-adjust:exact;
-    }
+.printSheet,
+.a4Page,
+.a4,
+.table-wrapper{
+    width:100%!important;
+    max-width:none!important;
+    height:auto!important;
+    margin:0!important;
+    overflow:visible!important;
+}
 
-    .a4Page{
-        page-break-before:auto;
-        page-break-after:auto;
-        page-break-inside:auto;
-        break-before:auto;
-        break-after:auto;
-        break-inside:auto;
-    }
+.table-wrapper{
+    display:block!important;
+    overflow-x:visible!important;
+    overflow-y:visible!important;
+}
 
-    th,
+.a4Page{
+    width:100%!important;
+    margin:0!important;
+    padding:0 0 10px!important;
+    page-break-after:auto!important;
+    break-after:auto!important;
+    page-break-inside:auto!important;
+    break-inside:auto!important;
+}
+tr{
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+}
+
+.a4{
+    padding:0!important;
+}
+
+.header{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;
+    align-items:center!important;
+    width:100%!important;
+    margin-bottom:8px!important;
+    font-size:11px!important;
+    white-space:nowrap!important;
+}
+
+.header-left{
+    display:flex!important;
+}
+
+.header-center{
+    display:flex!important;
+    justify-content:center!important;
+    white-space:nowrap!important;
+}
+
+.header-right{
+    display:flex!important;
+    justify-content:flex-end!important;
+    white-space:nowrap!important;
+}
+
+.headerLine{
+    width:max-content!important;
+    min-width:100px!important;
+    max-width:none!important;
+    white-space:nowrap!important;
+}
+
+table{
+    width:100%!important;
+    min-width:0!important;
+    border-collapse:collapse!important;
+    font-size:10px!important;
+}
+
+th,
 td{
+    padding:3px!important;
+    border:1px solid #000!important;
     color:#000!important;
     background:#fff!important;
+}
+
+.activityCell{
+    font-size:9px!important;
+    white-space:normal!important;
 }
 
 .activityTotalsCell{
@@ -1951,32 +2483,32 @@ td{
     background:#eaeaea!important;
 }
 
-th,
-tfoot td{
-    font-weight:bold;
+hr{
+    display:none!important;
 }
-
-}
-
-    </style>
+</style>
 </head>
 
-<body>${html}</body>
+<body>
+${html}
+</body>
 </html>
-`);
+        `);
 
-win.document.close();
-
+        win.document.close();
 
         setTimeout(() => {
             win.focus();
             win.print();
-        },400);
+        },500);
+
     }catch(error){
-        console.error(error);
-        alert("Unable to print all.");
+        console.error("Print All failed:",error);
+        alert("Unable to print all users.");
     }
 }
+
+
 
 function fullActivityName(name){
     const names = {
@@ -1992,27 +2524,28 @@ function fullActivityName(name){
 
     return names[name] || name;
 }
+
 function getReceiptActivityLines(breakup){
     const activityMap = {
         OEPL:"",
         PAEPL:""
     };
 
-    String(breakup || "").split("\n").forEach(line => {
-        line = line.trim();
+    String(breakup || "")
+        .split("\n")
+        .forEach(line => {
+            line = line.trim();
 
-        if(line.startsWith("OEPL")){
-            activityMap.OEPL = line
-                .replace(/^OEPL\s*→/,"")
-                .trim();
-        }
+            if(line.startsWith("OEPL")){
+                activityMap.OEPL =
+                    line.replace(/^OEPL\s*→/,"").trim();
+            }
 
-        if(line.startsWith("PAEPL")){
-            activityMap.PAEPL = line
-                .replace(/^PAEPL\s*→/,"")
-                .trim();
-        }
-    });
+            if(line.startsWith("PAEPL")){
+                activityMap.PAEPL =
+                    line.replace(/^PAEPL\s*→/,"").trim();
+            }
+        });
 
     let html = "";
 
@@ -2033,9 +2566,10 @@ function print80mm(){
     let paeplSum = 0;
     let grandSum = 0;
 
+    let entriesHtml = "";
+
     const oeplActivities = {};
     const paeplActivities = {};
-    let entriesHtml = "";
 
     data.forEach((row,index) => {
         tpuSum += +row.tpu || 0;
@@ -2043,33 +2577,35 @@ function print80mm(){
         paeplSum += +row.paepl || 0;
         grandSum += +row.total || 0;
 
-        const lines = String(row.breakup || "").split("\n");
+        String(row.breakup || "")
+            .split("\n")
+            .forEach(line => {
+                const target = line.startsWith("OEPL")
+                    ? oeplActivities
+                    : line.startsWith("PAEPL")
+                        ? paeplActivities
+                        : null;
 
-        lines.forEach(line => {
-            line = line.trim();
+                if(!target){
+                    return;
+                }
 
-            const target = line.startsWith("OEPL")
-                ? oeplActivities
-                : line.startsWith("PAEPL")
-                    ? paeplActivities
-                    : null;
+                line.replace(/^(OEPL|PAEPL)\s*→/,"")
+                    .split("|")
+                    .forEach(activity => {
+                        const parts = activity.split(":");
 
-            if(!target) return;
+                        if(parts.length < 2){
+                            return;
+                        }
 
-            line.replace(/^(OEPL|PAEPL) →/,"")
-                .split("|")
-                .forEach(activity => {
-                    const parts = activity.split(":");
-                    if(parts.length < 2) return;
+                        const name = parts[0].trim();
+                        const value = parseInt(parts[1]) || 0;
 
-                    const name = parts[0].trim();
-                    const value = parseInt(parts[1]) || 0;
-
-                    target[name] = (target[name] || 0) + value;
-                });
-        });
-
-        
+                        target[name] =
+                            (target[name] || 0) + value;
+                    });
+            });
 
         entriesHtml += `
         <div class="entry">
@@ -2079,7 +2615,10 @@ function print80mm(){
             </div>
 
             <div class="entry-meta">
-                <span>${(row.comboName || "").match(/\d+\/(?:\d+|NA)/)?.[0] || ""}</span>
+                <span>
+                    ${(row.comboName || "")
+                        .match(/\d+\/(?:\d+|NA)/)?.[0] || ""}
+                </span>
                 <span>${row.adults} A + ${row.children} C</span>
                 <span>${formatTime(row.time)}</span>
             </div>
@@ -2097,9 +2636,8 @@ function print80mm(){
             </div>
 
             <div class="breakup">
-    ${getReceiptActivityLines(row.breakup)}
-</div>
-
+                ${getReceiptActivityLines(row.breakup)}
+            </div>
         </div>`;
     });
 
@@ -2117,8 +2655,6 @@ function print80mm(){
     <html>
     <head>
         <meta charset="UTF-8">
-        <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
-
         <title>80MM Print</title>
 
         <style>
@@ -2141,9 +2677,42 @@ function print80mm(){
                 font-weight:bold;
             }
 
-            .header{
+            .receipt-header{
                 margin-bottom:10px;
                 text-align:center;
+            }
+
+            .receipt-top{
+                display:flex;
+                justify-content:space-between;
+                font-size:12px;
+            }
+
+            .receipt-date{
+                font-weight:bold;
+            }
+
+            .receipt-date span{
+                font-weight:normal;
+            }
+
+            .receipt-user{
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                gap:4px;
+                margin-top:5px;
+                white-space:nowrap;
+                font-weight:normal;
+            }
+
+            .receipt-username{
+                display:inline-block;
+                min-width:130px;
+                border-bottom:1px solid #000;
+                text-align:center;
+                white-space:nowrap;
+                font-weight:bold;
             }
 
             .line{
@@ -2186,13 +2755,12 @@ function print80mm(){
             }
 
             .amount-grid div{
-                    padding:3px;
-                    border-right:.5px solid #000;
-                    border-bottom:.5px solid #000;
-                    text-align:center;
-                    font-size:10px;
+                padding:3px;
+                border-right:.5px solid #000;
+                border-bottom:.5px solid #000;
+                text-align:center;
+                font-size:10px;
             }
-
 
             .amount-grid div:nth-child(4n){
                 border-right:0;
@@ -2227,7 +2795,6 @@ function print80mm(){
                 font-size:10px;
             }
 
-
             td:last-child{
                 width:25%;
                 text-align:right;
@@ -2236,15 +2803,18 @@ function print80mm(){
     </head>
 
     <body>
-        <div class="header">
-            <div style="display:flex;justify-content:space-between;font-size:12px">
-                <span>DATE : ${new Date().toLocaleDateString("en-GB")}</span>
-                <span>POS# : _______</span>
-            </div>
+        <div class="receipt-header">
+            <div class="receipt-top">
+                <span class="receipt-date">
+                    DATE :
+                    <span>${todayString()}</span>
+                </span>
 
-            <div style="text-align:left;font-size:12px;font-weight:normal">
-                USERNA<b>M</b>E.S :
-                <span style="display:inline-block;min-width:130px;border-bottom:1px solid #000;text-align:center;font-weight:bold">
+                            </div>
+
+            <div class="receipt-user">
+                USERNAME.S :
+                <span class="receipt-username">
                     ${usernameInput.value}
                 </span>
             </div>
@@ -2256,6 +2826,7 @@ function print80mm(){
 
         <div class="summary-box">
             <div class="summary-title">GRAND TOTAL</div>
+
             <table>
                 <tr>
                     <td>TPU</td>
@@ -2263,6 +2834,7 @@ function print80mm(){
                     <td>PAEPL</td>
                     <td>TOTAL</td>
                 </tr>
+
                 <tr>
                     <td>${tpuSum}</td>
                     <td>${oeplSum}</td>
@@ -2304,10 +2876,13 @@ function toggleTheme(){
     const dark = document.body.classList.toggle("dark");
 
     localStorage.setItem("theme",dark ? "dark" : "light");
-    document.querySelector(".hiText").textContent = dark ? "🌙 Hi," : "🌞 Hi,";
+
+    document.querySelector(".hiText").textContent =
+        dark ? "🌙 Hi," : "🌞 Hi,";
 }
 
 function startScanner(){
+    scanLocked = false;
     scannerOverlay.classList.add("show");
 
     if(qrScanner){
@@ -2322,9 +2897,10 @@ function startScanner(){
     }
 }
 
+
 function initScanner(){
     if(typeof Html5Qrcode === "undefined"){
-        alert("QR scanner library is still loading. Please try again.");
+        alert("QR scanner library is still loading.");
         closeScanner();
         return;
     }
@@ -2366,29 +2942,91 @@ function uploadQrImage(){
     uploadQrInput.click();
 }
 
-async function handleQrUpload(event){
-    const file = event.target.files && event.target.files[0];
-
-    if(!file) return;
-
-    try{
-        const result = await Html5Qrcode.scanFile(file,true);
-        onScanSuccess(result);
-    }catch(error){
-        alert("No QR code found in image.");
+function saveScannedValue(value){
+    if(scanLocked){
+        return false;
     }
 
-    event.target.value = "";
-}
+    const sob = normalizeSob(value);
 
-function onScanSuccess(decodedText){
-    const match = String(decodedText).match(/(?:SOB0*)?([0-9]{6})/i);
+    if(!sob){
+        return false;
+    }
 
+    scanLocked = true;
+    sobInput.value = sob;
     closeScanner();
 
-    if(match){
-        sobInput.value = match[1];
-        setTimeout(saveEntry,200);
+    setTimeout(() => {
+        saveEntry();
+
+        setTimeout(() => {
+            scanLocked = false;
+        },500);
+    },200);
+
+    return true;
+}
+
+
+function onScanSuccess(decodedText){
+    saveScannedValue(decodedText);
+}
+
+
+function loadTesseract(){
+    return new Promise((resolve,reject) => {
+        if(window.Tesseract){
+            resolve();
+            return;
+        }
+
+        const script = document.createElement("script");
+
+        script.src =
+            "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+
+        script.onload = resolve;
+        script.onerror = reject;
+
+        document.head.appendChild(script);
+    });
+}
+
+async function handleQrUpload(event){
+    const input = event.target;
+    const file = input.files && input.files[0];
+
+    if(!file){
+        return;
+    }
+
+    try{
+        let qrText = "";
+
+        try{
+            qrText = await Html5Qrcode.scanFile(file,false);
+        }catch(error){
+            qrText = "";
+        }
+
+        if(!saveScannedValue(qrText)){
+            await loadTesseract();
+
+            const result = await Tesseract.recognize(
+                file,
+                "eng"
+            );
+
+            if(!saveScannedValue(result.data.text)){
+                alert("No valid SOB ID found in the image.");
+            }
+        }
+    }catch(error){
+        console.error("Image scan failed:",error);
+        alert("Unable to read the uploaded image.");
+    }finally{
+        input.value = "";
     }
 }
 
@@ -2398,17 +3036,23 @@ document.addEventListener("click",event => {
     }
 });
 
-window.addEventListener("offline",() => setCloudStatus("offline"));
-window.addEventListener("online",() => setCloudStatus("syncing"));
+window.addEventListener("offline",() =>
+    setCloudStatus("offline")
+);
 
-function setDate(){
-    dateEl.textContent = todayString();
-}
+window.addEventListener("online",() =>
+    setCloudStatus("success")
+);
 
 function restoreFormState(){
-    combo.value = localStorage.getItem("lastCombo") || "";
-    adults.value = localStorage.getItem("lastAdults") || "";
-    children.value = localStorage.getItem("lastChildren") || "";
+    combo.value =
+        localStorage.getItem("lastCombo") || "";
+
+    adults.value =
+        localStorage.getItem("lastAdults") || "";
+
+    children.value =
+        localStorage.getItem("lastChildren") || "";
 
     if(combo.value){
         calc();
@@ -2418,23 +3062,39 @@ function restoreFormState(){
 setEditTimeOptions();
 restoreFormState();
 
-const savedUsername = localStorage.getItem("username") || "";
+const savedUsername =
+    localStorage.getItem("username") || "";
 
 usernameInput.value = savedUsername;
 usernameEl.textContent = savedUsername;
+dateEl.textContent = todayString();
+
+usernameInput.addEventListener("change",() => {
+    const username = usernameInput.value.trim();
+
+    if(!username){
+        data = [];
+        render();
+        return;
+    }
+
+    localStorage.setItem("username",username);
+    usernameEl.textContent = username;
+
+    loadUserLocalData();
+    render();
+});
 
 if(localStorage.getItem("theme") === "dark"){
     document.body.classList.add("dark");
     document.querySelector(".hiText").textContent = "🌙 Hi,";
 }
-
-setDate();
+loadUserLocalData();
 render();
-setCloudStatus(navigator.onLine ? "success" : "offline");
+setCloudStatus(
+    navigator.onLine ? "success" : "offline"
+);
 </script>
 
-<script src="https://unpkg.com/html5-qrcode"></script>
-<script src="final-fixes.js"></script>
-<script src="enhancements.js"></script>
 </body>
 </html>
