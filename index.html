@@ -571,19 +571,49 @@ body.dark .print-split button{
 
 .scannerBox{
     flex:1;
+    min-height:0;
     width:100%;
     background:#111;
 }
 
 #reader{
     width:100%;
-    height:100vh;
+    height:100%;
+    min-height:0;
 }
 
 #reader video{
+    display:block;
     width:100%!important;
     height:100%!important;
+    min-height:100vh;
     object-fit:cover;
+}
+
+#reader{
+    position:relative;
+    width:100%;
+    height:100%;
+    min-height:100%;
+    overflow:hidden;
+}
+
+#reader video{
+    display:block;
+    width:100%!important;
+    height:100%!important;
+    min-height:100%;
+    object-fit:cover;
+}
+
+/* Hide only the scanner library controls, not the video. */
+#reader__dashboard_section{
+    display:none!important;
+}
+
+#reader__scan_region{
+    width:100%!important;
+    height:100%!important;
 }
 
 @keyframes popIn{
@@ -922,9 +952,9 @@ body.dark .editCard::-webkit-scrollbar-thumb{
     </div>
 </div>
 
-<button onclick="print80mm()">🧾 Print 80mm</button>
-
 </div>
+
+<button onclick="print80mm()">🧾 Print 80mm</button>
 
 <div id="printArea">
 <div id="a4">
@@ -1036,7 +1066,7 @@ body.dark .editCard::-webkit-scrollbar-thumb{
 </div>
 
 <div class="footer-left">
-    26G21 | V4.7 <span id="cloudStatus" title="Cloud status">☁️✅</span>
+    26H08 | V4.8 <span id="cloudStatus" title="Cloud status">☁️✅</span>
 </div>
 
 <div id="scannerOverlay" class="scannerOverlay">
@@ -1058,11 +1088,13 @@ body.dark .editCard::-webkit-scrollbar-thumb{
 <script>
 const APP_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbxNOHZDh4gvEfHsEmSFMOvsFM_FVDE_6L4exdjmvlojTBUI2hkdfqYoam8LH6IW4BW-jA/exec";
-
 let data = JSON.parse(localStorage.getItem("sobData") || "[]");
 let editingIndex = -1;
 let qrScanner = null;
 let scanLocked = false;
+let ocrTimer = null;
+let ocrBusy = false;
+let ocrWorker = null;
 let deviceId = localStorage.getItem("deviceId");
 
 if(!deviceId){
@@ -1191,17 +1223,18 @@ function loadUserLocalData(){
 
     if(userData){
         try{
-            data = JSON.parse(userData) || [];
-            return;
+            data = (JSON.parse(userData) || []).filter(row =>
+    String(row.date || "").trim() === todayString()
+);
+
+saveLocalData();
+return;
+
         }catch(error){
             console.warn("Invalid user data:",error);
         }
     }
 
-    /*
-     * One-time migration from the old shared storage key.
-     * This preserves existing data for the currently saved user.
-     */
     const oldData = localStorage.getItem("sobData");
 
     if(oldData){
@@ -1209,13 +1242,14 @@ function loadUserLocalData(){
             const parsed = JSON.parse(oldData);
 
             const matchingRows = Array.isArray(parsed)
-                ? parsed.filter(row =>
-                    String(row.displayName || "")
-                        .trim()
-                        .toLowerCase() ===
-                    username.toLowerCase()
-                )
-                : [];
+    ? parsed.filter(row =>
+        String(row.displayName || "")
+            .trim()
+            .toLowerCase() === username.toLowerCase() &&
+        String(row.date || "") === todayString()
+    )
+    : [];
+
 
             data = matchingRows;
             saveLocalData();
@@ -1263,24 +1297,24 @@ function normalizeSob(value){
         .toUpperCase()
         .replace(/[^A-Z0-9]/g,"");
 
-    let match = text.match(/SOB0*([0-9]{6})(?![0-9])/);
+    // Direct manual entry: exactly six digits
+    if(/^\d{6}$/.test(text)) {
+    const number = Number(text);
 
-    if(!match && /^[0-9]{6}$/.test(text)){
-        match = [text,text];
+    if(number >= 100000 && number <= 999999) {
+        return text;
     }
 
-    if(!match){
-        return "";
-    }
-
-    const number = Number(match[1]);
-
-    if(number < 100000 || number > 999999){
-        return "";
-    }
-
-    return String(number).padStart(6,"0");
+    return "";
 }
+
+
+    // QR/OCR text: SOB000 followed by six digits
+    const match = text.match(/^SOB000(\d{6})$/);
+
+    return match ? match[1] : "";
+}
+
 
 function calc(){
     if(!combo.value){
@@ -1495,6 +1529,7 @@ if(adultsCount < 1 && childrenCount < 1){
     const entry = {
         entryId:createEntryId(),
         deviceId,
+        date:todayString(),
         displayName:username,
         sob,
         ...result,
@@ -1934,6 +1969,12 @@ function formatActivities(activities){
 }
 
 function render(){
+    const today = todayString();
+
+    data = data.filter(row =>
+        String(row.date || "").trim() === today
+    );
+
     dataBody.innerHTML = "";
 
     let tpuSum = 0;
@@ -1999,16 +2040,114 @@ function render(){
         `${formatActivities(activities.paeplActivities)}`;
 }
 
-function printA4(){
+async function printA4(){
     const username = usernameInput.value.trim();
 
-    if(username){
-        usernameEl.textContent = username;
-        localStorage.setItem("username",username);
+    if(!username){
+        alert("Enter Username first.");
+        return;
     }
 
+    usernameEl.textContent = username;
+    dateEl.textContent = todayString();
+    localStorage.setItem("username",username);
+
+    const today = todayString();
+
+    /*
+     * First synchronize today's user data from Google Sheets.
+     * Printing still uses the local data array after synchronization.
+     */
+    try{
+        setCloudStatus("syncing");
+
+        const response = await fetch(
+            APP_SCRIPT_URL +
+            "?date=" + encodeURIComponent(today) +
+            "&displayName=" + encodeURIComponent(username)
+        );
+
+        const cloudRows = await response.json();
+
+        if(cloudRows.status === "error"){
+            throw new Error(cloudRows.message || "Cloud loading failed.");
+        }
+
+        if(Array.isArray(cloudRows)){
+            const localRows = data.filter(row =>
+    String(row.date || "").trim() === today &&
+    String(row.displayName || "").trim().toLowerCase() ===
+    username.toLowerCase()
+);
+
+
+            const mergedRows = [...cloudRows];
+
+            const existingKeys = new Set(
+                mergedRows.map(row =>
+                    String(
+                        row.entryId ||
+                        `${row.displayName}|${row.sob}`
+                    ).trim()
+                )
+            );
+
+            /*
+             * Keep local entries that have not reached Google Sheets yet.
+             */
+            localRows.forEach(localRow => {
+                const key = String(
+                    localRow.entryId ||
+                    `${localRow.displayName}|${localRow.sob}`
+                ).trim();
+
+                if(!existingKeys.has(key)){
+                    mergedRows.push(localRow);
+                    existingKeys.add(key);
+                }
+            });
+
+            data = mergedRows.filter(row =>
+                String(row.date || "").trim() === today
+            );
+
+            saveLocalData();
+            render();
+            setCloudStatus("success");
+        }
+
+    }catch(error){
+        console.error("Unable to synchronize before printing:",error);
+        setCloudStatus("offline");
+
+        /*
+         * If the internet is unavailable, continue printing
+         * the already available local data.
+         */
+    }
+
+    /*
+     * Print the synchronized local data.
+     */
+    const originalData = data;
+
+    data = originalData.filter(row =>
+        String(row.date || "").trim() === today
+    );
+
+    render();
+
+    const restoreData = () => {
+        data = originalData;
+        render();
+        window.removeEventListener("afterprint",restoreData);
+    };
+
+    window.addEventListener("afterprint",restoreData);
     window.print();
 }
+
+
 
 function getSelectedPrintUsers(){
     const allCheckbox =
@@ -2278,7 +2417,11 @@ function mergePrintRows(cloudRows){
      * Add locally saved rows that have not reached Google Sheets yet.
      * This prevents unsynced local entries from disappearing from Print All.
      */
-    data.forEach(localRow => {
+    data
+    .filter(localRow =>
+        String(localRow.date || "") === todayString()
+    )
+    .forEach(localRow => {
         const key = String(
             localRow.entryId ||
             `${localRow.displayName}|${localRow.sob}`
@@ -2309,7 +2452,9 @@ if(cloudRows.status === "error"){
     return;
 }
 
-const rows = mergePrintRows(cloudRows);
+const rows = mergePrintRows(cloudRows).filter(row =>
+    String(row.date || "") === todayString()
+);
 
         if(!Array.isArray(rows) || !rows.length){
             alert("No entries found.");
@@ -2571,8 +2716,94 @@ function getReceiptActivityLines(breakup){
 
     return html;
 }
+  
+async function get80mmPrintRows(){
+    const username = usernameInput.value.trim();
+    const today = todayString();
 
-function print80mm(){
+    if(!username){
+        alert("Enter Username first.");
+        return [];
+    }
+
+    const localRows = data.filter(row =>
+        String(row.date || "").trim() === today &&
+        String(row.displayName || "").trim().toLowerCase() ===
+        username.toLowerCase()
+    );
+
+    try{
+        setCloudStatus("syncing");
+
+        const response = await fetch(
+            APP_SCRIPT_URL +
+            "?date=" + encodeURIComponent(today) +
+            "&displayName=" + encodeURIComponent(username)
+        );
+
+        const cloudRows = await response.json();
+
+        if(cloudRows.status === "error"){
+            throw new Error(
+                cloudRows.message || "Cloud loading failed."
+            );
+        }
+
+        const mergedRows = Array.isArray(cloudRows)
+            ? [...cloudRows]
+            : [];
+
+        const existingKeys = new Set(
+            mergedRows.map(row =>
+                String(
+                    row.entryId ||
+                    `${row.displayName}|${row.sob}`
+                ).trim()
+            )
+        );
+
+        localRows.forEach(localRow => {
+            const key = String(
+                localRow.entryId ||
+                `${localRow.displayName}|${localRow.sob}`
+            ).trim();
+
+            if(!existingKeys.has(key)){
+                mergedRows.push(localRow);
+                existingKeys.add(key);
+            }
+        });
+
+        setCloudStatus("success");
+
+        return mergedRows.filter(row =>
+            String(row.date || "").trim() === today &&
+            String(row.displayName || "").trim().toLowerCase() ===
+            username.toLowerCase()
+        );
+
+    }catch(error){
+        console.error(
+            "Unable to synchronize before 80mm printing:",
+            error
+        );
+
+        setCloudStatus("offline");
+
+        // Print today's local records if cloud sync fails.
+        return localRows;
+    }
+}
+
+async function print80mm(){
+
+    const printableRows = await get80mmPrintRows();
+
+    if(!printableRows.length){
+        alert("No entries found for today's 80mm print.");
+        return;
+    }
+
     let tpuSum = 0;
     let oeplSum = 0;
     let paeplSum = 0;
@@ -2583,7 +2814,7 @@ function print80mm(){
     const oeplActivities = {};
     const paeplActivities = {};
 
-    data.forEach((row,index) => {
+    printableRows.forEach((row,index) => {
         tpuSum += +row.tpu || 0;
         oeplSum += +row.oepl || 0;
         paeplSum += +row.paepl || 0;
@@ -2884,6 +3115,7 @@ function print80mm(){
     },500);
 }
 
+
 function toggleTheme(){
     const dark = document.body.classList.toggle("dark");
 
@@ -2893,61 +3125,159 @@ function toggleTheme(){
         dark ? "🌙 Hi," : "🌞 Hi,";
 }
 
-function startScanner(){
+async function startScanner(){
     scanLocked = false;
     scannerOverlay.classList.add("show");
 
-    if(qrScanner){
-        qrScanner.stop()
-            .catch(() => {})
-            .finally(() => {
-                qrScanner = null;
-                initScanner();
-            });
-    }else{
-        initScanner();
+    try{
+        if(qrScanner){
+            try{
+                await qrScanner.stop();
+            }catch(error){
+                console.warn("Previous scanner was not running:",error);
+            }
+
+            try{
+                await qrScanner.clear();
+            }catch(error){
+                console.warn("Previous scanner cleanup failed:",error);
+            }
+
+            qrScanner = null;
+        }
+
+        document.getElementById("reader").innerHTML = "";
+        await initScanner();
+
+    }catch(error){
+        console.error("Scanner initialization failed:",error);
+        alert("Camera could not start. Please allow camera permission and try again.");
+        await closeScanner();
     }
 }
-
-
-function initScanner(){
+async function initScanner(){
     if(typeof Html5Qrcode === "undefined"){
-        alert("QR scanner library is still loading.");
-        closeScanner();
-        return;
+        throw new Error("QR scanner library is not loaded.");
     }
 
     qrScanner = new Html5Qrcode("reader");
 
-    qrScanner.start(
+    await qrScanner.start(
         {facingMode:"environment"},
         {
-            fps:15,
-            qrbox:(width,height) => ({
-                width:Math.min(width,height) * .8,
-                height:Math.min(width,height) * .8
-            })
+            fps:15
         },
         onScanSuccess,
         () => {}
-    ).catch(error => {
-        console.error(error);
-        alert("Camera could not start.");
-        closeScanner();
-    });
+    );
+
+    startLiveOcr();
 }
 
-function closeScanner(){
-    if(qrScanner){
-        qrScanner.stop()
-            .catch(() => {})
-            .finally(() => {
-                qrScanner = null;
-                scannerOverlay.classList.remove("show");
-            });
-    }else{
-        scannerOverlay.classList.remove("show");
+async function getOcrWorker(){
+    await loadTesseract();
+
+    if(!ocrWorker){
+        ocrWorker = await Tesseract.createWorker("eng");
     }
+
+    return ocrWorker;
+}
+
+function stopLiveOcr(){
+    if(ocrTimer){
+        clearInterval(ocrTimer);
+        ocrTimer = null;
+    }
+
+    ocrBusy = false;
+}
+
+async function scanCameraText(){
+    if(
+        scanLocked ||
+        ocrBusy ||
+        !qrScanner ||
+        !scannerOverlay.classList.contains("show")
+    ){
+        return;
+    }
+
+    const video = document.querySelector("#reader video");
+
+    if(
+        !video ||
+        video.readyState < 2 ||
+        !video.videoWidth ||
+        !video.videoHeight
+    ){
+        return;
+    }
+
+    ocrBusy = true;
+
+    try{
+        const canvas = document.createElement("canvas");
+        const maxWidth = 1000;
+        const scale = Math.min(1,maxWidth / video.videoWidth);
+
+        canvas.width = Math.round(video.videoWidth * scale);
+        canvas.height = Math.round(video.videoHeight * scale);
+
+        const context = canvas.getContext("2d",{
+            willReadFrequently:true
+        });
+
+        context.drawImage(
+            video,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        const worker = await getOcrWorker();
+        const result = await worker.recognize(canvas);
+
+        saveScannedValue(result.data.text);
+
+    }catch(error){
+        console.warn("Live OCR failed:",error);
+    }finally{
+        ocrBusy = false;
+    }
+}
+
+function startLiveOcr(){
+    stopLiveOcr();
+
+    /*
+     * OCR is intentionally throttled because running OCR on every
+     * camera frame makes mobile devices slow.
+     */
+    ocrTimer = setInterval(scanCameraText,1800);
+}
+async function closeScanner(){
+    stopLiveOcr();
+
+    if(qrScanner){
+        try{
+            await qrScanner.stop();
+        }catch(error){
+            console.warn("QR scanner stop failed:",error);
+        }
+
+        try{
+            await qrScanner.clear();
+        }catch(error){
+            console.warn("QR scanner clear failed:",error);
+        }
+
+        qrScanner = null;
+    }
+
+    document.getElementById("reader").innerHTML = "";
+    scannerOverlay.classList.remove("show");
 }
 
 function uploadQrImage(){
@@ -3013,32 +3343,75 @@ async function handleQrUpload(event){
         return;
     }
 
+    scanLocked = false;
+    stopLiveOcr();
+
     try{
+        /*
+         * Stop the live scanner before using scanFile().
+         */
+        if(qrScanner){
+            try{
+                await qrScanner.stop();
+            }catch(error){
+                console.warn("QR scanner stop failed:",error);
+            }
+
+            try{
+                await qrScanner.clear();
+            }catch(error){
+                console.warn("QR scanner clear failed:",error);
+            }
+
+            qrScanner = null;
+        }
+
         let qrText = "";
 
+        /*
+         * scanFile() must be called on an Html5Qrcode instance.
+         */
         try{
-            qrText = await Html5Qrcode.scanFile(file,false);
-        }catch(error){
-            qrText = "";
-        }
+            const fileScanner = new Html5Qrcode("reader");
 
-        if(!saveScannedValue(qrText)){
-            await loadTesseract();
+            qrText = await fileScanner.scanFile(file,true);
 
-            const result = await Tesseract.recognize(
-                file,
-                "eng"
-            );
-
-            if(!saveScannedValue(result.data.text)){
-                alert("No valid SOB ID found in the image.");
+            try{
+                await fileScanner.clear();
+            }catch(error){
+                console.warn("File scanner cleanup failed:",error);
             }
+
+        }catch(error){
+            console.warn("No QR code found in image:",error);
         }
+
+        if(saveScannedValue(qrText)){
+            return;
+        }
+
+        /*
+         * If QR scanning fails, use OCR on the uploaded image.
+         */
+        const worker = await getOcrWorker();
+        const result = await worker.recognize(file);
+
+        if(!saveScannedValue(result.data.text)){
+            alert(
+                "No valid SOB ID found. The image must contain " +
+                "a QR code or text in the format SOB000123456."
+            );
+        }
+
     }catch(error){
-        console.error("Image scan failed:",error);
+        console.error("Image QR/OCR scan failed:",error);
         alert("Unable to read the uploaded image.");
     }finally{
         input.value = "";
+
+        if(scannerOverlay.classList.contains("show")){
+            startLiveOcr();
+        }
     }
 }
 
@@ -3107,6 +3480,5 @@ setCloudStatus(
     navigator.onLine ? "success" : "offline"
 );
 </script>
-
 </body>
 </html>
