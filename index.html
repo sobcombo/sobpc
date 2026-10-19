@@ -1066,7 +1066,7 @@ body.dark .editCard::-webkit-scrollbar-thumb{
 </div>
 
 <div class="footer-left">
-    26H08 | V4.8 <span id="cloudStatus" title="Cloud status">☁️✅</span>
+    26J19 | V4.9 <span id="cloudStatus" title="Cloud status">☁️✅</span>
 </div>
 
 <div id="scannerOverlay" class="scannerOverlay">
@@ -1151,6 +1151,34 @@ function todayString(){
         month:"2-digit",
         year:"numeric"
     }).format(new Date());
+}
+
+function saveUsernameForToday(username){
+    const session = {
+        date:todayString(),
+        username
+    };
+
+    localStorage.setItem("usernameSession",JSON.stringify(session));
+    localStorage.removeItem("username");
+}
+
+function getUsernameForToday(){
+    try{
+        const session = JSON.parse(
+            localStorage.getItem("usernameSession") || "null"
+        );
+
+        if(session && session.date === todayString()){
+            return String(session.username || "");
+        }
+    }catch(error){
+        console.warn("Invalid saved username session:",error);
+    }
+
+    localStorage.removeItem("usernameSession");
+    localStorage.removeItem("username");
+    return "";
 }
 
 function timeString(){
@@ -1309,8 +1337,8 @@ function normalizeSob(value){
 }
 
 
-    // QR/OCR text: SOB000 followed by six digits
-    const match = text.match(/^SOB000(\d{6})$/);
+    // QR/OCR text: find SOB000 followed by six digits, even in surrounding text.
+    const match = text.match(/SOB000(\d{6})(?!\d)/);
 
     return match ? match[1] : "";
 }
@@ -1548,7 +1576,7 @@ if(adultsCount < 1 && childrenCount < 1){
     render();
 
     sobInput.value = "";
-    localStorage.setItem("username",username);
+    saveUsernameForToday(username);
 
     postToCloud({
         date:todayString(),
@@ -1583,7 +1611,7 @@ async function restoreTodayData(){
         return;
     }
 
-    localStorage.setItem("username",username);
+    saveUsernameForToday(username);
     usernameEl.textContent = username;
 
     /*
@@ -2050,7 +2078,7 @@ async function printA4(){
 
     usernameEl.textContent = username;
     dateEl.textContent = todayString();
-    localStorage.setItem("username",username);
+    saveUsernameForToday(username);
 
     const today = todayString();
 
@@ -3447,8 +3475,8 @@ function restoreFormState(){
 setEditTimeOptions();
 restoreFormState();
 
-const savedUsername =
-    localStorage.getItem("username") || "";
+const savedUsername = getUsernameForToday();
+let activeDate = todayString();
 
 usernameInput.value = savedUsername;
 usernameEl.textContent = savedUsername;
@@ -3463,7 +3491,7 @@ usernameInput.addEventListener("change",() => {
         return;
     }
 
-    localStorage.setItem("username",username);
+    saveUsernameForToday(username);
     usernameEl.textContent = username;
 
     loadUserLocalData();
@@ -3479,6 +3507,34 @@ render();
 setCloudStatus(
     navigator.onLine ? "success" : "offline"
 );
+
+setInterval(() => {
+    const currentDate = todayString();
+
+    if(currentDate === activeDate){
+        return;
+    }
+
+    activeDate = currentDate;
+
+    // Clear browser-side entry caches only; this does not affect Apps Script.
+    const cacheKeys = Array.from({length:localStorage.length},(_,index) =>
+        localStorage.key(index)
+    ).filter(key =>
+        key === "sobData" ||
+        key === "sobDataBackup" ||
+        key.startsWith("sobData:")
+    );
+
+    cacheKeys.forEach(key => localStorage.removeItem(key));
+    localStorage.removeItem("usernameSession");
+    localStorage.removeItem("username");
+    usernameInput.value = "";
+    usernameEl.textContent = "";
+    dateEl.textContent = currentDate;
+    data = [];
+    render();
+},30000);
 </script>
 </body>
 </html>
