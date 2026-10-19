@@ -2878,19 +2878,15 @@ async function print80mm(){
                     });
             });
 
+        const ticketType = (row.comboName || "")
+            .match(/\d+\/(?:\d+|NA)/)?.[0] || "";
+
         entriesHtml += `
         <div class="entry">
             <div class="entry-title">
-                <span>${index + 1})</span>
-                ${row.sob}
-            </div>
-
-            <div class="entry-meta">
-                <span>
-                    ${(row.comboName || "")
-                        .match(/\d+\/(?:\d+|NA)/)?.[0] || ""}
-                </span>
-                <span>${row.adults} A + ${row.children} C</span>
+                <span>${index + 1}) ${row.sob}</span>
+                <span>${ticketType}</span>
+                <span>${row.adults}A+${row.children}C</span>
                 <span>${formatTime(row.time)}</span>
             </div>
 
@@ -2927,11 +2923,12 @@ async function print80mm(){
     <head>
         <meta charset="UTF-8">
         <title>80MM Print</title>
+        <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
 
         <style>
             @page{
                 size:80mm auto;
-                margin:3mm;
+                margin:5mm;
             }
 
             *{
@@ -2940,8 +2937,9 @@ async function print80mm(){
             }
 
             body{
-                width:74mm;
-                margin:auto;
+                width:70mm;
+                max-width:70mm;
+                margin:0 auto;
                 color:#000;
                 background:#fff;
                 font-size:12px;
@@ -2950,12 +2948,10 @@ async function print80mm(){
 
             .receipt-header{
                 margin-bottom:10px;
-                text-align:center;
+                text-align:left;
             }
 
             .receipt-top{
-                display:flex;
-                justify-content:space-between;
                 font-size:12px;
             }
 
@@ -2968,21 +2964,13 @@ async function print80mm(){
             }
 
             .receipt-user{
-                display:flex;
-                justify-content:center;
-                align-items:center;
-                gap:4px;
                 margin-top:5px;
+                text-align:left;
                 white-space:nowrap;
                 font-weight:normal;
             }
 
             .receipt-username{
-                display:inline-block;
-                min-width:130px;
-                border-bottom:1px solid #000;
-                text-align:center;
-                white-space:nowrap;
                 font-weight:bold;
             }
 
@@ -2997,26 +2985,19 @@ async function print80mm(){
             }
 
             .entry-title{
-                position:relative;
-                padding:4px 0;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:2px;
+                padding:4px 2px;
                 border-bottom:1px solid #000;
                 text-align:center;
-                font-size:16px;
+                font-size:9px;
+                white-space:nowrap;
             }
 
             .entry-title span{
-                position:absolute;
-                top:50%;
-                left:5px;
-                transform:translateY(-50%);
-                font-size:12px;
-            }
-
-            .entry-meta{
-                display:flex;
-                justify-content:space-between;
-                padding:3px 6px;
-                font-size:10px;
+                font-size:9px;
             }
 
             .amount-grid{
@@ -3026,7 +3007,7 @@ async function print80mm(){
             }
 
             .amount-grid div{
-                padding:3px;
+                padding:3px 1px;
                 border-right:.5px solid #000;
                 border-bottom:.5px solid #000;
                 text-align:center;
@@ -3064,11 +3045,7 @@ async function print80mm(){
                 padding:4px;
                 border:.5px solid #000;
                 font-size:10px;
-            }
-
-            td:last-child{
-                width:25%;
-                text-align:right;
+                text-align:center;
             }
         </style>
     </head>
@@ -3077,17 +3054,13 @@ async function print80mm(){
         <div class="receipt-header">
             <div class="receipt-top">
                 <span class="receipt-date">
-                    DATE :
-                    <span>${todayString()}</span>
+                    DATE : <span>${todayString()}</span>
                 </span>
-
-                            </div>
+            </div>
 
             <div class="receipt-user">
                 USERNA<b>M</b>E.<b>S</b> :
-                <span class="receipt-username">
-                    ${usernameInput.value}
-                </span>
+                <span class="receipt-username">${usernameInput.value}</span>
             </div>
         </div>
 
